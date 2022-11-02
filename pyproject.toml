@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "hvac", "logger"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vault"
+version = "1.0.0"
+authors = [
+  { name="Bervinov Oleg", email="unknown-312@ya.ru" },
+]
+description = "This module contains a collection of methods for working with vault."
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/obervinov/vault-package"
+"Bug Tracker" = "https://github.com/obervinov/vault-package/issues"
