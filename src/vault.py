@@ -1,13 +1,18 @@
-######### THIS FUNCTIONS VAULT CLIENT FROM READ/WRITE SECRETS #########
-
-### MODULES AND VARS ###
+# This functions vault client from read/write/list secrets
+# Import modules
 import hvac
 from logger import log
-### MODULES AND VARS ###
+
 
 class VaultClient:
 
-    def __init__(self, vault_addr, vault_approle_id, vault_approle_secret_id, vault_mount_point) -> None:
+    def __init__(
+            self,
+            vault_addr: str = "http://localhost:8200",
+            vault_approle_id: str = None,
+            vault_approle_secret_id: str = None,
+            vault_mount_point: str = "kv"
+    ) -> None:
         self.vault_addr = vault_addr
         self.vault_approle_id = vault_approle_id
         self.vault_approle_secret_id = vault_approle_secret_id
@@ -18,7 +23,10 @@ class VaultClient:
 
         try:          
           vault_approle_auth = vault_object.auth.approle.login(role_id=self.vault_approle_id, secret_id=self.vault_approle_secret_id)['auth']
-          vault_object.secrets.kv.v2.configure(max_versions=5000, mount_point=self.vault_mount_point, cas_required=False,)
+          
+          # If the vault configuration is different from the default configuration
+          if self.vault_mount_point != "kv":
+            vault_object.secrets.kv.v2.configure(max_versions=5000, mount_point=self.vault_mount_point, cas_required=False,)
           
           log.info(f"[class.{__class__.__name__}] kv engine is configured, token id {vault_approle_auth['entity_id']}")  
           self.vault_object = vault_object
