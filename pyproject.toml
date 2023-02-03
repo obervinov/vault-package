@@ -1,12 +1,12 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=61.0", "wheel", "hvac"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "vault"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
-  { name="Bervinov Oleg", email="unknown-312@ya.ru" },
+  { name="Bervinov Oleg", email="obervinov@mail.ru" },
 ]
 description = "This module contains a collection of methods for working with vault."
 readme = "README.md"
