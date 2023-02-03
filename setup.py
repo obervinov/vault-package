@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(
-    name = 'vault', 
+    name = 'vault',
     version = '1.0.1',
     description = 'This module contains a collection of methods for working with vault.',
     py_modules = ["vault"],
@@ -12,7 +12,7 @@ setup(
     long_description_content_type = "text/markdown",
     url='https://github.com/obervinov/vault-package',
     include_package_data=True,
-    classifiers  = [
+    classifiers = [
         'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
