@@ -19,6 +19,7 @@ pip3 install git+https://github.com/obervinov/vault-package.git@main#egg=vault
 ## Usage example
 ```bash
 # Import module
+import os
 import vault as vault
 
 # Environment variables #
