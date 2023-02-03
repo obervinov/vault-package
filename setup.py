@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = 'vault',
-    version = '1.0.1',
+    version = '1.0.3',
     description = 'This module contains a collection of methods for working with vault.',
     py_modules = ["vault"],
     package_dir = {'':'src'},
