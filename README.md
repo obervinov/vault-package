@@ -9,5 +9,5 @@ Support only kv version 2
 
 ## Installing
 ```bash
-pip3 install git+https://github.com/obervinov/vault-package.git#egg=vault
+pip3 install git+https://github.com/obervinov/vault-package.git@main#egg=vault
 ```
