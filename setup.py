@@ -30,6 +30,6 @@ setup(
     ],
     keywords = ['vault', 'secure'],
     install_requires=[
-            'hvac',
+            'hvac==1.0.2',
     ],
 )
