@@ -28,7 +28,7 @@ class VaultClient:
             )['auth']
 
             # If the vault configuration is different from the default configuration
-            if self.vault_mount_point != "kv":
+            if self.vault_mount_point != "secretv2":
                 vault_object.secrets.kv.v2.configure(
                     max_versions=5000,
                     mount_point=self.vault_mount_point,
