@@ -28,5 +28,8 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: OS Independent',
     ],
-    keywords = ['vault', 'secure'],    
+    keywords = ['vault', 'secure'],
+    install_requires=[
+            'hvac',
+    ],
 )
