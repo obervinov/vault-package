@@ -1,0 +1,10 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    uses: obervinov/_templates/.github/workflows/release.yml@main
