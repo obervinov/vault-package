@@ -1,114 +1,162 @@
-# This functions vault client from read/write/list secrets
-# Import modules
+"""This module contains an implementation over the hvac module for interacting with the vault api"""
 import hvac
 from logger import log
 
 
 class VaultClient:
+    """This class is an implementation over the hvac module.
+    Contains methods for reading/placing/listing secrets with additional doping and exceptions.
+    """
 
     def __init__(
             self,
-            vault_addr: str = "http://localhost:8200",
-            vault_approle_id: str = None,
-            vault_approle_secret_id: str = None,
-            vault_mount_point: str = "kv"
+            addr: str = "http://localhost:8200",
+            approle_id: str = None,
+            secret_id: str = None,
+            mount_point: str = "kv"
     ) -> None:
-        self.vault_addr = vault_addr
-        self.vault_approle_id = vault_approle_id
-        self.vault_approle_secret_id = vault_approle_secret_id
-        self.vault_mount_point = vault_mount_point
+        """Creates a new vault client instance.
+        :param addr: Base URL for the Vault instance being addressed.
+        :type addr: str
+        :default addr: http://localhost:8200
+        :param approle_id: Approle id to receive a token and then authorize requests to Vault.
+                More: https://www.vaultproject.io/api-docs/auth/approle
+        :type approle_id: str
+        :default approle_id: None
+        :param approle_secret_id: Secret id to receive a token and then authorize requests to Vault.
+                More: https://www.vaultproject.io/api-docs/auth/approle
+        :type approle_secret_id: str
+        :default approle_secret_id: None
+        :param mount_point: Default kv secret mount point.
+                More: https://developer.hashicorp.com/vault/tutorials/enterprise/namespace-structure
+        :type mount_point: str
+        :default mount_point: kv
+        """
+        self.addr = addr
+        self.approle_id = approle_id
+        self.secret_id = secret_id
+        self.mount_point = mount_point
+        self.vault_object = hvac.Client(url=self.addr,)
 
-        # vault approle https://www.vaultproject.io/api-docs/auth/approle
-        vault_object = hvac.Client(url=self.vault_addr,)
-
+        log.info(
+            f"[class.{__class__.__name__}] "
+            f"logging in Vault with approle..."
+        )
         try:
-            vault_approle_auth = vault_object.auth.approle.login(
-                role_id=self.vault_approle_id,
-                secret_id=self.vault_approle_secret_id
+            vault_approle_auth = self.vault_object.auth.approle.login(
+                role_id=self.approle_id,
+                secret_id=self.secret_id
             )['auth']
-
-            # If the vault configuration is different from the default configuration
-            if self.vault_mount_point != "secretv2":
-                vault_object.secrets.kv.v2.configure(
-                    max_versions=5000,
-                    mount_point=self.vault_mount_point,
-                    cas_required=False,
-                )
-
             log.info(
                 f"[class.{__class__.__name__}] "
-                f"kv engine is configured, "
-                f"token id {vault_approle_auth['entity_id']}"
+                f"Vault Token {vault_approle_auth['entity_id']} created successful"
             )
-            self.vault_object = vault_object
+        except hvac.exceptions.Forbidden as forbidden:
+            log.error(
+                f"[class.{__class__.__name__}] "
+                f"logging with approle forbidden, "
+                f"please check capabilities ['read', 'list', 'create', 'update] "
+                f"for '{mount_point}/config'\n"
+                f"{forbidden}"
+            )
+        except hvac.exceptions.InvalidRequest as invalidrequest:
+            log.error(
+                f"[class.{__class__.__name__}] "
+                f"logging with approle invalid request, "
+                f"please check your role-id or secret-id\n"
+                f"{invalidrequest}"
+            )
 
-        except Exception as ex:
-            log.error(f"[class.{__class__.__name__}] exception init kv engine: {ex}")
-
-
-    def vault_read_secrets(self, path, secret_key=None):
+    def vault_read_secrets(
+            self,
+            path: str = None,
+            key: str = None
+    ):
+        """Function for read secrets from Vault.
+        :param path: The path to the secret in vault.
+        :type path: str
+        :default path: None
+        :param key: The key from which you want to read the value.
+        :type key: str
+        :default key: None
+        """
         try:
             read_response = self.vault_object.secrets.kv.v2.read_secret_version(
                                     path=path,
-                                    mount_point=self.vault_mount_point,
+                                    mount_point=self.mount_point,
             )
-
-            if secret_key is None:
+            if key is None:
                 response = read_response['data']['data']
             else:
-                response = read_response['data']['data'][secret_key]
-
-        except hvac.exceptions.InvalidPath:
-            read_response = {'data': {'data': {'exception': 'InvalidPath'}}}
-            response = read_response['data']['data']
-
-        except Exception as ex:
-            log.warn(
+                response = read_response['data']['data'][key]
+        except hvac.exceptions.InvalidPath as invalidpath:
+            log.error(
                 f"[class.{__class__.__name__}] "
-                "exception getting secret "
-                f"{self.vault_mount_point}/{path}/{secret_key}: {ex}"
+                f"reading secret {path} faild\n"
+                f"{invalidpath}"
             )
 
         return response
 
-
-    def vault_put_secrets(self, path, key, value):
+    def vault_put_secrets(
+            self,
+            path: str = None,
+            key: str = None,
+            value: str = None
+    ):
+        """Function for put secrets from Vault.
+        :param path: The path to the secret in vault.
+        :type path: str
+        :default path: None
+        :param key: The key to write to the secret.
+        :type key: str
+        :default key: None
+        :param value: The value of the key to write to the secret.
+        :type value: str
+        :default value: None
+        """
         key_value = {}
         key_value[key] = value
-
         try:
             self.vault_object.secrets.kv.v2.create_or_update_secret(
-                path = path,
-                cas = 0,
-                secret = key_value,
-                mount_point = self.vault_mount_point,
+                path=path,
+                cas=0,
+                secret=key_value,
+                mount_point=self.mount_point,
             )
-
         except hvac.exceptions.InvalidRequest:
             self.vault_patch_secrets(path, key_value)
 
-        except Exception as ex:
-            log.error(f"[class.{__class__.__name__}] exception in secret {path}: {ex}")
+    def vault_patch_secrets(
+            self,
+            path: str = None,
+            key_value: str = None
+    ):
+        """Function for patching secrets from Vault.
+        :param path: The path to the secret in vault.
+        :type path: str
+        :default path: None
+        :param key_value: Dictionary with keys and their values.
+        :type key_value: str
+        :default key_value: None
+        """
+        self.vault_object.secrets.kv.v2.patch(
+            path=path,
+            secret=key_value,
+            mount_point=self.mount_point,
+        )
 
-
-    def vault_patch_secrets(self, path, key_value):
-        try:
-            self.vault_object.secrets.kv.v2.patch(
-                path = path,
-                secret = key_value,
-                mount_point = self.vault_mount_point,
-            )
-
-        except Exception as ex:
-            log.error(f"[class.{__class__.__name__}] exception in secret {path}: {ex}")
-
-
-    def vault_list_secrets(self, path):
-        try:
-            response = self.vault_object.secrets.kv.v2.list_secrets(
-                path = path,
-                mount_point = self.vault_mount_point
-            )['data']['keys']
-            return response
-        except Exception as ex:
-            log.error(f"[class.{__class__.__name__}] exception list secret {path}: {ex}")
+    def vault_list_secrets(
+            self,
+            path: str = None
+    ):
+        """Function for list secrets from Vault.
+        :param path: The path to the secret in vault.
+        :type path: str
+        :default path: None
+        """
+        response = self.vault_object.secrets.kv.v2.list_secrets(
+            path=path,
+            mount_point=self.mount_point
+        )['data']['keys']
+        return response
