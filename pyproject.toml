@@ -4,29 +4,15 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vault"
-version = "1.1.0"
+version = "1.0.3"
+authors = [
+  { name="Bervinov Oleg", email="obervinov@mail.ru" },
+]
 description = "This module contains a collection of methods for working with vault."
-repository = "https://github.com/obervinov/vault-package"
-documentation = "https://github.com/obervinov/vault-package/blob/main/README.md"
-license = "MIT"
 readme = "README.md"
 requires-python = ">=3.9"
-authors = [
-  { name="Bervinov Oleg", email="obervinov@pm.me" },
-]
-maintainers = [
-    "Bervinov Oleg <obervinov@pm.me>",
-]
 classifiers = [
-    "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: Implementation :: CPython",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
@@ -34,8 +20,3 @@ classifiers = [
 [project.urls]
 "Homepage" = "https://github.com/obervinov/vault-package"
 "Bug Tracker" = "https://github.com/obervinov/vault-package/issues"
-
-[tool.poetry.dependencies]
-python = "^3.6.2"
-hvac = "^1.0.2"
-logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.0" }

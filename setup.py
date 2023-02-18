@@ -1,37 +1,35 @@
-"""This module is necessary to distribute and install the written module via pip"""
 from setuptools import setup
 
-with open('README.md', 'r', encoding='utf8') as readme:
-    readme_content = readme.read()
-with open('CHANGELOG.md', 'r', encoding='utf8') as changelog:
-    changelog_content = changelog.read()
-
 setup(
-    name='vault',
-    version='1.1.0',
-    description='This module contains a collection of methods for working with vault.',
-    py_modules=["vault"],
-    package_dir={'': 'src'},
-    author='Oleg Bervinov',
-    author_email='obervinov@pm.me',
-    long_description=(f"{readme_content}""\n\n"f"{changelog_content}"),
-    long_description_content_type="text/markdown",
+    name = 'vault',
+    version = '1.0.3',
+    description = 'This module contains a collection of methods for working with vault.',
+    py_modules = ["vault"],
+    package_dir = {'':'src'},
+    author = 'Oleg Bervinov',
+    author_email = 'obervinov@mail.ru',
+    long_description = open('README.md').read() + '\n\n' + open('CHANGELOG.md').read(),
+    long_description_content_type = "text/markdown",
     url='https://github.com/obervinov/vault-package',
     include_package_data=True,
-    classifiers=[
-        "License :: OSI Approved :: MIT License",
+    classifiers = [
+        'Development Status :: 4 - Beta',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Operating System :: OS Independent'
+        "License :: OSI Approved :: BSD License",
+        'Intended Audience :: Developers',
+        'Intended Audience :: Other Audience',
+        'Intended Audience :: Science/Research',
+        'Intended Audience :: Education',
+        'Topic :: Text Processing',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: OS Independent',
     ],
-    keywords=['vault', 'secure'],
+    keywords = ['vault', 'secure'],
     install_requires=[
             'hvac==1.0.2',
-            'git+https://github.com/obervinov/logger-package.git@v1.0.0#egg=logger'
     ],
 )
