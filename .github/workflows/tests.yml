@@ -1,9 +1,0 @@
-name: Test and Lint
-
-on: [push]
-
-jobs:
-  pylint:
-    uses: obervinov/_templates/.github/workflows/pylint.yml@main
-  flake8:
-    uses: obervinov/_templates/.github/workflows/flake8.yml@main
