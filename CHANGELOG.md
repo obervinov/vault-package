@@ -17,8 +17,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 #### 🚀 Features
 * added github actions: **flake8**, **pylint** and **create release**
 * added [SECURITY.md](https://github.com/obervinov/vault-package/blob/main/SECURITY.md) policy
-
-
+* added [ISSUE_TEMPLATE](https://github.com/obervinov/vault-package/tree/main/.github/ISSUE_TEMPLATE)
+* added [PULL_REQUEST_TEMPLATE](https://github.com/obervinov/vault-package/tree/main/.github/PULL_REQUEST_TEMPLATE)
 
 ## v1.0.3 - 2023-02-03
 ### What's Changed
