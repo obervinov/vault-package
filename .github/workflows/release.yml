@@ -9,4 +9,4 @@ on:
 
 jobs:
   create-release:
-    uses: obervinov/_templates/.github/workflows/release.yml@main
+    uses: obervinov/_templates/.github/workflows/release.yml@v1.0.0
