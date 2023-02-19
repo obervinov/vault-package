@@ -16,7 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * global **code recycling**: __updated all exceptions events__, __removed old artifacts__, __fixed redundant logging__ and __more comments added to the code__
 #### 🚀 Features
 * added github actions: **flake8**, **pylint** and **create release**
-* added [SECURITY.md](https://github.com/obervinov/vault-package/blob/main/SECURITY.md) policy
+* added [SECURITY](https://github.com/obervinov/vault-package/blob/main/SECURITY.md)
 * added [ISSUE_TEMPLATE](https://github.com/obervinov/vault-package/tree/main/.github/ISSUE_TEMPLATE)
 * added [PULL_REQUEST_TEMPLATE](https://github.com/obervinov/vault-package/tree/main/.github/PULL_REQUEST_TEMPLATE)
 
