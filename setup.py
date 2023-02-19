@@ -8,8 +8,12 @@ with open('CHANGELOG.md', 'r', encoding='utf8') as changelog:
 
 setup(
     name='vault',
-    version='1.1.0',
-    description='This module contains a collection of methods for working with vault.',
+    version='v1.1.0',
+    license='MIT',
+    description=(
+        f"This is an additional implementation over the hvac module. "
+        f"The main purpose of which is simplified use and interaction with vault for my standard projects. "
+        f"This module contains a collection of methods for working with vault."),
     py_modules=["vault"],
     package_dir={'': 'src'},
     author='Oleg Bervinov',
@@ -29,7 +33,7 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Operating System :: OS Independent'
     ],
-    keywords=['vault', 'secure'],
+    keywords=['vault', 'secure', 'hvac'],
     install_requires=[
             'hvac==1.0.2',
             'git+https://github.com/obervinov/logger-package.git@v1.0.0#egg=logger'
