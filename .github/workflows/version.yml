@@ -1,7 +1,0 @@
-name: Comparing package version
-
-on: [push]
-
-jobs:
-  version:
-    uses: obervinov/_templates/.github/workflows/version.yml@feature/obervinov-version-template

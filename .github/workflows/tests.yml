@@ -1,4 +1,4 @@
-name: Test and lint
+name: Tests and checks
 
 on: [push]
 
@@ -7,3 +7,5 @@ jobs:
     uses: obervinov/_templates/.github/workflows/pylint.yml@main
   flake8:
     uses: obervinov/_templates/.github/workflows/flake8.yml@main
+  package-version:
+    uses: obervinov/_templates/.github/workflows/version.yml@feature/obervinov-version-template

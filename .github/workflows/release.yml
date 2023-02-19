@@ -8,5 +8,5 @@ on:
       - closed
 
 jobs:
-  release:
+  create-release:
     uses: obervinov/_templates/.github/workflows/release.yml@main
