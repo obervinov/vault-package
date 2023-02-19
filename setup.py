@@ -11,9 +11,11 @@ setup(
     version='v1.1.0',
     license='MIT',
     description=(
-        f"This is an additional implementation over the hvac module. "
-        f"The main purpose of which is simplified use and interaction with vault for my standard projects. "
-        f"This module contains a collection of methods for working with vault."),
+        "This is an additional implementation over the hvac module. "
+        "The main purpose of which is simplified use and interaction "
+        "with vault for my standard projects. "
+        "This module contains a collection of methods for working with vault."
+    ),
     py_modules=["vault"],
     package_dir={'': 'src'},
     author='Oleg Bervinov',

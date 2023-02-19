@@ -1,6 +1,7 @@
 # Vault Package
 [![Lint and Test](https://github.com/obervinov/vault-package/actions/workflows/tests.yml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/tests.yml)
 [![Release](https://github.com/obervinov/vault-package/actions/workflows/release.yml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/release.yml)
+[![Compare Versions](https://github.com/obervinov/vault-package/actions/workflows/version.yml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/version.yml)
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/obervinov/vault-package?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/obervinov/vault-package?style=for-the-badge)
