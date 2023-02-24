@@ -15,7 +15,7 @@ class VaultClient:
             secret_id: str = None,
             mount_point: str = "kv"
     ) -> None:
-        """Creates a new vault client instance.
+        """A function for create a new vault client instance.
         :param addr: Base URL for the Vault instance being addressed.
         :type addr: str
         :default addr: http://localhost:8200
@@ -72,7 +72,7 @@ class VaultClient:
             path: str = None,
             key: str = None
     ) -> dict:
-        """Function for read secrets from Vault.
+        """A function for read secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
@@ -103,7 +103,7 @@ class VaultClient:
             key: str = None,
             value: str = None
     ) -> None:
-        """Function for put secrets from Vault.
+        """A function for put secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
@@ -131,7 +131,7 @@ class VaultClient:
             path: str = None,
             key_value: str = None
     ) -> None:
-        """Function for patching secrets from Vault.
+        """A function for patch secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
@@ -149,7 +149,7 @@ class VaultClient:
             self,
             path: str = None
     ) -> list:
-        """Function for list secrets from Vault.
+        """A function for list secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
