@@ -71,7 +71,7 @@ class VaultClient:
             self,
             path: str = None,
             key: str = None
-    ) -> str | dict:
+    ) -> dict:
         """Function for read secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
