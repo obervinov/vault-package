@@ -19,6 +19,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * added [SECURITY](https://github.com/obervinov/vault-package/blob/main/SECURITY.md)
 * added [ISSUE_TEMPLATE](https://github.com/obervinov/vault-package/tree/main/.github/ISSUE_TEMPLATE)
 * added [PULL_REQUEST_TEMPLATE](https://github.com/obervinov/vault-package/tree/main/.github/PULL_REQUEST_TEMPLATE)
+* added [CODEOWNERS](https://github.com/obervinov/vault-package/tree/main/.github/CODEOWNERS)
+* added [dependabot.yml](https://github.com/obervinov/vault-package/tree/main/.github/dependabot.yml)
+
 
 ## v1.0.3 - 2023-02-03
 ### What's Changed
