@@ -71,7 +71,7 @@ class VaultClient:
             self,
             path: str = None,
             key: str = None
-    ) -> str | dict | None:
+    ) -> str | dict:
         """Function for read secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
@@ -95,7 +95,6 @@ class VaultClient:
                 f"reading secret {path} faild\n"
                 f"{invalidpath}"
             )
-            return None
         return None
 
     def vault_put_secrets(
@@ -149,7 +148,7 @@ class VaultClient:
     def vault_list_secrets(
             self,
             path: str = None
-    ) -> list | None:
+    ) -> list:
         """Function for list secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
