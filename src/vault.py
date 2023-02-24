@@ -71,7 +71,7 @@ class VaultClient:
             self,
             path: str = None,
             key: str = None
-    ):
+    ) -> str | dict | None:
         """Function for read secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
@@ -85,25 +85,25 @@ class VaultClient:
                                     path=path,
                                     mount_point=self.mount_point,
             )
-            if key is None:
-                response = read_response['data']['data']
-            else:
-                response = read_response['data']['data'][key]
+            if key :
+                return read_response['data']['data'][key]
+            if not key:
+                return read_response['data']['data']
         except hvac.exceptions.InvalidPath as invalidpath:
             log.error(
                 f"[class.{__class__.__name__}] "
                 f"reading secret {path} faild\n"
                 f"{invalidpath}"
             )
-
-        return response
+            return None
+        return None
 
     def vault_put_secrets(
             self,
             path: str = None,
             key: str = None,
             value: str = None
-    ):
+    ) -> None:
         """Function for put secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
@@ -131,7 +131,7 @@ class VaultClient:
             self,
             path: str = None,
             key_value: str = None
-    ):
+    ) -> None:
         """Function for patching secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
@@ -149,14 +149,13 @@ class VaultClient:
     def vault_list_secrets(
             self,
             path: str = None
-    ):
+    ) -> list | None:
         """Function for list secrets from Vault.
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
         """
-        response = self.vault_object.secrets.kv.v2.list_secrets(
+        return self.vault_object.secrets.kv.v2.list_secrets(
             path=path,
             mount_point=self.mount_point
         )['data']['keys']
-        return response
