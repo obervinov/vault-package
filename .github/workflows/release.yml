@@ -1,0 +1,12 @@
+name: Create release
+
+on:
+  pull_request:
+    branches: 
+      - main
+    types:
+      - closed
+
+jobs:
+  create-release:
+    uses: obervinov/_templates/.github/workflows/release.yml@v1.0.0
