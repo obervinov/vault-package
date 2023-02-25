@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 
-## v1.1.0 - 2023-02-24
+## v1.1.0 - 2023-02-25
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.0.3...v1.1.0 by @obervinov in https://github.com/obervinov/vault-package/pull/5
 #### 🐛 Bug Fixes
@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 #### 📚 Documentation
 * updated and expanded the documentation in the file [README.md](https://github.com/obervinov/vault-package/blob/main/README.md)
 #### 💥 Breaking Changes
-* global **code recycling**: __updated all exceptions events__, __removed old artifacts__, __fixed redundant logging__ and __more comments added to the code__
+* global **code recycling**: _updated all exceptions events_, _removed old artifacts_, _fixed redundant logging_ and _more comments added to the code_
 #### 🚀 Features
 * added github actions: **flake8**, **pylint** and **create release**
 * added [SECURITY](https://github.com/obervinov/vault-package/blob/main/SECURITY.md)
