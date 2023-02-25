@@ -19,7 +19,7 @@ This module contains a collection of methods for working with vault.
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.0](https://github.com/obervinov/_templates/tree/feature/v1.0.0) |
+| GitHub Actions Templates | [v1.0.0](https://github.com/obervinov/_templates/tree/v1.0.0) |
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
