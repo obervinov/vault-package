@@ -38,6 +38,6 @@ setup(
     keywords=['vault', 'secure', 'hvac'],
     install_requires=[
             'hvac==1.0.2',
-            'logger @ git+ssh://git@github.com/obervinov/logger-package@v1.0.0#egg=logger-1.0.0'
+            'logger @ git+ssh://git@github.com/obervinov/logger-package.git#egg=logger-1.0.0'
     ],
 )
