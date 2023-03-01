@@ -8,7 +8,7 @@ with open('CHANGELOG.md', 'r', encoding='utf8') as changelog:
 
 setup(
     name='vault',
-    version='v1.1.0',
+    version='v1.1.1',
     license='MIT',
     description=(
         "This is an additional implementation over the hvac module. "
