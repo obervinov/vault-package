@@ -6,8 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "vault"
 version = "1.1.1"
 description = "This module contains a collection of methods for working with vault."
-repository = "https://github.com/obervinov/vault-package"
-documentation = "https://github.com/obervinov/vault-package/blob/main/README.md"
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.9"
@@ -33,7 +31,10 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://github.com/obervinov/vault-package"
+"Repository" = "https://github.com/obervinov/vault-package"
 "Bug Tracker" = "https://github.com/obervinov/vault-package/issues"
+"Documentation" = "https://github.com/obervinov/vault-package/blob/main/README.md"
+"Changelog" = "https://github.com/obervinov/vault-package/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
