@@ -8,7 +8,7 @@ with open('CHANGELOG.md', 'r', encoding='utf8') as changelog:
 
 setup(
     name='vault',
-    version='v1.1.0',
+    version='1.1.1',
     license='MIT',
     description=(
         "This is an additional implementation over the hvac module. "
@@ -37,7 +37,9 @@ setup(
     ],
     keywords=['vault', 'secure', 'hvac'],
     install_requires=[
-            'hvac==1.0.2',
-            'git+https://github.com/obervinov/logger-package.git@v1.0.0#egg=logger'
+        'hvac==1.0.2'
     ],
+    dependency_links=[
+        'https://github.com/obervinov/logger-package/tarball/master#egg=logger-1.0.0'
+    ]
 )

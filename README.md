@@ -19,7 +19,7 @@ This module contains a collection of methods for working with vault.
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.0](https://github.com/obervinov/_templates/tree/v1.0.0) |
+| GitHub Actions Templates | [v1.0.1](https://github.com/obervinov/_templates/tree/v1.0.1) |
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
@@ -41,17 +41,17 @@ pip3 install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="usage"> Usage example
 ```python
-# Import module
+"""Import module"""
 import os
 import vault as vault
 
-# Environment variables #
+"""Environment variables"""
 vault_mount_point = os.environ.get('VAULT_MOUNT_PATH', 'kv')
 vault_addr = os.environ.get('VAULT_ADDR', 'http://localhost:8200')
 vault_approle_id = os.environ.get('VAULT_APPROLE_ID', 'not set')
 vault_approle_secret_id = os.environ.get('VAULT_APPROLE_SECRET_ID', 'not set')
 
-# Init class
+"""Init class"""
 vc = vault.VaultClient(
                vault_addr,
                vault_approle_id,
@@ -59,18 +59,25 @@ vc = vault.VaultClient(
                vault_mount_point
 )
 
-# Read target key in secret
 secret_key_value = vc.vault_read_secrets("bucket1/secret1", 'key1')
-# Response format (type str): value2
+"""Read target key in secret
+type: str
+response format: value2
+"""
 
-# Read all keys and values in secret
 secret_full = vc.vault_read_secrets("bucket1/secret1")
-# Response format (type dict): {"key1": "value1", "key2": "value2"}
+"""Read all keys and values in secret
+type: dict
+response format: {"key1": "value1", "key2": "value2"}
+"""
 
-# Put secret (patch if secret already exist)
 vc.vault_put_secrets("bucket1/secret1", "my_key", "my_value")
+"""Put secret (patch if secret already exist)
+"""
 
-# List secrets
 vc.vault_list_secrets("bucket1/secret1")
-# Response format (type list): ["key1", "key2", "key3"]
+"""List secrets
+type: list
+response format: ["key1", "key2", "key3"]
+"""
 ```
