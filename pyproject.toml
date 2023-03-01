@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vault"
-version = "v1.1.1"
+version = "1.1.1"
 description = "This module contains a collection of methods for working with vault."
 repository = "https://github.com/obervinov/vault-package"
 documentation = "https://github.com/obervinov/vault-package/blob/main/README.md"
-license = "MIT"
+license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
