@@ -15,7 +15,7 @@ authors = [
   { name="Bervinov Oleg", email="obervinov@pm.me" },
 ]
 maintainers = [
-    "Bervinov Oleg <obervinov@pm.me>",
+    { name="Bervinov Oleg", email="obervinov@pm.me" },
 ]
 classifiers = [
     "Programming Language :: Python",
