@@ -37,7 +37,9 @@ setup(
     ],
     keywords=['vault', 'secure', 'hvac'],
     install_requires=[
-            'hvac==1.0.2',
-            'logger @ git+ssh://git@github.com/obervinov/logger-package.git#egg=logger-1.0.0'
+        'hvac==1.0.2'
     ],
+    dependency_links=[
+        'https://github.com/obervinov/logger-package/tarball/master#egg=logger-1.0.0'
+    ]
 )
