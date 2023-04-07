@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * updated all workflows to version `v1.1.0`
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
 * added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `MR` and a `new release`)
+* added new action `obervinov/_templates/.github/workflows/package.yml` to test that the package can be installed correctly via `pip install`
 #### 📚 Documentation
 * updated the template body in `pull_request_template.md`
 * updated `description` in `pyproject.toml`
