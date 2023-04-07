@@ -105,7 +105,10 @@ class VaultConfigurator:
         self.vault_client.sys.enable_secrets_engine(
             backend_type='kv',
             path=path,
-            description="Namespace is created automatically via the configrator module (https://github.com/obervinov/vault-package)",
+            description=(
+                "Namespace is created automatically via the configrator module"
+                "(https://github.com/obervinov/vault-package)"
+            ),
             version=2
         )
         log.info(
