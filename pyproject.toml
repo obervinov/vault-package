@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vault"
-version = "1.1.1"
-description = "This module contains a collection of methods for working with vault."
+version = "2.0.0"
+description = "This is an additional implementation over the hvac module. The main purpose of which is simplified use and interaction with vault for my standard projects. This module contains a collection of methods for working with vault."
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.9"
@@ -39,4 +39,4 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.6.2"
 hvac = "^1.0.2"
-logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.0" }
+logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1" }

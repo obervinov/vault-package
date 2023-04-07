@@ -1,4 +1,6 @@
-"""This module is necessary to distribute and install the written module via pip"""
+"""
+This module is necessary to distribute and install the written module via pip
+"""
 from setuptools import setup
 
 with open('README.md', 'r', encoding='utf8') as readme:
@@ -8,7 +10,7 @@ with open('CHANGELOG.md', 'r', encoding='utf8') as changelog:
 
 setup(
     name='vault',
-    version='1.1.1',
+    version='2.0.0',
     license='MIT',
     description=(
         "This is an additional implementation over the hvac module. "
@@ -16,8 +18,8 @@ setup(
         "with vault for my standard projects. "
         "This module contains a collection of methods for working with vault."
     ),
-    py_modules=["vault"],
-    package_dir={'': 'src'},
+    py_modules=['client', 'configurator'],
+    package_dir={'': 'vault'},
     author='Oleg Bervinov',
     author_email='obervinov@pm.me',
     long_description=(f"{readme_content}""\n\n"f"{changelog_content}"),
@@ -40,6 +42,6 @@ setup(
         'hvac==1.0.2'
     ],
     dependency_links=[
-        'https://github.com/obervinov/logger-package/tarball/master#egg=logger-1.0.0'
+        'https://github.com/obervinov/logger-package/tarball/master#egg=logger-1.0.1'
     ]
 )

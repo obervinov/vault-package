@@ -4,6 +4,25 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 
+## v2.0.0 - 2023-04-08
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
+#### 🐛 Bug Fixes
+* refactoring all `doc-strings` in class `VaultClient()`
+* renamed the directory with modules `src` -> `vault`
+* 
+#### 💥 Breaking Changes
+* changed all arguments in `__init__` from the `VaultClient()` class
+   `mount_point: str = "kv"` -> `namespace: str = None`
+   `approle_id: str = None`, `secret_id: str = None` -> `approle: dict = {'id': None, 'secret-id': None} | None`
+* changed log format `f-string` -> `%s-lazzy`
+
+#### 🚀 Features
+
+#### 📚 Documentation
+* updated the template body in `pull_request_template.md`
+
+
 ## v1.1.1 - 2023-03-01
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.0...v1.1.1 by @obervinov in https://github.com/obervinov/vault-package/pull/9

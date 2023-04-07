@@ -3,7 +3,8 @@ name: Create release
 on:
   push:
     branches: [main]
+    paths: ['vault/**']
 
 jobs:
   create-release:
-    uses: obervinov/_templates/.github/workflows/release.yml@v1.0.1
+    uses: obervinov/_templates/.github/workflows/release.yml@feature/github-actions
