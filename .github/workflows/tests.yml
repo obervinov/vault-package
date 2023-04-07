@@ -14,3 +14,5 @@ jobs:
     uses: obervinov/_templates/.github/workflows/flake8.yml@feature/github-actions
   package-version:
     uses: obervinov/_templates/.github/workflows/version.yml@feature/github-actions
+  package-install:
+    uses: obervinov/_templates/.github/workflows/package.yml@feature/github-actions
