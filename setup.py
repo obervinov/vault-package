@@ -13,10 +13,10 @@ setup(
     version='2.0.0',
     license='MIT',
     description=(
-        "This is an additional implementation over the hvac module. "
-        "The main purpose of which is simplified use and interaction "
-        "with vault for my standard projects. "
-        "This module contains a collection of methods for working with vault."
+        "This is an additional implementation compared to the hvac module. "
+        "The main purpose of which is to simplify the use "
+        "and interaction with vault for my standard projects. "
+        "This module contains a set of methods for interacting and quickly installing Vault."
     ),
     py_modules=['client', 'configurator'],
     package_dir={'': 'vault'},

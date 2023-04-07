@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "vault"
 version = "2.0.0"
-description = "This is an additional implementation over the hvac module. The main purpose of which is simplified use and interaction with vault for my standard projects. This module contains a collection of methods for working with vault."
+description = "This is an additional implementation compared to the hvac module. The main purpose of which is to simplify the use and interaction with vault for my standard projects. This module contains a set of methods for interacting and quickly installing Vault."
 license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.9"

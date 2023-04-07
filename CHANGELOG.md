@@ -9,18 +9,26 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
 #### 🐛 Bug Fixes
 * refactoring all `doc-strings` in class `VaultClient()`
-* renamed the directory with modules `src` -> `vault`
-* 
+* renamed the directory with modules: `src` -> `vault`
+* fixed warnings from `.flake8` and `.pylintrc`
+* removed condition `- '!main'` for [.github/workflows/tests.yml](https://github.com/obervinov/vault-package/blob/v2.0.0/.github/workflows/tests.yml#L3-L8) (this is done for the correct display of the badge in [README.md](https://github.com/obervinov/vault-package/blob/v2.0.0/README.md?plain=1#L4) on the `main` brunch)
 #### 💥 Breaking Changes
-* changed all arguments in `__init__` from the `VaultClient()` class
+* changed all arguments in `__init__` from the `VaultClient()` class:
    `mount_point: str = "kv"` -> `namespace: str = None`
    `approle_id: str = None`, `secret_id: str = None` -> `approle: dict = {'id': None, 'secret-id': None} | None`
 * changed log format `f-string` -> `%s-lazzy`
-
+* updated [SECURITY.md](https://github.com/obervinov/vault-package/blob/v2.0.0/SECURITY.md) policy
+* renamed file with `VaultClient` class: `vault.py` -> `client.py`
+* renamed methods in `VaultClient` class: `vault_read_secrets()` -> `read_secret()`, `vault_put_secrets()` -> `put_secret()`, `vault_patch_secrets()` -> `patch_secret()` `vault_list_secrets()` -> `list_secrets()`
+* moved `mount_point=self.mount_point` from `vault_read_secrets()`, `vault_put_secrets()`, `vault_patch_secrets()`, `vault_list_secrets()` to `self.vault_client = hvacClient(url=self.addr, namespace=namespace['name'])` of `__init__()`
 #### 🚀 Features
-
+* added new `VaultConfigurator()` class to automate and speed up the setup of a new vault instance for my projects
+* updated all workflows to version `v1.1.0`
+* updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
+* added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `MR` and a `new release`)
 #### 📚 Documentation
 * updated the template body in `pull_request_template.md`
+* updated `description` in `pyproject.toml`
 
 
 ## v1.1.1 - 2023-03-01

@@ -10,24 +10,27 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/obervinov/vault-package?style=for-the-badge)
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/book.png" width="25" title="about"> About this project
-This is an additional implementation over the **hvac** module.
+This is an additional implementation compared to the **hvac** module.
 
-The main purpose of which is simplified use and interaction with vault for my standard projects.
+The main purpose of which is to simplify the use and interaction with vault for my standard projects.
 
-This module contains a collection of methods for working with vault.
+This module contains a set of methods for interacting and quickly installing Vault.
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.1](https://github.com/obervinov/_templates/tree/v1.0.1) |
+| GitHub Actions Templates | [v1.1.0](https://github.com/obervinov/_templates/tree/v1.1.0) |
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
-- Authentication with approle
-- Read secrets
-- List secrets
-- Put secrets
-- Patch secrets
+- Client: Authentication using the application role
+- Client: Read the secrets
+- Client: List of secrets
+- Client: Lay out the secrets
+- Client: Secrets of corrections
+- Setup: Create a new namespace and engine
+- Setup: Create a new application role and a secret ID
+- Setup: upload a new policy
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
@@ -40,25 +43,37 @@ pip3 install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
 ```
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="usage"> Usage example
+For kv client
 ```python
-"""Import module"""
+# import modules
 import os
 import vault as vault
 
-"""Environment variables"""
-vault_mount_point = os.environ.get('VAULT_MOUNT_PATH', 'kv')
-vault_addr = os.environ.get('VAULT_ADDR', 'http://localhost:8200')
-vault_approle_id = os.environ.get('VAULT_APPROLE_ID', 'not set')
-vault_approle_secret_id = os.environ.get('VAULT_APPROLE_SECRET_ID', 'not set')
-
-"""Init class"""
-vc = vault.VaultClient(
-               vault_addr,
-               vault_approle_id,
-               vault_approle_secret_id,
-               vault_mount_point
+# environment variables
+bot_name = os.environ.get(
+    'BOT_NAME',
+    'mybot'
+)
+vault_addr = os.environ.get(
+    'VAULT_ADDR',
+    'http://vault-server:8200'
+)
+vault_approle_id = os.environ.get(
+    'VAULT_APPROLE_ID',
+    None
+)
+vault_approle_secret_id = os.environ.get(
+    'VAULT_APPROLE_SECRET_ID',
+    None
 )
 
+# init vault client
+vault_client = VaultClient(
+    addr=vault_addr,
+    approle_id=vault_approle_id,
+    secret_id=vault_approle_secret_id,
+    mount_point=bot_name
+)
 secret_key_value = vc.vault_read_secrets("bucket1/secret1", 'key1')
 """Read target key in secret
 type: str
