@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * updated `description` in `pyproject.toml`
 
 
+
 ## v1.1.1 - 2023-03-01
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.0...v1.1.1 by @obervinov in https://github.com/obervinov/vault-package/pull/9
