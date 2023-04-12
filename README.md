@@ -95,5 +95,4 @@ vc.vault_list_secrets("bucket1/secret1")
 type: list
 response format: ["key1", "key2", "key3"]
 """
-
 ```
