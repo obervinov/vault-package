@@ -1,4 +1,4 @@
-name: Tests and checks
+name: Tests and Checks
 
 on:
   push:
@@ -9,10 +9,10 @@ on:
 
 jobs:
   pylint:
-    uses: obervinov/_templates/.github/workflows/pylint.yml@feature/github-actions
+    uses: obervinov/_templates/.github/workflows/test.pylint.yml@feature/github-actions
   flake8:
-    uses: obervinov/_templates/.github/workflows/flake8.yml@feature/github-actions
-  package-version:
-    uses: obervinov/_templates/.github/workflows/version.yml@feature/github-actions
-  package-install:
-    uses: obervinov/_templates/.github/workflows/package.yml@feature/github-actions
+    uses: obervinov/_templates/.github/workflows/test.flake8.yml@feature/github-actions
+  verify-package:
+    uses: obervinov/_templates/.github/workflows/verify.package.yml@feature/github-actions
+  verify-changelog:
+    uses: obervinov/_templates/.github/workflows/verify.changelog.yml@feature/github-actions

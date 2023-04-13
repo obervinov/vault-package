@@ -23,10 +23,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * moved `mount_point=self.mount_point` from `vault_read_secrets()`, `vault_put_secrets()`, `vault_patch_secrets()`, `vault_list_secrets()` to `self.vault_client = hvacClient(url=self.addr, namespace=namespace['name'])` of `__init__()`
 #### 🚀 Features
 * added new `VaultConfigurator()` class to automate and speed up the setup of a new vault instance for my projects
-* updated all workflows to version `v1.1.0`
+* all workflows migrated to version `v1.0.3`
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
 * added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `MR` and a `new release`)
-* added new action `obervinov/_templates/.github/workflows/package.yml` to test that the package can be installed correctly via `pip install`
 #### 📚 Documentation
 * updated the template body in `pull_request_template.md`
 * updated `description` in `pyproject.toml`

@@ -19,7 +19,7 @@ This module contains a set of methods for interacting and quickly installing Vau
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.1.0](https://github.com/obervinov/_templates/tree/v1.1.0) |
+| GitHub Actions Templates | [v1.0.3](https://github.com/obervinov/_templates/tree/v1.0.3) |
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2

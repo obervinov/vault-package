@@ -1,4 +1,4 @@
-name: Create release
+name: Create GitHub Release
 
 on:
   push:
@@ -7,4 +7,4 @@ on:
 
 jobs:
   create-release:
-    uses: obervinov/_templates/.github/workflows/release.yml@feature/github-actions
+    uses: obervinov/_templates/.github/workflows/create.release.yml@feature/github-actions
