@@ -4,7 +4,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 
 
-## v2.0.0 - 2023-04-08
+## v2.0.0 - 2023-04-13
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
 #### 🐛 Bug Fixes

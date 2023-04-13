@@ -10,8 +10,6 @@ on:
 jobs:
   pylint:
     uses: obervinov/_templates/.github/workflows/test.pylint.yml@feature/github-actions
-  flake8:
-    uses: obervinov/_templates/.github/workflows/test.flake8.yml@feature/github-actions
   verify-package:
     uses: obervinov/_templates/.github/workflows/verify.package.yml@feature/github-actions
   verify-changelog:
