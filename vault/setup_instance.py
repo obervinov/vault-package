@@ -5,7 +5,7 @@ This script contains functions for the typical automatic configuration of a new 
 """
 import os
 import argparse
-from vault import VaultConfigurator
+from vault.configurator import VaultConfigurator
 
 token = os.environ.get(
     'VAULT_TOKEN',
