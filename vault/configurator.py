@@ -17,14 +17,7 @@ class VaultConfigurator:
             self,
             addr: str = "http://localhost:8200",
             token: str = None,
-            namespace: dict = {
-                'create': False,
-                'name': None
-                } | None,
-            approle: dict = {
-                'create': False,
-                'name': None
-            } | None
+            namespace: str = None
     ) -> None:
         """
         A method for create a new Vault Configurator instance.
@@ -35,41 +28,17 @@ class VaultConfigurator:
         :param token: Root token with full access rights to the Vault
         :type token: str
         :default token: None
-        :param namespace: Instance namespace for your kv engine.
-                More: https://developer.hashicorp.com/vault/tutorials/enterprise/namespace-structure
-        :type namespace: dict
-        :default namespace: {'create': False, 'name': None} | None
-            :param namespace.create: If the target namespace does not exist and needs to be created.
-            :type namespace.create: str
-            :default namespace.create: False
-            :param namespace.name: The name of the target namespace.
-            :type namespace.name: str
-            :default namespace.name: None
-        :param approle: Dictionary containing the approle configuration for this instance.
-        :type approle: dict
-        :default approle: {'create': False, 'name': None} | None
-            :param approle.create: Used only if you need to create a new approle
-                (root token required).
-            :type approle.create: bool
-            :default approle.create: False
-            :param approle.name: Name of the approle to create.
-            :type approle.name: str
-            :default approle.name: None
+        :param namespace: The name of the target namespace.
+        :type namespace: str
+        :default namespace: None
         """
         self.addr = addr
-        self.approle = approle
-        if namespace['create']:
-            self.vault_client = hvac.Client(
-                url=self.addr,
-                namespace=self.create_namespace(),
-                token=token
-            )
-        else:
-            self.vault_client = hvac.Client(
-                url=self.addr,
-                namespace=namespace['name'],
-                token=token
-            )
+        self.token = token
+        self.vault_client = hvac.Client(
+            url=self.addr,
+            token=token,
+            namespace=namespace
+        )
         log.info(
             '[class.%s] logging in Vault with root token...',
             __class__.__name__
@@ -88,23 +57,25 @@ class VaultConfigurator:
 
     def create_namespace(
         self,
-        path: str = None
+        name: str = None
     ) -> str:
         """
         A method for creating a new namespace in the Vault kv engine.
         
-        :param path: Root path of the new namespace.
-        :type path: str
-        :default path: None
+        https://developer.hashicorp.com/vault/tutorials/enterprise/namespace-structure
+        
+        :param name: The name of the target namespace.
+        :type name: str
+        :default name: None
         """
         log.info(
             '[class.%s] Creating new namesapce %s with type kv2 in Vault...',
             __class__.__name__,
-            path
+            name
         )
-        self.vault_client.sys.enable_secrets_engine(
+        namespace = self.vault_client.sys.enable_secrets_engine(
             backend_type='kv',
-            path=path,
+            path=name,
             description=(
                 "Namespace is created automatically via the configrator module"
                 "(https://github.com/obervinov/vault-package)"
@@ -114,16 +85,26 @@ class VaultConfigurator:
         log.info(
             '[class.%s] The new namespace %s with type kv2 is ready',
             __class__.__name__,
-            path
+            name
         )
-        return path
+        self.vault_client = hvac.Client(
+                url=self.addr,
+                namespace=namespace,
+                token=self.token
+        )
+        log.info(
+            '[class.%s] self.vault_client updated to namespace=%s',
+            __class__.__name__,
+            namespace
+        )
+        return name
 
 
     def create_policy(
         self,
         name: str = None,
         path: str = None
-    ):
+    ) -> str:
         """
         Method of creating a new policy for approle in the Vault.
         
@@ -140,6 +121,12 @@ class VaultConfigurator:
                 policy=policy.read(),
             )
         policy.close()
+        log.info(
+            '[class.%s] The new policy %s has been recorded',
+            __class__.__name__,
+            name
+        )
+        return name
 
 
     def create_approle(
@@ -148,7 +135,7 @@ class VaultConfigurator:
         path: str = None,
         policy: str = None,
         descritpion: str = None
-    ) -> str:
+    ) -> dict:
         """
         Method of creating a new approle for authorization in the Vault.
         
@@ -181,4 +168,20 @@ class VaultConfigurator:
             token_no_default_policy=True,
             mount_point=path
         )
-        return response
+        log.info(
+            '[class.%s] The new approle %s has been created: %s',
+            __class__.__name__,
+            name,
+            response
+        )
+        approle_id = self.vault_client.api.auth_methods.AppRole.read_role_id(
+            role_name=name
+        )
+        secret_id = self.vault_client.auth.approle.generate_secret_id(
+            role_name=name,
+            metadata=descritpion
+        )
+        return {
+            'approle-id': approle_id,
+            'secret-id': secret_id
+        }
