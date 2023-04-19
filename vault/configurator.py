@@ -176,11 +176,11 @@ class VaultConfigurator:
         )
         approle_id = self.vault_client.api.auth_methods.AppRole.read_role_id(
             role_name=name
-        )
+        )["data"]["role_id"]
         secret_id = self.vault_client.auth.approle.generate_secret_id(
             role_name=name,
             metadata=descritpion
-        )
+        )["data"]["secret_id"]
         return {
             'approle-id': approle_id,
             'secret-id': secret_id
