@@ -100,4 +100,6 @@ if args.approle.create:
         policy=policy,
         descritpion=args.approle.description
     )
-    print(f"Credentionals for new AppRole:\n{approle}")
+    with open(f"{os.path.expanduser( '~' )}/.approle", 'w', encoding='utf-8') as file:
+        file.write(approle)
+    file.close()
