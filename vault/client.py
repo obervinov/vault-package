@@ -10,7 +10,6 @@ class VaultClient:
     This class is an implementation over the hvac module.
     Contains methods for reading/writing/enumerating secrets with additional logging and exceptions.
     """
-
     def __init__(
             self,
             addr: str = "http://localhost:8200",
@@ -22,7 +21,7 @@ class VaultClient:
     ) -> None:
         """
         A method for create a new Vault Client instance.
-        
+
         :param addr: Base URL for the Vault instance being addressed.
         :type addr: str
         :default addr: http://localhost:8200
@@ -76,7 +75,6 @@ class VaultClient:
                 invalidrequest
             )
 
-
     def read_secret(
             self,
             path: str = None,
@@ -84,7 +82,7 @@ class VaultClient:
     ) -> dict:
         """
         A method for read secrets from Vault.
-        
+
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
@@ -96,7 +94,7 @@ class VaultClient:
             read_response = self.vault_client.secrets.kv.v2.read_secret_version(
                                     path=path
             )
-            if key :
+            if key:
                 return read_response['data']['data'][key]
             if not key:
                 return read_response['data']['data']
@@ -109,7 +107,6 @@ class VaultClient:
             )
         return None
 
-
     def put_secret(
             self,
             path: str = None,
@@ -118,7 +115,7 @@ class VaultClient:
     ) -> None:
         """
         A method for put secrets from Vault.
-        
+
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
@@ -140,7 +137,6 @@ class VaultClient:
         except hvac.exceptions.InvalidRequest:
             self.patch_secret(path, key_value)
 
-
     def patch_secret(
             self,
             path: str = None,
@@ -148,7 +144,7 @@ class VaultClient:
     ) -> None:
         """
         A method for patch secrets from Vault.
-        
+
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None
@@ -161,14 +157,13 @@ class VaultClient:
             secret=key_value
         )
 
-
     def list_secrets(
             self,
             path: str = None
     ) -> list:
         """
         A method for list secrets from Vault.
-        
+
         :param path: The path to the secret in vault.
         :type path: str
         :default path: None

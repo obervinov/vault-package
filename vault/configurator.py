@@ -12,7 +12,6 @@ class VaultConfigurator:
     Contains methods for creating policy/approle/namespace secrets
     with additional logging and exceptions.
     """
-
     def __init__(
             self,
             addr: str = "http://localhost:8200",
@@ -21,7 +20,7 @@ class VaultConfigurator:
     ) -> None:
         """
         A method for create a new Vault Configurator instance.
-        
+
         :param addr: Base URL for the Vault instance being addressed.
         :type addr: str
         :default addr: http://localhost:8200
@@ -54,16 +53,14 @@ class VaultConfigurator:
                 __class__.__name__
             )
 
-
     def create_namespace(
         self,
         name: str = None
     ) -> str:
         """
         A method for creating a new namespace in the Vault kv engine.
-        
         https://developer.hashicorp.com/vault/tutorials/enterprise/namespace-structure
-        
+
         :param name: The name of the target namespace.
         :type name: str
         :default name: None
@@ -99,7 +96,6 @@ class VaultConfigurator:
         )
         return name
 
-
     def create_policy(
         self,
         name: str = None,
@@ -107,7 +103,7 @@ class VaultConfigurator:
     ) -> str:
         """
         Method of creating a new policy for approle in the Vault.
-        
+
         :param name: Name of the new policy to create.
         :type name: str
         :default name: None
@@ -128,7 +124,6 @@ class VaultConfigurator:
         )
         return name
 
-
     def create_approle(
         self,
         name: str = None,
@@ -138,7 +133,7 @@ class VaultConfigurator:
     ) -> dict:
         """
         Method of creating a new approle for authorization in the Vault.
-        
+
         :param name: Name of the new approle to create.
         :type name: str
         :default name: None

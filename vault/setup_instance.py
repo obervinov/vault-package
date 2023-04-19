@@ -84,20 +84,20 @@ configurator = VaultConfigurator(
 
 if args.namespace.create:
     namespace = configurator.create_namespace(
-        name = args.namespace.name
+        name=args.namespace.name
     )
 
 if args.policy.create:
     policy = configurator.create_policy(
-        name = args.policy.name,
-        path = args.policy.path
+        name=args.policy.name,
+        path=args.policy.path
     )
 
 if args.approle.create:
     approle = configurator.create_approle(
-        name = args.approle.name,
-        path = namespace,
-        policy = policy,
-        descritpion = args.approle.description
+        name=args.approle.name,
+        path=namespace,
+        policy=policy,
+        descritpion=args.approle.description
     )
     print(f"Credentionals for new AppRole:\n{approle}")
