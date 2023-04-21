@@ -1,6 +1,7 @@
 """
 This module contains an implementation over the hvac module for interacting with the Vault api.
 """
+import os
 import hvac
 from logger import log
 
@@ -12,7 +13,7 @@ class VaultClient:
     """
     def __init__(
             self,
-            addr: str = "http://localhost:8200",
+            addr: str = None,
             namespace: str = None,
             approle: dict = {
                 'id': None,
@@ -41,7 +42,25 @@ class VaultClient:
             :type approle.secret-id: str
             :default approle.secret-id: None
         """
-        self.addr = addr
+        if not addr:
+            self.addr = os.environ.get(
+                'VAULT_ADDR'
+            )
+        else:
+            self.addr = addr
+        self.approle = approle
+        if not approle['id']:
+            self.approle['id'] = os.environ.get(
+                'VAULT_APPROLE_ID'
+            )
+        else:
+            self.approle['id'] = approle['id']
+        if not approle['secret-id']:
+            self.approle['secret-id'] = os.environ.get(
+                'VAULT_APPROLE_SECRETID'
+            )
+        else:
+            self.approle['secret-id'] = approle['secret-id']
         self.vault_client = hvac.Client(
             url=self.addr,
             namespace=namespace['name'],

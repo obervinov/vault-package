@@ -2,6 +2,7 @@
 This module contains an implementation on top of the hvac module
 for configuring the Vault instance via the api.
 """
+import os
 import hvac
 from logger import log
 
@@ -14,7 +15,7 @@ class VaultConfigurator:
     """
     def __init__(
             self,
-            addr: str = "http://localhost:8200",
+            addr: str = None,
             token: str = None,
             namespace: str = None
     ) -> None:
@@ -23,7 +24,7 @@ class VaultConfigurator:
 
         :param addr: Base URL for the Vault instance being addressed.
         :type addr: str
-        :default addr: http://localhost:8200
+        :default addr: None
         :param token: Root token with full access rights to the Vault
         :type token: str
         :default token: None
@@ -31,12 +32,45 @@ class VaultConfigurator:
         :type namespace: str
         :default namespace: None
         """
-        self.addr = addr
-        self.token = token
+        self.namespace = namespace
+        if not addr:
+            self.addr = os.environ.get(
+                'VAULT_ADDR'
+            )
+        else:
+            self.addr = addr
+        self.vault_client = hvac.Client(
+            url=self.addr
+        )
+        if not self.vault_client.sys.read_init_status()['initialized']:
+            log.warning(
+                '[class.%s] this vault instance is not initialized. '
+                'Initialization is in progress...',
+                __class__.__name__
+            )
+            init_result = self.vault_client.sys.initialize()
+            log.info(
+                '[class.%s] Initialization completed: %s',
+                __class__.__name__,
+                init_result
+            )
+            self.token = init_result['root_token']
+            self.vault_client.sys.submit_unseal_key(key=init_result['keys'][0])
+            log.info(
+                '[class.%s] Instance has been to unsealed',
+                __class__.__name__,
+            )
+        else:
+            if not token:
+                self.token = os.environ.get(
+                    'VAULT_TOKEN'
+                )
+            else:
+                self.token = token
         self.vault_client = hvac.Client(
             url=self.addr,
-            token=token,
-            namespace=namespace
+            token=self.token,
+            namespace=self.namespace
         )
         log.info(
             '[class.%s] logging in Vault with root token...',

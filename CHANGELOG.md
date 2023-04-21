@@ -3,7 +3,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-
 ## v2.0.0 - 2023-04-13
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
@@ -26,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * all workflows migrated to version `v1.0.3`
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
 * added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `MR` and a `new release`)
+* added support for default environment variables `VAULT_ADDR`, `VAULT_TOKEN`, `VAULT_APPROLE_ID` and `VAULT_APPROLE_SECRETID` for a more native and convenient way to interact mou for with vault
 #### 📚 Documentation
 * updated the template body in `pull_request_template.md`
 * updated `description` in `pyproject.toml`
