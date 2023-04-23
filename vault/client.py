@@ -15,12 +15,13 @@ class VaultClient:
       - Usage: interactions with secrets in an already configured Vault instance using AppRole
         (read/write/list secrets)
     """
+
     def __init__(
             self,
             address: str = None,
             namespace: str = None,
             configure: dict = {
-                'enabled': False, 
+                'enabled': False,
                 'token': None,
                 'name': None,
                 'policy': None
@@ -47,7 +48,7 @@ class VaultClient:
         :type namespace: str
         :default namespace: None
         :param configure: Dictionary with parameters for configuring the Vault instance.
-        :type configure: dict 
+        :type configure: dict
         :default configure: {'enabled': False, 'token': None, 'policy': None} | None
             :param enabled: Initialize the class in the installation mode of the Vault instance.
             :type enabled: bool
@@ -62,7 +63,7 @@ class VaultClient:
             :type policy: str
             :default policy: None
         :param usage: Dictionary with parameters for working with Vault secrets via AppRole.
-        :type usage: dict 
+        :type usage: dict
         :default usage: {'enabled': False, 'approle-id': None, 'secret-id': None} | None
             :param enabled: Init the class in the mode of working with the secrets of the Vault.
             :type enabled: bool
@@ -84,12 +85,10 @@ class VaultClient:
         self.vault_client = hvac.Client(
             url=self.address,
         )
-
         if not self.vault_client.sys.read_init_status()['initialized']:
             init_data = self.instance_init()
             self.token = init_data['root_token']
             self.keys = init_data['unseal_keys']
-
         if configure['enabled']:
             if configure['token']:
                 self.token = configure['token']
@@ -118,7 +117,6 @@ class VaultClient:
             ) as init_file:
                 init_file.write(init_data)
             init_file.close()
-
         if usage['enabled']:
             if not usage['approle-id'] and not usage['secret-id']:
                 self.approle['id'] = os.environ.get('VAULT_APPROLE_ID')
@@ -159,7 +157,6 @@ class VaultClient:
                     invalidrequest
                 )
 
-
     def instance_init(
         self
     ) -> dict:
@@ -187,7 +184,6 @@ class VaultClient:
             'root_token': init_result['root_token'],
             'unseal_keys': init_result['keys']
         }
-
 
     def create_namespace(
         self,
@@ -232,7 +228,6 @@ class VaultClient:
         )
         return name
 
-
     def create_policy(
         self,
         name: str = None,
@@ -260,7 +255,6 @@ class VaultClient:
             name
         )
         return name
-
 
     def create_approle(
         self,
@@ -313,7 +307,6 @@ class VaultClient:
             'secret-id': secret_id
         }
 
-
     def read_secret(
             self,
             path: str = None,
@@ -346,7 +339,6 @@ class VaultClient:
             )
         return None
 
-
     def put_secret(
             self,
             path: str = None,
@@ -377,7 +369,6 @@ class VaultClient:
         except hvac.exceptions.InvalidRequest:
             self.patch_secret(path, key_value)
 
-
     def patch_secret(
             self,
             path: str = None,
@@ -397,7 +388,6 @@ class VaultClient:
             path=path,
             secret=key_value
         )
-
 
     def list_secrets(
             self,
