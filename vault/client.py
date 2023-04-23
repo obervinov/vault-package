@@ -61,10 +61,10 @@ class VaultClient:
             :param policy: The path to the file with the contents of the policy.
             :type policy: str
             :default policy: None
-        :param usage: Dictionary with parameters for working with Vault instance secrets via AppRole.
+        :param usage: Dictionary with parameters for working with Vault secrets via AppRole.
         :type usage: dict 
         :default usage: {'enabled': False, 'approle-id': None, 'secret-id': None} | None
-            :param enabled: Initialize the class in the mode of working with the secrets of the Vault instance.
+            :param enabled: Init the class in the mode of working with the secrets of the Vault.
             :type enabled: bool
             :default enabled: False
             :param approle-id: AppRole id to receive a token and authorize requests to Vault.
@@ -146,16 +146,16 @@ class VaultClient:
                 )
             except hvac.exceptions.Forbidden as forbidden:
                 log.error(
-                    '[class.%s] logging with approle %s forbidden: %s',
+                    '[class.%s] logging in with the AppRole '
+                    'from the VAULT_APPROLE_ID environment variable is forbidden: %s',
                     __class__.__name__,
-                    self.approle['id'],
                     forbidden
                 )
             except hvac.exceptions.InvalidRequest as invalidrequest:
                 log.error(
-                    '[class.%s] logging with approle %s invalid request: %s',
+                    '[class.%s] logging in with the AppRole '
+                    'from the VAULT_APPROLE_ID environment variable is invalid request: %s',
                     __class__.__name__,
-                    self.approle['id'],
                     invalidrequest
                 )
 
@@ -221,7 +221,7 @@ class VaultClient:
             name
         )
         self.vault_client = hvac.Client(
-                url=self.addr,
+                url=self.address,
                 namespace=namespace,
                 token=self.token
         )
