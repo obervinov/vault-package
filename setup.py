@@ -18,7 +18,7 @@ setup(
         "and interaction with vault for my standard projects. "
         "This module contains a set of methods for interacting and quickly installing Vault."
     ),
-    py_modules=['client', 'tools'],
+    py_modules=['vault'],
     package_dir={'': 'vault'},
     author='Oleg Bervinov',
     author_email='obervinov@pm.me',
@@ -37,7 +37,7 @@ setup(
         'Programming Language :: Python :: 3.11',
         'Operating System :: OS Independent'
     ],
-    keywords=['vault', 'client', 'configurator', 'tools'],
+    keywords=['vault', 'client'],
     install_requires=[
         'hvac==1.0.2'
     ],
