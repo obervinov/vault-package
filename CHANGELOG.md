@@ -3,7 +3,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## v2.0.0 - 2023-04-23
+## v2.0.0 - 2023-05-03
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
 #### 🐛 Bug Fixes
@@ -12,20 +12,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * fixed warnings from `.flake8` and `.pylintrc`
 * removed condition `- '!main'` for [.github/workflows/tests.yml](https://github.com/obervinov/vault-package/blob/v2.0.0/.github/workflows/tests.yml#L3-L8) (this is done for the correct display of the badge in [README.md](https://github.com/obervinov/vault-package/blob/v2.0.0/README.md?plain=1#L4) on the `main` brunch)
 #### 💥 Breaking Changes
-* changed all arguments in `__init__` from the `VaultClient()` class:
-   `mount_point: str = "kv"` -> `namespace: str = None`
-   `approle_id: str = None`, `secret_id: str = None` -> `approle: dict = {'id': None, 'secret-id': None} | None`
+* all input arguments were rewritten in `__init__` and, in general, the `Vault Client()` class was refactored
 * changed log format `f-string` -> `%s-lazzy`
 * updated [SECURITY.md](https://github.com/obervinov/vault-package/blob/v2.0.0/SECURITY.md) policy
-* renamed file with `VaultClient` class: `vault.py` -> `client.py`
-* renamed methods in `VaultClient` class: `vault_read_secrets()` -> `read_secret()`, `vault_put_secrets()` -> `put_secret()`, `vault_patch_secrets()` -> `patch_secret()` `vault_list_secrets()` -> `list_secrets()`
-* moved `mount_point=self.mount_point` from `vault_read_secrets()`, `vault_put_secrets()`, `vault_patch_secrets()`, `vault_list_secrets()` to `self.vault_client = hvacClient(url=self.addr, namespace=namespace['name'])` of `__init__()`
+* renamed methods for working with secrets in the `VaultClient` class: `vault_read_secrets()` -> `read_secret()`, `vault_put_secrets()` -> `put_secret()`, `vault_patch_secrets()` -> `patch_secret()` `vault_list_secrets()` -> `list_secrets()`
+* moved `mount_point=self.mount_point` from `vault_read_secrets()`, `vault_put_secrets()`, `vault_patch_secrets()`, `vault_list_secrets()` to `self.vault_client = hvacClient(url=self.addr, namespace=name)` of `__init__()`
 #### 🚀 Features
-* added new `VaultConfigurator()` class to automate and speed up the setup of a new vault instance for my projects
-* all workflows migrated to version `v1.0.3`
+* added new methods to automate and speed up the setup of a new vault (or exist) instance for my projects
+* all workflows migrated to version `v1.0.4`
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
-* added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `MR` and a `new release`)
-* added support for default environment variables `VAULT_ADDR`, `VAULT_TOKEN`, `VAULT_APPROLE_ID` and `VAULT_APPROLE_SECRETID` for a more native and convenient way to interact mou for with vault
+* added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `PR` and a `new release`)
+* added support for default environment variables: `VAULT_ADD', `VAULT_TOKEN', `VAULT_APP ROLE_ID` and `VAULT_APPROVED_SECURIES` for a more native and convenient way to interact with the vault api
 #### 📚 Documentation
 * updated the template body in `pull_request_template.md`
 * updated `description` in `pyproject.toml`

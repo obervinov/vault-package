@@ -2,6 +2,7 @@
 This module contains an implementation over the hvac module for interacting with the Vault api.
 """
 import os
+import json
 import hvac
 from logger import log
 
@@ -14,7 +15,7 @@ class VaultClient:
 
     def __init__(
             self,
-            address: str = None,
+            url: str = None,
             name: str = None,
             **kwargs
     ) -> None:
@@ -22,112 +23,68 @@ class VaultClient:
         A method for create a new Vault Client instance.
 
         Args:
-            address (str): base URL for the Vault instance being addressed.
-            name (str): the name of the project for which the instance is being created,
-                        used for isolation, such as namespace, policy, and approle in Vault.
-            **kwargs: dictionary with additional variable parameters
+            :param url (str): base URL for the Vault instance being urled.
+            :param name (str): the name of the project for which an instance is being created,
+                               this name will be used for isolation mechanisms such as:
+                               namespace, policy, approle
+            :param **kwargs (dict): dictionary with additional variable parameters
 
         Keyword Args:
-                token (str): root token with full access rights to configure the Vault instance.
-                policy (str): the path to the file with the contents of the policy.
-                new (bool): if the initial setup of a new instance of the vault server is required.
-                approle (dict): dictionary with AppRole credentials.
-                                more: https://www.vaultproject.io/api-docs/auth/approle
-                    id (str): AppRole id to receive a token and authorize requests to Vault.
-                    secret-id (str): secret to receive a token and authorize requests to Vault.
+            :param new (bool): to activate the "initial setup" mode of vault-server.
+            :param token (str): root token with full access to configure the vault-server.
+            :param policy (str): the path to the file with the contents of the policy.
+            :param approle (dict): dictionary with approle credentials.
+                :param id (str): approle-id to receive a token.
+                :param secret-id (str): secret-id to receive a token.
 
         Returns:
             None
 
         Examples:
-            >>> instance_init = VaultClient(
-                    address='http://vault-server:8200',
-                    name='myapp-1'
+            >>> init_instance = VaultClient(
+                    url='http://vault-server:8200',
+                    name='myapp-1',
+                    policy='vault/policy.hcl',
+                )
+            >>> instance_prepare = VaultClient(
+                    url='http://vault-server:8200',
+                    name='myapp-1',
+                    policy='vault/policy.hcl',
+                    token=hvs.123qwe
                 )
             >>> vault_client = VaultClient(
-                    address='http://vault-server:8200',
+                    url='http://vault-server:8200',
                     name='myapp-1',
                     approle={'id': '123qwe', 'secret-id': 'qwe123'}
                 )
         """
-        if address:
-            self.address = address
+        if url:
+            self.url = url
         else:
-            self.address = os.environ.get('VAULT_ADDR')
+            self.url = os.environ.get('VAULT_ADDR')
         self.name = name
-        self.vault_client = hvac.Client(
-            url=self.address,
-        )
         self.kwargs = kwargs
+        self.vault_client = hvac.Client(
+            url=self.url
+        )
         if kwargs.get('new'):
             self.token = None
             self.prepare_instance()
         else:
-            self.vault_client = self.prepare_client()
-
-    def prepare_client(
-        self
-    ) -> hvac.Client:
-        """
-        This method is used to prepare the client to work with the secrets of the kv v2 engine.
-
-        Args:
-            None
-
-        Returns:
-            vault_client (hvac.Client)
-        """
-        approle = {}
-        if not self.kwargs.get('approle'):
-            approle['id'] = os.environ.get('VAULT_APPROLE_ID')
-            approle['secret-id'] = os.environ.get('VAULT_APPROLE_SECRETID')
-        else:
-            approle = self.kwargs.get('approle')
-        vault_client = hvac.Client(
-            url=self.address,
-            namespace=self.name,
-        )
-        log.info(
-            '[class.%s] logging in Vault with approle...',
-            __class__.__name__,
-        )
-        try:
-            vault_approle_auth = vault_client.auth.approle.login(
-                role_id=approle['id'],
-                secret_id=approle['secret-id']
-            )['auth']
-            log.info(
-                '[class.%s] Vault Token %s created successful',
-                __class__.__name__,
-                vault_approle_auth['entity_id']
-            )
-            return vault_client
-        except hvac.exceptions.Forbidden as forbidden:
-            log.error(
-                '[class.%s] logging in with the AppRole '
-                'from the VAULT_APPROLE_ID environment variable is forbidden: %s',
-                __class__.__name__,
-                forbidden
-            )
-        except hvac.exceptions.InvalidRequest as invalidrequest:
-            log.error(
-                '[class.%s] logging in with the AppRole '
-                'from the VAULT_APPROLE_ID environment variable is invalid request: %s',
-                __class__.__name__,
-                invalidrequest
-            )
-        return None
+            self.approle = None
+            self.vault_client = self.prepare_client_kv2()
 
     def prepare_instance(
         self
     ) -> None:
         """
-        This method is used to prepare and configure a new Vault-Server
+        This method is used to prepare and configure a new vault-server
         to work with my typical projects.
         - Init
         - Unseal
-        - Uplaod a Policy
-        - Create a AppRole
+        - Uplaod a policy
+        - Create a approle
+        - Create a namespace
 
         Args:
             None
@@ -135,15 +92,16 @@ class VaultClient:
         Returns:
             None
         """
-        if not self.vault_client.sys.read_init_status()['initialized']:
-            token = self.instance_init()['root_token']
+        if not self.vault_client.sys.is_initialized():
+            self.token = self.init_instance()
         elif self.kwargs.get('token'):
-            token = self.kwargs.get('token')
+            self.token = self.kwargs.get('token')
         else:
-            token = os.environ.get('VAULT_TOKEN')
+            self.token = os.environ.get('VAULT_TOKEN')
+
         self.vault_client = hvac.Client(
-            url=self.address,
-            token=token
+            url=self.url,
+            token=self.token
         )
         namespace = self.create_namespace(
             name=self.name
@@ -158,88 +116,155 @@ class VaultClient:
             policy=policy
         )
 
-    def instance_init(
+    def prepare_client_kv2(
         self
-    ) -> dict:
+    ) -> hvac.Client:
         """
-        A method for initing the Vault-Server instance.
+        This method is used to prepare the client to work with the secrets of the kv v2 engine.
 
         Args:
             None
 
         Returns:
-            {'root_token': 'token', 'unseal_keys': 'keys'} (dict)
+            (hvac.Client) vault_client_kv2
+                or
+            None
+        """
+        if self.kwargs.get('approle'):
+            self.approle = self.kwargs.get('approle')
+        else:
+            self.approle['id'] = os.environ.get('VAULT_APPROLE_ID')
+            self.approle['secret-id'] = os.environ.get('VAULT_APPROLE_SECRETID')
+
+        vault_client = hvac.Client(
+            url=self.url,
+            namespace=self.name,
+        )
+
+        try:
+            log.info(
+                '[class.%s] logging in vault with approle...',
+                __class__.__name__,
+            )
+            response = vault_client.auth.approle.login(
+                role_id=self.approle['id'],
+                secret_id=self.approle['secret-id']
+            )['auth']
+            log.info(
+                '[class.%s] vault token with id %s created successful',
+                __class__.__name__,
+                response['entity_id']
+            )
+            return vault_client
+        except hvac.exceptions.Forbidden as forbidden:
+            log.error(
+                '[class.%s] logging in with the approle '
+                'from the VAULT_APPROLE_ID environment variable is forbidden: %s',
+                __class__.__name__,
+                forbidden
+            )
+        except hvac.exceptions.InvalidRequest as invalidrequest:
+            log.error(
+                '[class.%s] logging in with the approle '
+                'from the VAULT_APPROLE_ID environment variable is invalid request: %s',
+                __class__.__name__,
+                invalidrequest
+            )
+        return None
+
+    def init_instance(
+        self
+    ) -> str:
+        """
+        A method for initing the vault-server instance.
+
+        Args:
+            None
+
+        Returns:
+            (str) 'root_token'
+                or
+            None
         """
         log.warning(
-            '[class.%s] this vault instance is not initialized. '
-            'Initialization is in progress...',
+            '[class.%s] this vault instance is not initialized: '
+            'initialization is in progress...',
             __class__.__name__
         )
-        init_result = self.vault_client.sys.initialize()
-        log.info(
-            '[class.%s] Initialization completed: %s',
+        response = self.vault_client.sys.initialize()
+        keys_store = f"{os.path.expanduser('~')}/.vaultinit"
+        with open(keys_store, 'w', encoding='UTF-8') as initfile:
+            initfile.write(json.dumps(response))
+        initfile.close()
+        log.warning(
+            '[class.%s] the vault instance was successfully initialized: '
+            'sensitive information for managing this instance has been stored in %s',
             __class__.__name__,
-            init_result
+            keys_store
         )
-        self.token = init_result['root_token']
-        self.vault_client.sys.submit_unseal_key(key=init_result['keys'][0])
-        log.info(
-            '[class.%s] Instance has been to unsealed',
-            __class__.__name__,
-        )
-        init_data = {
-            'root_token': init_result['root_token'],
-            'unseal_keys': init_result['keys']
-        }
-        with open(f"{os.path.expanduser('~')}/.vault_init", 'w', encoding='UTF-8') as init_file:
-            init_file.write(init_data)
-        init_file.close()
-        return init_data
+
+        if self.vault_client.sys.is_sealed():
+            self.vault_client.sys.submit_unseal_keys(
+                keys=[response['keys'][0], response['keys'][1], response['keys'][2]]
+            )
+            log.info(
+                '[class.%s] vault instance has been to unsealed successfull',
+                __class__.__name__,
+            )
+        return response['root_token']
 
     def create_namespace(
         self,
         name: str = None
     ) -> str:
         """
-        A method for creating a new namespace in the Vault kv engine.
-        https://developer.hashicorp.com/vault/tutorials/enterprise/namespace-structure
+        A method for creating a new namespace in the kv v2 engine.
 
         Args:
-            name (str): the name of the target namespace.
+            :param name (str): the name of the target namespace.
 
         Returns:
-            'policy_name' (str)
+            (str) 'namespace'
+                or
+            None
         """
-        log.info(
-            '[class.%s] Creating new namesapce %s with type kv2 in Vault...',
-            __class__.__name__,
-            name
-        )
-        namespace = self.vault_client.sys.enable_secrets_engine(
-            backend_type='kv',
-            path=name,
-            description=(
-                "Namespace is created automatically via the configrator module"
-                "(https://github.com/obervinov/vault-package)"
-            ),
-            version=2
-        )
-        log.info(
-            '[class.%s] The new namespace %s with type kv2 is ready',
-            __class__.__name__,
-            name
-        )
-        self.vault_client = hvac.Client(
-                url=self.address,
-                namespace=namespace,
-                token=self.token
-        )
-        log.info(
-            '[class.%s] self.vault_client updated to namespace=%s',
-            __class__.__name__,
-            namespace
-        )
-        return name
+        try:
+            log.info(
+                '[class.%s] creating new namesapce "%s" with type "kv2"...',
+                __class__.__name__,
+                name
+            )
+            response = self.vault_client.sys.enable_secrets_engine(
+                backend_type='kv',
+                path=name,
+                description=(
+                    "Namespace is created automatically via the configrator module"
+                    "(https://github.com/obervinov/vault-package)"
+                ),
+                version=2
+            )
+            log.info(
+                '[class.%s] namespace "%s" is ready: %s',
+                __class__.__name__,
+                name,
+                response
+            )
+            return name
+        except hvac.exceptions.InvalidRequest as invalidrequest:
+            log.warning(
+                '[class.%s] namespace already exist: %s',
+                __class__.__name__,
+                invalidrequest
+            )
+            return name
+        except hvac.exceptions.Forbidden as forbidden:
+            log.error(
+                '[class.%s] failed to create a new namespace: %s\n'
+                'please check if your root_token is valid.',
+                __class__.__name__,
+                forbidden
+            )
+            return None
 
     def create_policy(
         self,
@@ -247,49 +272,67 @@ class VaultClient:
         path: str = None
     ) -> str:
         """
-        Method of creating a new policy for approle in the Vault.
+        Method of creating a new policy for approle in the vault.
 
         Args:
-            name (str): name of the new policy to create.
-            path (str): the path to the file with the contents of the policy.
+            :param name (str): name of the new policy to create.
+            :param path (str): the path to the file with the contents of the policy.
 
         Retruns:
-            'policy_name' (str)
+            (str) 'policy'
+                or
+            None
         """
-        with open(path, 'rb') as policy:
-            self.vault_client.sys.create_or_update_policy(
-                name=name,
-                policy=policy.read(),
+        if os.path.exists(path):
+            with open(path, 'rb') as policyfile:
+                response = self.vault_client.sys.create_or_update_policy(
+                    name=name,
+                    policy=policyfile.read().decode("utf-8"),
+                )
+            policyfile.close()
+            log.info(
+                '[class.%s] policy "%s" has been created: %s',
+                __class__.__name__,
+                name,
+                response
             )
-        policy.close()
-        log.info(
-            '[class.%s] The new policy %s has been recorded',
+            return name
+        log.error(
+            '[class.%s] the file with the vault policy was not found: %s.',
             __class__.__name__,
-            name
+            path
         )
-        return name
+        return None
 
     def create_approle(
         self,
         name: str = None,
         path: str = None,
         policy: str = None
-    ) -> dict:
+    ) -> None:
         """
-        Method of creating a new approle for authorization in the Vault.
+        Method of creating a new approle for authorization in the vault.
 
         Args:
-            name (str): name of the new approle to create.
-            path (str): custom mount point for the new app role.
-            policy (str): default policy name for issued tokens.
+            :param name (str): name of the new approle to create.
+            :param path (str): custom mount point for the new app role.
+            :param policy (str): default policy name for issued tokens.
 
         Returns:
-            {'approle-id': approle_id, 'secret-id': secret_id} (dict)
+           None
         """
-        self.vault_client.sys.enable_auth_method(
-            method_type='approle',
-            path=path
-        )
+        try:
+            self.vault_client.sys.enable_auth_method(
+                method_type='approle',
+                path=path
+            )
+        except hvac.exceptions.InvalidRequest as invalidrequest:
+            log.warning(
+                '[class.%s] auth method already exist: %s',
+                __class__.__name__,
+                invalidrequest
+            )
+
         response = self.vault_client.auth.approle.create_or_update_approle(
             role_name=name,
             token_policies=[policy],
@@ -302,87 +345,94 @@ class VaultClient:
             mount_point=path
         )
         log.info(
-            '[class.%s] The new approle %s has been created: %s',
+            '[class.%s] approle "%s" has been created %s',
             __class__.__name__,
             name,
             response
         )
+        approle_adapter = hvac.api.auth_methods.AppRole(
+            self.vault_client.adapter
+        )
         approle = {
-            'id': self.vault_client.api.auth_methods.AppRole.read_role_id(
-                                role_name=name
+            'name': name,
+            'id': approle_adapter.read_role_id(
+                                role_name=name,
+                                mount_point=path
                           )["data"]["role_id"],
-            'secret-id': self.vault_client.auth.approle.generate_secret_id(
-                                role_name=name
+            'secret-id': approle_adapter.generate_secret_id(
+                                role_name=name,
+                                mount_point=path
                          )["data"]["secret_id"]
         }
+
         try:
             log.info(
-                '[class.%s] Test login with new AppRole data...',
+                '[class.%s] testing login with new approle...',
                 __class__.__name__
             )
-            token = self.vault_client.auth.approle.login(
+            response = self.vault_client.auth.approle.login(
                             role_id=approle['id'],
-                            secret_id=approle['secret-id']
+                            secret_id=approle['secret-id'],
+                            mount_point=path
             )['auth']
-            if token['entity_id']:
+            if response['entity_id']:
                 log.info(
-                        '[class.%s] The test login with the new AppRole was successfully: %s\n'
-                        'Revocation of the test token...',
+                        '[class.%s] the test login with the new approle was successfully: '
+                        'revocation of the test token %s ...',
                         __class__.__name__,
-                        token['entity_id']
+                        response['entity_id']
                 )
                 self.vault_client.auth.token.revoke(
-                    token['entity_id']
+                    response['entity_id']
                 )
                 log.info(
-                        '[class.%s] The token has been revoked',
-                        __class__.__name__
+                        '[class.%s] the token %s has been revoked.',
+                        __class__.__name__,
+                        response['entity_id']
                 )
-                log.warning(
-                    '[class.%s] New AppRole: %s\nPlease keep this information in a safe place.',
-                    __class__.__name__,
-                    approle
+                print(
+                    f"!!! AppRole Data: {approle}\n"
+                    "!!! Please keep this information in a safe place."
                 )
-                return approle
-            log.error(
-                    '[class.%s] Failed to get a token through the new approle: %s',
-                    __class__.__name__,
-                    token['entity_id']
-            )
-            return None
+            else:
+                log.error(
+                        '[class.%s] failed to get a token through the new approle: %s',
+                        __class__.__name__,
+                        response['entity_id']
+                )
         except hvac.exceptions.VaultError as vaulterror:
             log.error(
-                    '[class.%s] Authorization by the new AppRole failed with an error: %s',
+                    '[class.%s] authorization by the new approle failed with an error: %s',
                     __class__.__name__,
                     vaulterror
             )
-            return None
 
     def read_secret(
-            self,
-            path: str = None,
-            key: str = None
+        self,
+        path: str = None,
+        key: str = None
     ) -> dict:
         """
-        A method for read secrets from Vault.
+        A method for read secrets from vault.
 
         Args:
-            path (str): the path to the secret in vault.
-            key (str): the key from which you want to read the value.
+            :param path (str): the path to the secret in vault.
+            :param key (str): specify the key if you want to get only the value of a specific key,
+                              and not the entire dictionary
 
         Returns:
-            'value' (str)
+            (str) 'value'
                 or
-            {'key': 'value'} (dict)
+            (dict) {'key': 'value'}
         """
         try:
-            read_response = self.vault_client.secrets.kv.v2.read_secret_version(
-                                    path=path
+            response = self.vault_client.secrets.kv.v2.read_secret_version(
+                path=path
             )
             if key:
-                return read_response['data']['data'][key]
+                return response['data']['data'][key]
             if not key:
-                return read_response['data']['data']
+                return response['data']['data']
         except hvac.exceptions.InvalidPath as invalidpath:
             log.error(
                 '[class.%s] reading secret %s faild: %s',
@@ -399,45 +449,44 @@ class VaultClient:
             value: str = None
     ) -> None:
         """
-        A method for put secrets from Vault.
+        A method for put secrets from vault.
 
         Args:
-            path (str): the path to the secret in vault.
-            key (str): the key to write to the secret.
-            value (str): the value of the key to write to the secret.
+            :param path (str): the path to the secret in vault.
+            :param key (str): the key to write to the secret.
+            :param value (str): the value of the key to write to the secret.
 
         Returns:
             None
         """
-        key_value = {}
-        key_value[key] = value
+        secret = {key: value}
         try:
             self.vault_client.secrets.kv.v2.create_or_update_secret(
                 path=path,
                 cas=0,
-                secret=key_value
+                secret=secret
             )
         except hvac.exceptions.InvalidRequest:
-            self.patch_secret(path, key_value)
+            self.patch_secret(path, secret)
 
     def patch_secret(
             self,
             path: str = None,
-            key_value: str = None
+            secret: str = None
     ) -> None:
         """
-        A method for patch secrets from Vault.
+        A method for patch secrets from vault.
 
         Args:
-            path (str): the path to the secret in vault.
-            key_value (str): dictionary with keys and their values.
+            :param path (str): the path to the secret in vault.
+            :param secret (str): dictionary with keys and their values.
 
         Returns:
             None
         """
         self.vault_client.secrets.kv.v2.patch(
             path=path,
-            secret=key_value
+            secret=secret
         )
 
     def list_secrets(
@@ -445,13 +494,13 @@ class VaultClient:
             path: str = None
     ) -> list:
         """
-        A method for list secrets from Vault.
+        A method for list secrets from vault.
 
         Args:
-            path (str): the path to the secret in vault.
+            :param path (str): the path to the secret in vault.
 
         Returns:
-            ['key1','key2','key3'] (list)
+            (list) ['key1','key2','key3']
         """
         return self.vault_client.secrets.kv.v2.list_secrets(
             path=path
