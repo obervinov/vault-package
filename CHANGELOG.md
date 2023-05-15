@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
 * added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `PR` and a `new release`)
 * added support for default environment variables: `VAULT_ADD', `VAULT_TOKEN', `VAULT_APP ROLE_ID` and `VAULT_APPROVED_SECURIES` for a more native and convenient way to interact with the vault api
+* [tests]([tests/) have been written for this module
 #### 📚 Documentation
 * updated the template body in `pull_request_template.md`
 * updated `description` in `pyproject.toml`

@@ -19,8 +19,15 @@ This module contains a set of methods for interacting and quickly installing Vau
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.3](https://github.com/obervinov/_templates/tree/v1.0.3) |
+| GitHub Actions Templates | [v1.0.4](https://github.com/obervinov/_templates/tree/v1.0.4) |
 
+## <img src="https://github.com/obervinov/_templates/blob/main/ico/4072573.png" width="25" title="vars"> Supported environment variables
+| Variable  | Description |
+| ------------- | ------------- |
+| `VAULT_ADDR`  | URL of the vault server (ex. `http://vaultexample.com:8200`) |
+| `VAULT_TOKEN` | Root token with full access rights (ex. `hvs.123qwerty`) |
+| `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server (ex. `db02de05-fa39-4855-059b-67221c5c2f63`) |
+| `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server (ex. `6a174c20-f6de-a53c-74d2-6018fcceff64`) |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
 - Client: Authentication using the application role
