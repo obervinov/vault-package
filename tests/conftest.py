@@ -34,7 +34,7 @@ def fixture_test_path():
 
 
 @pytest.fixture(name="configurator_client")
-def fixture_configurator_client(name, policy_path):
+def fixture_configurator_client(name):
     """Returns client of the configurator"""
     return VaultClient(
                 url='http://0.0.0.0:8200',
