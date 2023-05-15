@@ -24,7 +24,7 @@ This module contains a set of methods for interacting and quickly installing Vau
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="vars"> Supported environment variables
 | Variable  | Description | Example |
 | ------------- | ------------- | ------------- |
-| `VAULT_ADDR`  | URL of the vault server | `http://vaultexample.com:8200` |
+| `VAULT_ADDR`  | URL of the vault server | `http://vault.example.com:8200` |
 | `VAULT_TOKEN` | Root token with full access rights | `hvs.123qwerty` |
 | `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server | `db02de05-fa39-4855-059b-67221c5c2f63` |
 | `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server |  `6a174c20-f6de-a53c-74d2-6018fcceff64` |
