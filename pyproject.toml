@@ -38,5 +38,8 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.6.2"
-hvac = "^1.0.2"
+hvac = "^1.1.0"
 logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1" }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

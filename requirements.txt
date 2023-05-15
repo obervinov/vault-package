@@ -1,2 +1,2 @@
-hvac==1.0.2
+hvac==1.1.0
 git+https://github.com/obervinov/logger-package.git@v1.0.1#egg=logger

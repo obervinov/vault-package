@@ -39,7 +39,7 @@ setup(
     ],
     keywords=['vault', 'client'],
     install_requires=[
-        'hvac==1.0.2'
+        'hvac==1.1.0'
     ],
     dependency_links=[
         'https://github.com/obervinov/logger-package/tarball/master#egg=logger-1.0.1'
