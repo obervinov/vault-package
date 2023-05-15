@@ -81,7 +81,7 @@ response = client.list_secrets(
 )
 ```
 2. working with the vault instance `configuration` (create or update `engine`/`namespace`/`policy`/`approle`)</br>
-__if your vault server is already initialized set arg `token='root_token'`__
+__preparing an existing vault server for your project__
 ```python
 from vault.vault import VaultClient
 
@@ -113,7 +113,39 @@ approle = configurator.create_approle(
         policy=policy
 )
 ```
+__preparing a new (not initialized) vault server for your project__ 
+```python
+from vault.vault import VaultClient
 
+
+configurator = VaultClient(
+                url='http://0.0.0.0:8200',
+                name='project1',
+                new=True,
+                token='hvs.123456789qwerty'
+)
+
+# Enable the kv v2 engine and create a new namespace
+# type: str
+namespace = configurator.create_namespace(
+        name='namespace1'
+)
+
+# Download a new policy from a local file
+# type: str
+policy = configurator.create_policy(
+        name='policy1',
+        path='tests/vault/policy.hcl'
+)
+
+# Create a new approle
+# type: dict
+approle = configurator.create_approle(
+        name='approle1',
+        path=namespace,
+        policy=policy
+)
+```
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/vault.png" width="25" title="usage"> Vault Policy structure
 An example with the required permissions and their description in [policy.hcl](tests/vault/policy.hcl)
