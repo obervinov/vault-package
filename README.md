@@ -21,7 +21,7 @@ This module contains a set of methods for interacting and quickly installing Vau
 | ------------------------ | ----------- |
 | GitHub Actions Templates | [v1.0.4](https://github.com/obervinov/_templates/tree/v1.0.4) |
 
-## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="vars"> Supported environment variables
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
 | Variable  | Description | Example |
 | ------------- | ------------- | ------------- |
 | `VAULT_ADDR`  | URL of the vault server | `http://vault.example.com:8200` |
@@ -32,12 +32,91 @@ This module contains a set of methods for interacting and quickly installing Vau
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
 - Client: Authentication using the application role
 - Client: Read the secrets
-- Client: List of secrets
-- Client: Lay out the secrets
-- Client: Secrets of corrections
-- Setup: Create a new namespace and engine
+- Client: List the secrets
+- Client: Update the secrets
+- Client: Create the secrets
+- Setup: Create a new namespace and enable engine
 - Setup: Create a new application role and a secret ID
-- Setup: upload a new policy
+- Setup: Upload a new policy
+
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="mods"> Usage examples
+This module can operate in two types of modes:
+1. working with `secrets` via the kv version 2 engine (`read`/`write`/`update`/`list` secrets)
+```python
+from vault.vault import VaultClient
+
+client = VaultClient(
+            url='http://0.0.0.0:8200',
+            name='project1',
+            approle={
+                'id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                'secret-id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+            }
+)
+
+# Get only the key value from the secret
+# type: str
+value = client.read_secret(
+    "namespace/secret", 'key'
+)
+
+# Get full dict with the secret body
+# type: dict
+secret = client.read_secret(
+    "namespace/secret"
+)
+
+# Write new data to a secret
+# type: requests.response
+response = client.write_secret(
+     "namespace/secret",
+     "key",
+     "value"
+)
+
+# Get a list of secrets on the specified path
+# type: list
+response = client.list_secrets(
+    "bucket1/secret1"
+)
+```
+2. working with the vault instance `configuration` (create or update `engine`/`namespace`/`policy`/`approle`)</br>
+__if your vault server is already initialized set arg `token='root_token'`__
+```python
+from vault.vault import VaultClient
+
+
+configurator = VaultClient(
+                url='http://0.0.0.0:8200',
+                name='project1',
+                new=True,
+)
+
+# Enable the kv v2 engine and create a new namespace
+# type: str
+namespace = configurator.create_namespace(
+        name='namespace1'
+)
+
+# Download a new policy from a local file
+# type: str
+policy = configurator.create_policy(
+        name='policy1',
+        path='tests/vault/policy.hcl'
+)
+
+# Create a new approle
+# type: dict
+approle = configurator.create_approle(
+        name='approle1',
+        path=namespace,
+        policy=policy
+)
+```
+
+
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/vault.png" width="25" title="usage"> Vault Policy structure
+An example with the required permissions and their description in [policy.hcl](tests/vault/policy.hcl)
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
@@ -47,60 +126,4 @@ pip3 install git+https://github.com/obervinov/vault-package.git#egg=vault
 pip3 install git+https://github.com/obervinov/vault-package.git@main#egg=vault
 # Install version by tag
 pip3 install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
-```
-
-## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="usage"> Usage example
-For kv client
-```python
-# import modules
-import os
-import vault as vault
-
-# environment variables
-bot_name = os.environ.get(
-    'BOT_NAME',
-    'mybot'
-)
-vault_addr = os.environ.get(
-    'VAULT_ADDR',
-    'http://vault-server:8200'
-)
-vault_approle_id = os.environ.get(
-    'VAULT_APPROLE_ID',
-    None
-)
-vault_approle_secret_id = os.environ.get(
-    'VAULT_APPROLE_SECRET_ID',
-    None
-)
-
-# init vault client
-vault_client = VaultClient(
-    addr=vault_addr,
-    approle_id=vault_approle_id,
-    secret_id=vault_approle_secret_id,
-    mount_point=bot_name
-)
-secret_key_value = vc.vault_read_secrets("bucket1/secret1", 'key1')
-"""Read target key in secret
-type: str
-response format: value2
-"""
-
-secret_full = vc.vault_read_secrets("bucket1/secret1")
-"""Read all keys and values in secret
-type: dict
-response format: {"key1": "value1", "key2": "value2"}
-"""
-
-vc.vault_put_secrets("bucket1/secret1", "my_key", "my_value")
-"""Put secret (patch if secret already exist)
-"""
-
-vc.vault_list_secrets("bucket1/secret1")
-"""List secrets
-type: list
-response format: ["key1", "key2", "key3"]
-"""
-
 ```

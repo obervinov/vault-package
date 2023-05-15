@@ -39,7 +39,6 @@ def fixture_configurator_client(name, policy_path):
     return VaultClient(
                 url='http://0.0.0.0:8200',
                 name=name,
-                policy=policy_path,
                 new=True
     )
 
