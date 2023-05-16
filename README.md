@@ -43,7 +43,7 @@ This module contains a set of methods for interacting and quickly installing Vau
 This module can operate in two types of modes:
 1. working with `secrets` via the kv version 2 engine (`read`/`write`/`update`/`list` secrets)
 ```python
-from vault.vault import VaultClient
+from vault import VaultClient
 
 client = VaultClient(
             url='http://0.0.0.0:8200',
@@ -83,7 +83,7 @@ response = client.list_secrets(
 2. working with the vault instance `configuration` (create or update `engine`/`namespace`/`policy`/`approle`)</br>
 __preparing an existing vault server for your project__
 ```python
-from vault.vault import VaultClient
+from vault import VaultClient
 
 
 configurator = VaultClient(
@@ -115,7 +115,7 @@ approle = configurator.create_approle(
 ```
 __preparing a new (not initialized) vault server for your project__ 
 ```python
-from vault.vault import VaultClient
+from vault import VaultClient
 
 
 configurator = VaultClient(

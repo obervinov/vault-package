@@ -64,6 +64,7 @@ class VaultClient:
         if kwargs.get('new'):
             self.client = self.prepare_client_configurator()
         else:
+            self.approle = {}
             self.client = self.prepare_client_secrets()
 
     def prepare_client_configurator(
@@ -123,12 +124,11 @@ class VaultClient:
                 or
             None
         """
-        approle = {}
         if self.kwargs.get('approle'):
-            approle = self.kwargs.get('approle')
+            self.approle = self.kwargs.get('approle')
         elif os.environ['VAULT_APPROLE_ID'] and os.environ['VAULT_APPROLE_SECRETID']:
-            approle['id'] = os.environ['VAULT_APPROLE_ID']
-            approle['secret-id'] = os.environ['VAULT_APPROLE_SECRETID']
+            self.approle['id'] = os.environ['VAULT_APPROLE_ID']
+            self.approle['secret-id'] = os.environ['VAULT_APPROLE_SECRETID']
         else:
             log.error(
                 '[class.%s] failed to get authorization data through the AppRole'
@@ -145,9 +145,9 @@ class VaultClient:
                 __class__.__name__,
             )
             response = client.auth.approle.login(
-                role_id=approle['id'],
-                secret_id=approle['secret-id'],
-                mount_point=self.name
+                        role_id=self.approle['id'],
+                        secret_id=self.approle['secret-id'],
+                        mount_point=self.name
             )['auth']
             client.secrets.kv.v2.configure(
                 max_versions=10,
@@ -175,15 +175,6 @@ class VaultClient:
                 invalidrequest
             )
             raise hvac.exceptions.InvalidRequest
-        except hvac.exceptions.InternalServerError as internalservererror:
-            log.error(
-                '[class.%s] failed to log in using the AppRole: %s\n'
-                'please, check environment variables VAULT_APPROLE_ID/VAULT_APPROLE_SECRETID',
-                __class__.__name__,
-                internalservererror
-            )
-            raise hvac.exceptions.InternalServerError
-        return None
 
     def init_instance(
         self,
@@ -353,7 +344,7 @@ class VaultClient:
             token_type='service',
             secret_id_num_uses=0,
             token_num_uses=0,
-            token_ttl='15m',
+            token_ttl='1h',
             bind_secret_id=True,
             token_no_default_policy=True,
             mount_point=path
@@ -446,6 +437,17 @@ class VaultClient:
                 invalidpath
             )
             raise hvac.exceptions.InvalidPath
+        except hvac.exceptions.Forbidden as forbidden:
+            log.warning(
+                '[class.%s] the token has expired: %s',
+                __class__.__name__,
+                forbidden
+            )
+            self.client = self.prepare_client_secrets()
+            return self.read_secret(
+                path=path,
+                key=key
+            )
         return None
 
     def write_secret(
@@ -491,6 +493,19 @@ class VaultClient:
                 secret={key: value},
                 mount_point=self.name
             )
+        except hvac.exceptions.Forbidden as forbidden:
+            log.warning(
+                '[class.%s] the token has expired: %s',
+                __class__.__name__,
+                forbidden
+            )
+            self.client = self.prepare_client_secrets()
+            return self.write_secret(
+                path=path,
+                key=key,
+                value=value,
+                overwrite=overwrite
+            )
 
     def list_secrets(
         self,
@@ -505,7 +520,18 @@ class VaultClient:
         Returns:
             (list) ['key1','key2','key3']
         """
-        return self.client.secrets.kv.v2.list_secrets(
-            path=path,
-            mount_point=self.name
-        )['data']['keys']
+        try:
+            return self.client.secrets.kv.v2.list_secrets(
+                path=path,
+                mount_point=self.name
+            )['data']['keys']
+        except hvac.exceptions.Forbidden as forbidden:
+            log.warning(
+                '[class.%s] the token has expired: %s',
+                __class__.__name__,
+                forbidden
+            )
+            self.client = self.prepare_client_secrets()
+            return self.list_secrets(
+                path=path
+            )
