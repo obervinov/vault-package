@@ -23,22 +23,16 @@ jobs:
         ports:
           - 8200:8200
         env:
-          #VAULT_API_ADDR: http://0.0.0.0:8200
-          #VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/data"}}, "default_lease_ttl": "1h", "max_lease_ttl": "720h", "listener": {"tcp": {"address": "0.0.0.0:8200", "tls_disable": "1"}}'
           VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/data"}}, "default_lease_ttl": "1h", "max_lease_ttl": "720h"}'
         options: --cap-add=IPC_LOCK
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
+        run:
         run: |
-          telnet localhost 8200
-          telnet 0.0.0.0 8200
-          nslookup vault
-          telnet vault 8200
-        #run: |
-        #  python -m pip install --upgrade pip
-        #  pip install pytest
-        #  if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      #- name: Test with pytest
-      #  run: |
-      #    pytest
+          python -m pip install --upgrade pip
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Test with pytest
+        run: |
+      #   pytest
