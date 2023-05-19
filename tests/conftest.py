@@ -9,8 +9,6 @@ from vault.vault import VaultClient
 @pytest.fixture(name="url", scope='session')
 def fixture_url():
     """Returns the vault url"""
-    if os.getenv("CI"):
-        return "http://vault:8200"
     return "http://0.0.0.0:8200"
 
 
