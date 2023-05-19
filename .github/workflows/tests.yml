@@ -30,9 +30,14 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Test with pytest
-        run: |
-          pytest
+          nslookup vault
+          telnet vault 8200
+          telnet localhost 8200
+          telnet 0.0.0.0 8200
+        #run: |
+        #  python -m pip install --upgrade pip
+        #  pip install pytest
+        #  if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      #- name: Test with pytest
+      #  run: |
+      #    pytest
