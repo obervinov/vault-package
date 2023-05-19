@@ -27,7 +27,7 @@ jobs:
           VAULT_API_ADDR: http://0.0.0.0:8200
         options: >-
           --cap-add=IPC_LOCK
-          --entrypoint "docker-entrypoint.sh server"
+          --entrypoint "/usr/local/bin/docker-entrypoint.sh server"
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
