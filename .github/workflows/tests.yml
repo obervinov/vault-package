@@ -15,25 +15,4 @@ jobs:
   verify-changelog:
     uses: obervinov/_templates/.github/workflows/verify.changelog.yml@v1.0.3
   pytest:
-    name: pytest
-    runs-on: ubuntu-latest
-    services:
-      vault:
-        image: ghcr.io/obervinov/tools/vault:v1.13.2
-        ports:
-          - 8200:8200
-        env:
-          VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/data"}}, "default_lease_ttl": "1h", "max_lease_ttl": "720h", "listener": {"tcp": {"address": "0.0.0.0:8200", "tls_disable": "1"}}'
-          VAULT_API_ADDR: http://0.0.0.0:8200
-        options: >-
-          --cap-add=IPC_LOCK
-    steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest pytest-order pytest-ordering
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Test with pytest
-        run: |
-          pytest . --verbose
+    uses: obervinov/_templates/.github/workflows/test.pylint-with-vault.yml@fix/v1.0.4
