@@ -24,7 +24,10 @@ jobs:
           - 8200:8200
         env:
           VAULT_LOCAL_CONFIG: '{"backend": {"file": {"path": "/vault/data"}}, "default_lease_ttl": "1h", "max_lease_ttl": "720h"}'
-        options: --cap-add=IPC_LOCK
+          VAULT_API_ADDR: http://0.0.0.0:8200
+        options: >-
+          --cap-add=IPC_LOCK
+          --entrypoint "docker-entrypoint.sh server"
     steps:
       - uses: actions/checkout@v3
       - name: Install dependencies
