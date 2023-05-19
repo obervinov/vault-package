@@ -9,10 +9,10 @@ on:
 
 jobs:
   pylint:
-    uses: obervinov/_templates/.github/workflows/test.pylint.yml@fix/v1.0.4
+    uses: obervinov/_templates/.github/workflows/test.pylint.yml@v1.0.4
   verify-package:
-    uses: obervinov/_templates/.github/workflows/verify.package.yml@fix/v1.0.4
+    uses: obervinov/_templates/.github/workflows/verify.package.yml@v1.0.4
   verify-changelog:
-    uses: obervinov/_templates/.github/workflows/verify.changelog.yml@v1.0.3
+    uses: obervinov/_templates/.github/workflows/verify.changelog.yml@v1.0.4
   pytest:
-    uses: obervinov/_templates/.github/workflows/test.pytest-with-vault.yml@fix/v1.0.4
+    uses: obervinov/_templates/.github/workflows/test.pytest-with-vault.yml@v1.0.4

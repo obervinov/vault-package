@@ -14,13 +14,13 @@ def test_client_secret(secrets_client):
 
 
 @pytest.mark.order(5)
-def test_write_secret(secrets_client, test_data, test_path):
+def test_write_secret(secrets_client, test_data, secret_path):
     """
     Testing writing a secret to the vault
     """
     for key, value in test_data.items():
         response = secrets_client.write_secret(
-            path=test_path,
+            path=secret_path,
             key=key,
             value=value
         )
@@ -28,13 +28,13 @@ def test_write_secret(secrets_client, test_data, test_path):
 
 
 @pytest.mark.order(6)
-def test_read_secret(secrets_client, test_data, test_path):
+def test_read_secret(secrets_client, test_data, secret_path):
     """
     Testing reading a secret to the vault
     """
     for key, value in test_data.items():
         response = secrets_client.read_secret(
-          path=test_path,
+          path=secret_path,
           key=key
         )
         assert response == value
@@ -42,12 +42,12 @@ def test_read_secret(secrets_client, test_data, test_path):
 
 
 @pytest.mark.order(5)
-def test_list_secrets(secrets_client, test_path):
+def test_list_secrets(secrets_client, secret_path):
     """
     Testing checks the reading of the list of secrets from the vault
     """
     response = secrets_client.list_secrets(
-        path=f"{test_path.split('/')[0]}/"
+        path=f"{secret_path.split('/')[0]}/"
     )
-    assert f"{test_path.split('/')[1]}" in response
+    assert f"{secret_path.split('/')[1]}" in response
     assert isinstance(response, list)

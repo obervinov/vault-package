@@ -2,10 +2,6 @@
 path "auth/token/lookup" {
   capabilities = ["read"]
 }
-# To re-issue the token upon expiration
-path "auth/token/renew" {
-  capabilities = ["update"]
-}
 # To revoke the token after creating and testing approle
 path "auth/token/revoke" {
   capabilities = ["update"]

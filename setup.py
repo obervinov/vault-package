@@ -16,7 +16,7 @@ setup(
         "This is an additional implementation compared to the hvac module. "
         "The main purpose of which is to simplify the use "
         "and interaction with vault for my standard projects. "
-        "This module contains a set of methods for interacting and quickly installing Vault."
+        "This module contains a set of methods for working with secrets and quickly configuring Vault."
     ),
     py_modules=['vault'],
     package_dir={'': 'vault'},

@@ -36,9 +36,9 @@ def fixture_test_data():
     }
 
 
-@pytest.fixture(name="test_path", scope='session')
-def fixture_test_path():
-    """Returns test secret path"""
+@pytest.fixture(name="secret_path", scope='session')
+def fixture_secret_path():
+    """Returns the path to the test secret"""
     return "configuration/mysecret"
 
 
