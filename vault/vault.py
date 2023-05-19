@@ -195,7 +195,6 @@ class VaultClient:
             __class__.__name__
         )
         response = client.sys.initialize()
-
         keys_store = f"{os.path.expanduser('~')}/.vaultinit"
         with open(keys_store, 'w', encoding='UTF-8') as initfile:
             initfile.write(json.dumps(response))
@@ -206,7 +205,6 @@ class VaultClient:
             __class__.__name__,
             keys_store
         )
-
         if client.sys.is_sealed():
             client.sys.submit_unseal_keys(
                 keys=[response['keys'][0], response['keys'][1], response['keys'][2]]

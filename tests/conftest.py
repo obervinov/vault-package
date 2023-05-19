@@ -1,25 +1,34 @@
 """
 This module stores fixtures for performing tests.
 """
+import os
 import pytest
 from vault.vault import VaultClient
 
 
-@pytest.fixture(name="name")
+@pytest.fixture(name="url", scope='session')
+def fixture_url():
+    """Returns the vault url"""
+    if os.getenv("CI"):
+        return "http://vault:8200"
+    return "http://0.0.0.0:8200"
+
+
+@pytest.fixture(name="name", scope='session')
 def fixture_name():
-    """Returns the project name."""
+    """Returns the project name"""
     return "testapp-1"
 
 
-@pytest.fixture(name="policy_path")
+@pytest.fixture(name="policy_path", scope='session')
 def fixture_policy_path():
-    """Returns the policy path."""
+    """Returns the policy path"""
     return "tests/vault/policy.hcl"
 
 
-@pytest.fixture(name="test_data")
+@pytest.fixture(name="test_data", scope='session')
 def fixture_test_data():
-    """Returns test data for the module."""
+    """Returns test data for the module"""
     return {
         'username': 'user1',
         'password': 'qwerty',
@@ -27,41 +36,41 @@ def fixture_test_data():
     }
 
 
-@pytest.fixture(name="test_path")
+@pytest.fixture(name="test_path", scope='session')
 def fixture_test_path():
-    """Returns test secret path."""
+    """Returns test secret path"""
     return "configuration/mysecret"
 
 
-@pytest.fixture(name="configurator_client")
-def fixture_configurator_client(name):
+@pytest.fixture(name="configurator_client", scope='session')
+def fixture_configurator_client(url, name):
     """Returns client of the configurator"""
     return VaultClient(
-                url='http://0.0.0.0:8200',
+                url=url,
                 name=name,
                 new=True
     )
 
 
-@pytest.fixture(name="secrets_client")
-def fixture_secrets_client(approle, name):
-    """Returns the client of the secrets."""
+@pytest.fixture(name="secrets_client", scope='session')
+def fixture_secrets_client(url, approle, name):
+    """Returns the client of the secrets"""
     return VaultClient(
-            url='http://0.0.0.0:8200',
+            url=url,
             name=name,
             approle=approle
     )
 
 
-@pytest.fixture(name="namespace")
+@pytest.fixture(name="namespace", scope='session')
 def fixture_namespace(configurator_client, name):
-    """Returns the namespace."""
+    """Returns the namespace"""
     return configurator_client.create_namespace(
         name=name
     )
 
 
-@pytest.fixture(name="policy")
+@pytest.fixture(name="policy", scope='session')
 def fixture_policy(configurator_client, policy_path, name):
     """Returns the policy path."""
     return configurator_client.create_policy(
@@ -70,9 +79,9 @@ def fixture_policy(configurator_client, policy_path, name):
     )
 
 
-@pytest.fixture(name="approle")
+@pytest.fixture(name="approle", scope='session')
 def fixture_approle(configurator_client, name, policy):
-    """Returns the approle data."""
+    """Returns the approle data"""
     return configurator_client.create_approle(
         name=name,
         path=name,
