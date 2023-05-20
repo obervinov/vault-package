@@ -3,31 +3,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## v2.0.0 - 2023-05-16
+## v2.0.0 - 2023-05-21
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
 #### 🐛 Bug Fixes
-* refactoring all `doc-strings` in class `VaultClient()`
+* https://github.com/obervinov/_templates/issues/16
+* https://github.com/obervinov/_templates/issues/18
 * renamed the directory with modules: `src` -> `vault`
-* fixed warnings from `.flake8` and `.pylintrc`
 * removed condition `- '!main'` for [.github/workflows/tests.yml](https://github.com/obervinov/vault-package/blob/v2.0.0/.github/workflows/tests.yml#L3-L8) (this is done for the correct display of the badge in [README.md](https://github.com/obervinov/vault-package/blob/v2.0.0/README.md?plain=1#L4) on the `main` brunch)
 #### 💥 Breaking Changes
-* all input arguments were rewritten in `__init__` and, in general, the `Vault Client()` class was refactored
+**The new major version is completely incompatible with the old versions!**
+* the `VaultClient()` class has been completely rewritten and refactored (all class methods and module logic have been changed).
 * changed log format `f-string` -> `%s-lazzy`
 * updated [SECURITY.md](https://github.com/obervinov/vault-package/blob/v2.0.0/SECURITY.md) policy
-* renamed methods for working with secrets in the `VaultClient` class: `vault_read_secrets()` -> `read_secret()`, `vault_put_secrets()` -> `put_secret()`, `vault_patch_secrets()` -> `patch_secret()` `vault_list_secrets()` -> `list_secrets()`
-* moved `mount_point=self.mount_point` from `vault_read_secrets()`, `vault_put_secrets()`, `vault_patch_secrets()`, `vault_list_secrets()` to `self.vault_client = hvacClient(url=self.addr, namespace=name)` of `__init__()`
 #### 🚀 Features
-* added new methods to automate and speed up the setup of a new vault (or exist) instance for my projects
+* https://github.com/obervinov/vault-package/issues/16
+* https://github.com/obervinov/vault-package/issues/14
+* https://github.com/obervinov/vault-package/issues/12
 * all workflows migrated to version `v1.0.4`
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
 * added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `PR` and a `new release`)
-* added support for default environment variables: `VAULT_ADD', `VAULT_TOKEN', `VAULT_APPROLE_ID` and `VAULT_APPROVED_SECRETID` for a more native and convenient way to interact with the vault api
-* [tests]([tests/) have been written for this module
+* added support for default environment variables: `VAULT_ADDR', `VAULT_TOKEN', `VAULT_APPROLE_ID` and `VAULT_APPROVED_SECRETID` for a more native and convenient way to interact with the vault api
+* https://github.com/obervinov/vault-package/issues/19
 #### 📚 Documentation
-* updated the template body in `pull_request_template.md`
+* https://github.com/obervinov/vault-package/issues/13
+* https://github.com/obervinov/vault-package/issues/17
+https://github.com/obervinov/vault-package/issues/18
+* updated and expanded [README.md](https://github.com/obervinov/vault-package/tree/v2.0.0#-supported-environment-variables)
 * updated `description` in `pyproject.toml`
-* added a list of supported environment variables in [README.md](https://github.com/obervinov/vault-package/tree/v2.0.0#-supported-environment-variables)
 
 
 
