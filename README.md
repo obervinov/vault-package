@@ -29,19 +29,21 @@ This module contains a set of methods for working with secrets and quickly confi
 | `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server | `db02de05-fa39-4855-059b-67221c5c2f63` |
 | `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server |  `6a174c20-f6de-a53c-74d2-6018fcceff64` |
 
-## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
-- Client: Authentication using the application role
-- Client: Read the secrets
-- Client: List the secrets
-- Client: Update the secrets
-- Client: Create the secrets
-- Setup: Create a new namespace and enable engine
-- Setup: Create a new application role and a secret ID
-- Setup: Upload a new policy
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
+__The client can only work with the KV v2 engine__
+- Client: Authentication using the AppRole
+- Client: Reading a secrets
+- Client: Listing a secrets
+- Client: Writing a secrets
+- Configurator: Initializing a new vault instance
+- Configurator: Unsealing a new vault instance
+- Configurator: Creating a new namespace and enabling the kvv2 engine
+- Configurator: Creating a new AppRole ID and a generating a new AppRole Secret ID
+- Configurator: Uploading a new vault policy
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="mods"> Usage examples
 This module can operate in two types of modes:
-1. working with `secrets` via the kv version 2 engine (`read`/`write`/`update`/`list` secrets)
+1. Working with the kv secrets engine (v2): `read`/`write`/`update`/`list` of secrets
 ```python
 from vault import VaultClient
 
@@ -57,34 +59,34 @@ client = VaultClient(
 # Get only the key value from the secret
 # type: str
 value = client.read_secret(
-    "namespace/secret", 'key'
+    path='namespace/secret',
+    key='key'
 )
 
 # Get full dict with the secret body
 # type: dict
 secret = client.read_secret(
-    "namespace/secret"
+    path='namespace/secret'
 )
 
 # Write new data to a secret
 # type: requests.response
 response = client.write_secret(
-     "namespace/secret",
-     "key",
-     "value"
+     path='namespace/secret',
+     key='key',
+     value='value'
 )
 
 # Get a list of secrets on the specified path
 # type: list
 response = client.list_secrets(
-    "bucket1/secret1"
+    path='namespace/secret1'
 )
 ```
-2. working with the vault instance `configuration` (create or update `engine`/`namespace`/`policy`/`approle`)</br>
-__preparing an existing vault server for your project__
+2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
+_preparing an existing vault server for your project_
 ```python
 from vault import VaultClient
-
 
 configurator = VaultClient(
                 url='http://0.0.0.0:8200',
@@ -113,10 +115,9 @@ approle = configurator.create_approle(
         policy=policy
 )
 ```
-__preparing a new (not initialized) vault server for your project__ 
+_preparing a new (not initialized) vault server for your project_
 ```python
 from vault import VaultClient
-
 
 configurator = VaultClient(
                 url='http://0.0.0.0:8200',
@@ -153,9 +154,9 @@ An example with the required permissions and their description in [policy.hcl](t
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
 # Install current version
-pip3 install git+https://github.com/obervinov/vault-package.git#egg=vault
+pip install git+https://github.com/obervinov/vault-package.git#egg=vault
 # Install version by branch
-pip3 install git+https://github.com/obervinov/vault-package.git@main#egg=vault
+pip install git+https://github.com/obervinov/vault-package.git@main#egg=vault
 # Install version by tag
-pip3 install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
+pip install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
 ```
