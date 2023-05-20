@@ -41,7 +41,7 @@ def test_read_secret(secrets_client, test_data, secret_path):
         assert isinstance(response, (dict, str))
 
 
-@pytest.mark.order(5)
+@pytest.mark.order(7)
 def test_list_secrets(secrets_client, secret_path):
     """
     Testing checks the reading of the list of secrets from the vault
