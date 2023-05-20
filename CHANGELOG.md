@@ -28,7 +28,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 #### 📚 Documentation
 * https://github.com/obervinov/vault-package/issues/13
 * https://github.com/obervinov/vault-package/issues/17
-https://github.com/obervinov/vault-package/issues/18
+* https://github.com/obervinov/vault-package/issues/18
 * updated and expanded [README.md](https://github.com/obervinov/vault-package/tree/v2.0.0#-supported-environment-variables)
 * updated `description` in `pyproject.toml`
 
