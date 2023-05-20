@@ -84,6 +84,7 @@ response = client.list_secrets(
 )
 ```
 2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
+
 _preparing an existing vault server for your project_
 ```python
 from vault import VaultClient
