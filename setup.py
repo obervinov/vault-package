@@ -40,7 +40,7 @@ setup(
     ],
     keywords=['vault', 'client'],
     install_requires=[
-        'hvac==1.1.0'
+        'hvac==1.1.0',
         'keyring==23.13.1'
     ],
     dependency_links=[
