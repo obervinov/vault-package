@@ -74,7 +74,7 @@ class VaultClient:
     def get_env(
         self,
         name: str = None
-    ) -> str | dict:
+    ) -> str | dict | None:
         """
         This method is used to extract a value from an environment variable and error handling
 
@@ -85,7 +85,8 @@ class VaultClient:
             (str) value
                 or
             (dict) values
-                or None
+                or
+            None
         """
         try:
             if name == 'url':
@@ -112,7 +113,7 @@ class VaultClient:
 
     def prepare_client_configurator(
         self
-    ) -> None:
+    ) -> hvac.Client:
         """
         This method is used to prepare the client for setting up a new vault server
         to work with my typical projects.
@@ -146,7 +147,7 @@ class VaultClient:
 
     def prepare_client_secrets(
         self
-    ) -> None:
+    ) -> hvac.Client:
         """
         This method is used to prepare the client to work with the secrets of the kv v2 engine.
         - read secrets
@@ -158,8 +159,6 @@ class VaultClient:
 
         Returns:
             (hvac.Client) secrets_client
-                or
-            None
         """
         if self.kwargs.get('approle'):
             self.approle = self.kwargs.get('approle')
@@ -209,7 +208,7 @@ class VaultClient:
     def init_instance(
         self,
         client: hvac.Client = None
-    ) -> str:
+    ) -> dict:
         """
         A method for initing the vault-server instance.
 
@@ -217,7 +216,7 @@ class VaultClient:
             :param client (hvac.Client): client for initialization vault connections
 
         Returns:
-            (dict) 'init_data'
+            (dict) init_data
         """
         log.warning(
             '[class.%s] this vault instance is not initialized: '
@@ -241,7 +240,11 @@ class VaultClient:
 
         if client.sys.is_sealed():
             client.sys.submit_unseal_keys(
-                keys=[response['keys'][0], response['keys'][1], response['keys'][2]]
+                keys=[
+                    response['keys'][0],
+                    response['keys'][1],
+                    response['keys'][2]
+                ]
             )
             log.info(
                 '[class.%s] vault instance has been to unsealed successfull',
@@ -260,7 +263,7 @@ class VaultClient:
             :param name (str): the name of the target namespace.
 
         Returns:
-            (str) 'namespace'
+            (str) namespace_name
         """
         try:
             log.info(
@@ -306,16 +309,16 @@ class VaultClient:
         self,
         name: str = None,
         path: str = None
-    ) -> str:
+    ) -> str | None:
         """
         Method of creating a new policy for approle in the vault.
 
         Args:
-            :param name (str): name of the new policy to create.
+            :param name (str): name of the policy.
             :param path (str): the path to the file with the contents of the policy.
 
         Retruns:
-            (str) 'policy'
+            (str) policy_name
                 or
             None
         """
@@ -334,7 +337,7 @@ class VaultClient:
             )
             return name
         log.error(
-            '[class.%s] the file with the vault policy was not found: %s.',
+            '[class.%s] the file with the vault policy wasnt found: %s.',
             __class__.__name__,
             path
         )
@@ -345,13 +348,13 @@ class VaultClient:
         name: str = None,
         path: str = None,
         policy: str = None
-    ) -> None:
+    ) -> dict | None:
         """
         Method of creating a new approle for authorization in the vault.
 
         Args:
-            :param name (str): name of the new approle to create.
-            :param path (str): custom mount point for the new app role.
+            :param name (str): name of the AppRole.
+            :param path (str): custom mount point for the new AppRole.
             :param policy (str): default policy name for issued tokens.
 
         Returns:
@@ -412,10 +415,8 @@ class VaultClient:
         )['auth']
         if response['entity_id']:
             log.info(
-                    '[class.%s] the test login with the new approle was successfully: '
-                    'revocation of the test token %s ...',
-                    __class__.__name__,
-                    response['entity_id']
+                '[class.%s] the test login with the new approle was successfully',
+                __class__.__name__,
             )
             self.client.auth.token.revoke(
                 response['entity_id']
@@ -427,9 +428,9 @@ class VaultClient:
             )
             return approle
         log.error(
-                '[class.%s] failed to get a token through the new approle: %s',
+                '[class.%s] failed to get a token with the new approle: %s',
                 __class__.__name__,
-                response['entity_id']
+                response
         )
         return None
 
@@ -437,14 +438,13 @@ class VaultClient:
         self,
         path: str = None,
         key: str = None
-    ) -> dict:
+    ) -> str | dict:
         """
-        A method for read secrets from vault.
+        A method for read secret from vault.
 
         Args:
             :param path (str): the path to the secret in vault.
-            :param key (str): specify the key if you want to get only the value of a specific key,
-                              and not the entire dictionary
+            :param key (str): specify the key if you want to get only the value of a specific key.
 
         Returns:
             (str) 'value'
@@ -490,7 +490,7 @@ class VaultClient:
         overwrite: bool = False
     ) -> object:
         """
-        A method for put secrets from vault.
+        A method for write secret from vault.
 
         Args:
             :param path (str): the path to the secret in vault.
