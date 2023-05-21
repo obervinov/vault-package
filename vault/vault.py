@@ -225,12 +225,19 @@ class VaultClient:
             __class__.__name__
         )
         response = client.sys.initialize()
-        keyring.set_password(self.url, "vault-package:initdata", json.dumps(response))
-        log.warning(
-            '[class.%s] the vault instance was successfully initialized: '
-            'sensitive information for managing this instance has been stored in system keystore',
-            __class__.__name__
-        )
+        try:
+            keyring.set_password(self.url, "vault-package:initdata", json.dumps(response))
+            log.info(
+                '[class.%s] the vault instance was successfully initialized: '
+                'sensitive data for managing this instance has been stored in your system keystore',
+                __class__.__name__
+            )
+        except keyring.errors.NoKeyringError:
+            log.warning(
+                '[class.%s] the vault instance was successfully initialized: '
+                'but sensitive data for managing this instance was not saved.',
+                __class__.__name__
+            )
 
         if client.sys.is_sealed():
             client.sys.submit_unseal_keys(
