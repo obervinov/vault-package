@@ -4,6 +4,7 @@ This module contains an implementation over the hvac module for interacting with
 import os
 import json
 import hvac
+import keyring
 from logger import log
 
 
@@ -224,16 +225,13 @@ class VaultClient:
             __class__.__name__
         )
         response = client.sys.initialize()
-        keys_store = f"{os.path.expanduser('~')}/.vaultinit"
-        with open(keys_store, 'w', encoding='UTF-8') as initfile:
-            initfile.write(json.dumps(response))
-        initfile.close()
+        keyring.set_password(self.url, "vault-package:initdata", json.dumps(response))
         log.warning(
             '[class.%s] the vault instance was successfully initialized: '
-            'sensitive information for managing this instance has been stored in %s',
-            __class__.__name__,
-            keys_store
+            'sensitive information for managing this instance has been stored in system keystore',
+            __class__.__name__
         )
+
         if client.sys.is_sealed():
             client.sys.submit_unseal_keys(
                 keys=[response['keys'][0], response['keys'][1], response['keys'][2]]
