@@ -23,14 +23,14 @@ class VaultClient:
         A method for create a new Vault Client instance.
 
         Args:
-            :param url (str): base URL for the Vault instance being urled.
+            :param url (str): base URL for the Vault instance.
             :param name (str): the name of the project for which an instance is being created,
                                this name will be used for isolation mechanisms such as:
                                namespace, policy, approle
             :param **kwargs (dict): dictionary with additional variable parameters
 
         Keyword Args:
-            :param new (bool): to activate the "initial setup" mode of vault-server.
+            :param new (bool): starting in the "preparing a vault instance for a new project" mode.
             :param token (str): root token with full access to configure the vault-server.
             :param approle (dict): dictionary with approle credentials.
                 :param id (str): approle-id to receive a token.
@@ -41,16 +41,16 @@ class VaultClient:
 
         Examples:
             >>> init_instance = VaultClient(
-                    url='http://vault-server:8200',
+                    url='http://vault:8200',
                     name='myapp-1'
                 )
-            >>> instance_prepare = VaultClient(
-                    url='http://vault-server:8200',
+            >>> prepare_instance = VaultClient(
+                    url='http://vault:8200',
                     name='myapp-1'
                     token=hvs.123qwerty
                 )
-            >>> client = VaultClient(
-                    url='http://vault-server:8200',
+            >>> client_secrets = VaultClient(
+                    url='http://vault:8200',
                     name='myapp-1',
                     approle={'id': '123qwerty', 'secret-id': 'qwerty123'}
                 )
@@ -58,14 +58,56 @@ class VaultClient:
         if url:
             self.url = url
         else:
-            self.url = os.environ['VAULT_ADDR']
+            self.url = self.get_env('url')
+
         self.name = name
         self.kwargs = kwargs
+
         if kwargs.get('new'):
+            self.token = None
             self.client = self.prepare_client_configurator()
         else:
             self.approle = {}
             self.client = self.prepare_client_secrets()
+
+    def get_env(
+        self,
+        name: str = None
+    ) -> str | dict:
+        """
+        This method is used to extract a value from an environment variable and error handling
+
+        Args:
+            :param name (str): name of the environment variable
+
+        Returns:
+            (str) value
+                or
+            (dict) values
+                or None
+        """
+        try:
+            if name == 'url':
+                return os.environ['VAULT_ADDR']
+            if name == 'token':
+                return os.environ['VAULT_TOKEN']
+            if name == 'approle':
+                return {
+                    'id': os.environ['VAULT_APPROLE_ID'],
+                    'secret-id': os.environ['VAULT_APPROLE_SECRETID']
+                }
+            return None
+        except KeyError as keyerror:
+            log.error(
+                '[class.%s] failed to extract environment variable for parameter "%s"',
+                __class__.__name__,
+                name
+            )
+            raise KeyError(
+                "Failed to extract the value of the environment variable. "
+                "You need to set an environment variable or pass an argument "
+                "when creating an instance of VaultClient(arg=value)"
+            ) from keyerror
 
     def prepare_client_configurator(
         self
@@ -89,22 +131,16 @@ class VaultClient:
             url=self.url
         )
         if not client.sys.is_initialized():
-            token = self.init_instance(
+            self.token = self.init_instance(
                 client=client
             )['root_token']
         elif self.kwargs.get('token'):
-            token = self.kwargs.get('token')
-        elif os.environ['VAULT_TOKEN']:
-            token = os.environ['VAULT_TOKEN']
+            self.token = self.kwargs.get('token')
         else:
-            log.error(
-                '[class.%s] failed to get authorization data through the Root Token'
-                'please, check environment variable: VAULT_TOKEN',
-                __class__.__name__,
-            )
+            self.token = self.get_env('token')
         return hvac.Client(
             url=self.url,
-            token=token
+            token=self.token
         )
 
     def prepare_client_secrets(
@@ -126,15 +162,8 @@ class VaultClient:
         """
         if self.kwargs.get('approle'):
             self.approle = self.kwargs.get('approle')
-        elif os.environ['VAULT_APPROLE_ID'] and os.environ['VAULT_APPROLE_SECRETID']:
-            self.approle['id'] = os.environ['VAULT_APPROLE_ID']
-            self.approle['secret-id'] = os.environ['VAULT_APPROLE_SECRETID']
         else:
-            log.error(
-                '[class.%s] failed to get authorization data through the AppRole'
-                'please, check environment variables: VAULT_APPROLE_ID/VAULT_APPROLE_SECRETID',
-                __class__.__name__,
-            )
+            self.approle = self.get_env('approle')
         client = hvac.Client(
             url=self.url,
             namespace=self.name
