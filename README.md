@@ -10,74 +10,154 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/obervinov/vault-package?style=for-the-badge)
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/book.png" width="25" title="about"> About this project
-This is an additional implementation over the **hvac** module.
+This is an additional implementation compared to the **hvac** module.
 
-The main purpose of which is simplified use and interaction with vault for my standard projects.
+The main purpose of which is to simplify the use and interaction with vault for my standard projects.
 
-This module contains a collection of methods for working with vault.
+This module contains a set of methods for working with secrets and quickly configuring Vault.
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.1](https://github.com/obervinov/_templates/tree/v1.0.1) |
+| GitHub Actions Templates | [v1.0.4](https://github.com/obervinov/_templates/tree/v1.0.4) |
 
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
+| Variable  | Description | Example |
+| ------------- | ------------- | ------------- |
+| `VAULT_ADDR`  | URL of the vault server | `http://vault.example.com:8200` |
+| `VAULT_TOKEN` | Root token with full access rights | `hvs.123qwerty` |
+| `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server | `db02de05-fa39-4855-059b-67221c5c2f63` |
+| `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server |  `6a174c20-f6de-a53c-74d2-6018fcceff64` |
 
-## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Support only kv version 2
-- Authentication with approle
-- Read secrets
-- List secrets
-- Put secrets
-- Patch secrets
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
+__The client can only work with the KV v2 engine__
+- Client: Authentication using the AppRole
+- Client: Reading a secrets
+- Client: Listing a secrets
+- Client: Writing a secrets
+- Configurator: Initializing a new vault instance
+- Configurator: Unsealing a new vault instance
+- Configurator: Creating a new namespace and enabling the kvv2 engine
+- Configurator: Creating a new AppRole ID and a generating a new AppRole Secret ID
+- Configurator: Uploading a new vault policy
+
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="mods"> Usage examples
+This module can operate in two types of modes:
+1. Working with the kv secrets engine (v2): `read`/`write`/`update`/`list` of secrets
+```python
+from vault import VaultClient
+
+client = VaultClient(
+            url='http://0.0.0.0:8200',
+            name='project1',
+            approle={
+                'id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                'secret-id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+            }
+)
+
+# Get only the key value from the secret
+# type: str
+value = client.read_secret(
+    path='namespace/secret',
+    key='key'
+)
+
+# Get full dict with the secret body
+# type: dict
+secret = client.read_secret(
+    path='namespace/secret'
+)
+
+# Write new data to a secret
+# type: requests.response
+response = client.write_secret(
+     path='namespace/secret',
+     key='key',
+     value='value'
+)
+
+# Get a list of secrets on the specified path
+# type: list
+response = client.list_secrets(
+    path='namespace/secret1'
+)
+```
+2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
+
+_preparing an existing vault server for your project_
+```python
+from vault import VaultClient
+
+configurator = VaultClient(
+                url='http://0.0.0.0:8200',
+                name='project1',
+                new=True,
+)
+
+# Enable the kv v2 engine and create a new namespace
+# type: str
+namespace = configurator.create_namespace(
+        name='namespace1'
+)
+
+# Download a new policy from a local file
+# type: str
+policy = configurator.create_policy(
+        name='policy1',
+        path='tests/vault/policy.hcl'
+)
+
+# Create a new approle
+# type: dict
+approle = configurator.create_approle(
+        name='approle1',
+        path=namespace,
+        policy=policy
+)
+```
+_preparing a new (not initialized) vault server for your project_
+```python
+from vault import VaultClient
+
+configurator = VaultClient(
+                url='http://0.0.0.0:8200',
+                name='project1',
+                new=True,
+                token='hvs.123456789qwerty'
+)
+
+# Enable the kv v2 engine and create a new namespace
+# type: str
+namespace = configurator.create_namespace(
+        name='namespace1'
+)
+
+# Download a new policy from a local file
+# type: str
+policy = configurator.create_policy(
+        name='policy1',
+        path='tests/vault/policy.hcl'
+)
+
+# Create a new approle
+# type: dict
+approle = configurator.create_approle(
+        name='approle1',
+        path=namespace,
+        policy=policy
+)
+```
+
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/vault.png" width="25" title="usage"> Vault Policy structure
+An example with the required permissions and their description in [policy.hcl](tests/vault/policy.hcl)
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
 # Install current version
-pip3 install git+https://github.com/obervinov/vault-package.git#egg=vault
+pip install git+https://github.com/obervinov/vault-package.git#egg=vault
 # Install version by branch
-pip3 install git+https://github.com/obervinov/vault-package.git@main#egg=vault
+pip install git+https://github.com/obervinov/vault-package.git@main#egg=vault
 # Install version by tag
-pip3 install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
-```
-
-## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="usage"> Usage example
-```python
-"""Import module"""
-import os
-import vault as vault
-
-"""Environment variables"""
-vault_mount_point = os.environ.get('VAULT_MOUNT_PATH', 'kv')
-vault_addr = os.environ.get('VAULT_ADDR', 'http://localhost:8200')
-vault_approle_id = os.environ.get('VAULT_APPROLE_ID', 'not set')
-vault_approle_secret_id = os.environ.get('VAULT_APPROLE_SECRET_ID', 'not set')
-
-"""Init class"""
-vc = vault.VaultClient(
-               vault_addr,
-               vault_approle_id,
-               vault_approle_secret_id,
-               vault_mount_point
-)
-
-secret_key_value = vc.vault_read_secrets("bucket1/secret1", 'key1')
-"""Read target key in secret
-type: str
-response format: value2
-"""
-
-secret_full = vc.vault_read_secrets("bucket1/secret1")
-"""Read all keys and values in secret
-type: dict
-response format: {"key1": "value1", "key2": "value2"}
-"""
-
-vc.vault_put_secrets("bucket1/secret1", "my_key", "my_value")
-"""Put secret (patch if secret already exist)
-"""
-
-vc.vault_list_secrets("bucket1/secret1")
-"""List secrets
-type: list
-response format: ["key1", "key2", "key3"]
-"""
+pip install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
 ```
