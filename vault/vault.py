@@ -486,8 +486,7 @@ class VaultClient:
         self,
         path: str = None,
         key: str = None,
-        value: str = None,
-        overwrite: bool = False
+        value: str = None
     ) -> object:
         """
         A method for write secret from vault.
@@ -496,30 +495,29 @@ class VaultClient:
             :param path (str): the path to the secret in vault.
             :param key (str): the key to write to the secret.
             :param value (str): the value of the key to write to the secret.
-            :param overwrite (bool): to overwrite the secret
 
         Returns:
             (object) https://www.w3schools.com/python/ref_requests_response.asp
         """
-        if overwrite:
-            return self.client.secrets.kv.v2.create_or_update_secret(
-                path=path,
-                secret={key: value},
-                mount_point=self.name
-            )
+        # This is not an optimal solution,
+        # but the hvac module cannot verify the existence of a secret without exception
+        # https://github.com/hvac/hvac/issues/381
         try:
+            # check if a secret exists
             secret = self.client.secrets.kv.v2.read_secret_version(
                 path=path,
                 mount_point=self.name,
                 raise_on_deleted_version=True
             )['data']['data']
             secret[key] = value
+            # update an existing secret
             return self.client.secrets.kv.v2.create_or_update_secret(
                 path=path,
                 secret=secret,
                 mount_point=self.name
             )
         except hvac.exceptions.InvalidPath:
+            # if the secret doesn't exist
             return self.client.secrets.kv.v2.create_or_update_secret(
                 path=path,
                 secret={key: value},
@@ -535,8 +533,7 @@ class VaultClient:
             return self.write_secret(
                 path=path,
                 key=key,
-                value=value,
-                overwrite=overwrite
+                value=value
             )
 
     def list_secrets(
