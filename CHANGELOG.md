@@ -5,7 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## v2.0.1 - 2023-06-19
 ### What's Changed
-**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.0...v2.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.0...v2.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/27
 #### 🐛 Bug Fixes
 * [Fix work with transit dependencies in setup.py](https://github.com/obervinov/vault-package/issues/26)
 
@@ -14,8 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10
 #### 🐛 Bug Fixes
-* https://github.com/obervinov/_templates/issues/16
-* https://github.com/obervinov/_templates/issues/18
+* [Fix: typos in workflow](https://github.com/obervinov/_templates/issues/16)
+* [Fix: add the pylint module to install in the test.pylint.yml task](https://github.com/obervinov/_templates/issues/18)
 * renamed the directory with modules: `src` -> `vault`
 * removed condition `- '!main'` for [.github/workflows/tests.yml](https://github.com/obervinov/vault-package/blob/v2.0.0/.github/workflows/tests.yml#L3-L8) (this is done for the correct display of the badge in [README.md](https://github.com/obervinov/vault-package/blob/v2.0.0/README.md?plain=1#L4) on the `main` brunch)
 #### 💥 Breaking Changes
@@ -24,20 +24,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * changed log format `f-string` -> `%s-lazzy`
 * updated [SECURITY.md](https://github.com/obervinov/vault-package/blob/v2.0.0/SECURITY.md) policy
 #### 🚀 Features
-* https://github.com/obervinov/vault-package/issues/16
-* https://github.com/obervinov/vault-package/issues/14
-* https://github.com/obervinov/vault-package/issues/12
+* [Add an automatic token reissue function to reduce lease_ttl](https://github.com/obervinov/vault-package/issues/16)
+* [Add workflow with package installation verification (by tag, branch, default)](https://github.com/obervinov/vault-package/issues/14)
+* [Add methods to automatically configure a new vault instance or prepare an existing instance](https://github.com/obervinov/vault-package/issues/12)
 * all workflows migrated to version `v1.0.4`
 * updated logger version `git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1"`
 * added condition `paths: ['vault/**']` for `.github/workflows/release.yml` action (this is done so that you can update the documentation without creating an `PR` and a `new release`)
 * added support for default environment variables: `VAULT_ADDR', `VAULT_TOKEN', `VAULT_APPROLE_ID` and `VAULT_APPROVED_SECRETID` for a more native and convenient way to interact with the vault api
-* https://github.com/obervinov/vault-package/issues/19
+* [Write tests for pytest](https://github.com/obervinov/vault-package/issues/19)
 #### 📚 Documentation
-* https://github.com/obervinov/vault-package/issues/13
-* https://github.com/obervinov/vault-package/issues/17
-* https://github.com/obervinov/vault-package/issues/18
+* [Updated PR template: full changelog](https://github.com/obervinov/vault-package/issues/13)
+* [Add to readme.md structure and rights to work with vault](https://github.com/obervinov/vault-package/issues/17)
+* [Add to readme.md information about environment variables](https://github.com/obervinov/vault-package/issues/18)
 * updated and expanded [README.md](https://github.com/obervinov/vault-package/tree/v2.0.0#-supported-environment-variables)
-* updated `description` in `pyproject.toml`
+* updated `description` in `pyproject.toml` 
 
 
 
