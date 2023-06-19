@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v2.0.1 - 2023-06-19
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.0...v2.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/
+#### 🐛 Bug Fixes
+* [Fix work with transit dependencies in setup.py](https://github.com/obervinov/vault-package/issues/26)
+
+
 ## v2.0.0 - 2023-05-22
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.1...v2.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/10

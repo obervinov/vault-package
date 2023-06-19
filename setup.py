@@ -10,7 +10,7 @@ with open('CHANGELOG.md', 'r', encoding='utf8') as changelog:
 
 setup(
     name='vault',
-    version='2.0.0',
+    version='2.0.1',
     license='MIT',
     description=(
         "This is an additional implementation compared to the hvac module. "
@@ -29,21 +29,15 @@ setup(
     include_package_data=True,
     classifiers=[
         "License :: OSI Approved :: MIT License",
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Operating System :: OS Independent'
+        "Programming Language :: Python :: 3.10",
+        "Operating System :: OS Independent",
+        "Intended Audience :: Developers",
+        "Topic :: Software Development"
     ],
     keywords=['vault', 'client'],
     install_requires=[
         'hvac==1.1.0',
-        'keyring==23.13.1'
-    ],
-    dependency_links=[
-        'https://github.com/obervinov/logger-package/tarball/master#egg=logger-1.0.1'
+        'keyring==23.13.1',
+        'logger @ git+https://github.com/obervinov/logger-package.git@v1.0.1',
     ]
 )
