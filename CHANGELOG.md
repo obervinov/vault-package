@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.0...v2.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/27
 #### 🐛 Bug Fixes
 * [Fix work with transit dependencies in setup.py](https://github.com/obervinov/vault-package/issues/26)
+* [A bug with an infinite loop on the reissue of the token](https://github.com/obervinov/vault-package/issues/25)
+* [Add dependencies between tasks in the GitHub Actions](https://github.com/obervinov/vault-package/issues/20)
+#### 📚 Documentation
+* [Add a description to the links in CHANGELOG.md](https://github.com/obervinov/vault-package/issues/28)
+* [Add to README.md description of dependencies](https://github.com/obervinov/vault-package/issues/22)
 
 
 ## v2.0.0 - 2023-05-22
