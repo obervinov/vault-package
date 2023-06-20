@@ -1,8 +1,9 @@
 """
 This test is necessary to check how the module works with the secrets of the vault instance.
 """
-import pytest
 import time
+import pytest
+
 
 @pytest.mark.order(4)
 def test_client_secret(secrets_client):

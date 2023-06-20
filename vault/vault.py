@@ -4,6 +4,7 @@ This module contains an implementation over the hvac module for interacting with
 import os
 import json
 from datetime import datetime, timezone
+from dateutil.parser import isoparse
 import hvac
 import keyring
 from logger import log
@@ -185,7 +186,7 @@ class VaultClient:
                 mount_point=self.name,
                 cas_required=False
             )
-            self.token_expire_date = datetime.fromisoformat(
+            self.token_expire_date = isoparse(
                 client.lookup_token()['data']['expire_time']
             ).replace(tzinfo=None)
             log.info(
