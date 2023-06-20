@@ -6,6 +6,10 @@ path "auth/token/lookup" {
 path "auth/token/revoke" {
   capabilities = ["update"]
 }
+# To lookup for a token that has expired
+path "auth/token/lookup-self" {
+  capabilities = ["read"]
+}
 # To read and update the namespace configuration
 path "testapp-1/config" {
   capabilities = ["read", "list", "update"]

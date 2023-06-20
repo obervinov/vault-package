@@ -3,6 +3,7 @@ This module contains an implementation over the hvac module for interacting with
 """
 import os
 import json
+from datetime import datetime, timezone
 import hvac
 import keyring
 from logger import log
@@ -69,6 +70,7 @@ class VaultClient:
             self.client = self.prepare_client_configurator()
         else:
             self.approle = {}
+            self.token_expire_date = None
             self.client = self.prepare_client_secrets()
 
     def get_env(
@@ -119,7 +121,7 @@ class VaultClient:
         to work with my typical projects.
         - init
         - unseal
-        - uplaod a policy
+        - upload a policy
         - create a approle
         - create a namespace
 
@@ -127,7 +129,7 @@ class VaultClient:
             None
 
         Returns:
-            (hvac.Client) configrator_client
+            (hvac.Client) configurator_client
         """
         client = hvac.Client(
             url=self.url
@@ -183,6 +185,9 @@ class VaultClient:
                 mount_point=self.name,
                 cas_required=False
             )
+            self.token_expire_date = datetime.fromisoformat(
+                client.lookup_token()['data']['expire_time']
+            ).replace(tzinfo=None)
             log.info(
                 '[class.%s] vault token with id %s created successful',
                 __class__.__name__,
@@ -197,11 +202,11 @@ class VaultClient:
                 forbidden
             )
             raise hvac.exceptions.Forbidden
-        except hvac.exceptions.InvalidRequest as invalidrequest:
+        except hvac.exceptions.InvalidRequest as invalid_request:
             log.error(
                 '[class.%s] failed to log in using the AppRole: %s',
                 __class__.__name__,
-                invalidrequest
+                invalid_request
             )
             raise hvac.exceptions.InvalidRequest
 
@@ -210,7 +215,7 @@ class VaultClient:
         client: hvac.Client = None
     ) -> dict:
         """
-        A method for initing the vault-server instance.
+        A method for initialization the vault-server instance.
 
         Args:
             :param client (hvac.Client): client for initialization vault connections
@@ -225,7 +230,7 @@ class VaultClient:
         )
         response = client.sys.initialize()
         try:
-            keyring.set_password(self.url, "vault-package:initdata", json.dumps(response))
+            keyring.set_password(self.url, "vault-package:init-data", json.dumps(response))
             log.info(
                 '[class.%s] the vault instance was successfully initialized: '
                 'sensitive data for managing this instance has been stored in your system keystore',
@@ -247,7 +252,7 @@ class VaultClient:
                 ]
             )
             log.info(
-                '[class.%s] vault instance has been to unsealed successfull',
+                '[class.%s] vault instance has been to unsealed successful',
                 __class__.__name__,
             )
         return response
@@ -267,7 +272,7 @@ class VaultClient:
         """
         try:
             log.info(
-                '[class.%s] creating new namesapce "%s" with type "kv2"...',
+                '[class.%s] creating new namespace "%s" with type "kv2"...',
                 __class__.__name__,
                 name
             )
@@ -275,7 +280,7 @@ class VaultClient:
                 backend_type='kv',
                 path=name,
                 description=(
-                    "Namespace is created automatically via the configrator module: "
+                    "Namespace is created automatically via the configurator module: "
                     "https://github.com/obervinov/vault-package"
                 ),
                 options={
@@ -289,11 +294,11 @@ class VaultClient:
                 response
             )
             return name
-        except hvac.exceptions.InvalidRequest as invalidrequest:
+        except hvac.exceptions.InvalidRequest as invalid_request:
             log.warning(
                 '[class.%s] namespace already exist: %s',
                 __class__.__name__,
-                invalidrequest
+                invalid_request
             )
             return name
         except hvac.exceptions.Forbidden as forbidden:
@@ -317,7 +322,7 @@ class VaultClient:
             :param name (str): name of the policy.
             :param path (str): the path to the file with the contents of the policy.
 
-        Retruns:
+        Returns:
             (str) policy_name
                 or
             None
@@ -337,7 +342,7 @@ class VaultClient:
             )
             return name
         log.error(
-            '[class.%s] the file with the vault policy wasnt found: %s.',
+            '[class.%s] the file with the vault policy wasn`t found: %s.',
             __class__.__name__,
             path
         )
@@ -347,7 +352,8 @@ class VaultClient:
         self,
         name: str = None,
         path: str = None,
-        policy: str = None
+        policy: str = None,
+        token_ttl: str = '1h'
     ) -> dict | None:
         """
         Method of creating a new approle for authorization in the vault.
@@ -356,6 +362,7 @@ class VaultClient:
             :param name (str): name of the AppRole.
             :param path (str): custom mount point for the new AppRole.
             :param policy (str): default policy name for issued tokens.
+            :param token_ttl (str): token lifetime during authorization via approle
 
         Returns:
             (dict) approle_data
@@ -367,11 +374,11 @@ class VaultClient:
                 method_type='approle',
                 path=path
             )
-        except hvac.exceptions.InvalidRequest as invalidrequest:
+        except hvac.exceptions.InvalidRequest as invalid_request:
             log.warning(
                 '[class.%s] auth method already exist: %s',
                 __class__.__name__,
-                invalidrequest
+                invalid_request
             )
         response = self.client.auth.approle.create_or_update_approle(
             role_name=name,
@@ -379,7 +386,7 @@ class VaultClient:
             token_type='service',
             secret_id_num_uses=0,
             token_num_uses=0,
-            token_ttl='1h',
+            token_ttl=token_ttl,
             bind_secret_id=True,
             token_no_default_policy=True,
             mount_point=path
@@ -461,25 +468,27 @@ class VaultClient:
                 return response['data']['data'][key]
             if not key:
                 return response['data']['data']
-        except hvac.exceptions.InvalidPath as invalidpath:
+        except hvac.exceptions.InvalidPath as invalid_path:
             log.error(
-                '[class.%s] reading secret %s faild: %s',
+                '[class.%s] reading secret %s failed: %s',
                 __class__.__name__,
                 path,
-                invalidpath
+                invalid_path
             )
             raise hvac.exceptions.InvalidPath
         except hvac.exceptions.Forbidden as forbidden:
-            log.warning(
-                '[class.%s] the token has expired: %s',
+            if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
+                self.client = self.prepare_client_secrets()
+                return self.read_secret(
+                    path=path,
+                    key=key
+                )
+            log.error(
+                '[class.%s] reading secret failed: %s',
                 __class__.__name__,
                 forbidden
             )
-            self.client = self.prepare_client_secrets()
-            return self.read_secret(
-                path=path,
-                key=key
-            )
+            raise hvac.exceptions.Forbidden
         return None
 
     def write_secret(
@@ -524,17 +533,19 @@ class VaultClient:
                 mount_point=self.name
             )
         except hvac.exceptions.Forbidden as forbidden:
-            log.warning(
-                '[class.%s] the token has expired: %s',
+            if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
+                self.client = self.prepare_client_secrets()
+                return self.write_secret(
+                    path=path,
+                    key=key,
+                    value=value
+                )
+            log.error(
+                '[class.%s] writing secret failed: %s',
                 __class__.__name__,
                 forbidden
             )
-            self.client = self.prepare_client_secrets()
-            return self.write_secret(
-                path=path,
-                key=key,
-                value=value
-            )
+            raise hvac.exceptions.Forbidden
 
     def list_secrets(
         self,
@@ -555,12 +566,14 @@ class VaultClient:
                 mount_point=self.name
             )['data']['keys']
         except hvac.exceptions.Forbidden as forbidden:
-            log.warning(
-                '[class.%s] the token has expired: %s',
+            if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
+                self.client = self.prepare_client_secrets()
+                return self.list_secrets(
+                    path=path
+                )
+            log.error(
+                '[class.%s] listing secret failed: %s',
                 __class__.__name__,
                 forbidden
             )
-            self.client = self.prepare_client_secrets()
-            return self.list_secrets(
-                path=path
-            )
+            raise hvac.exceptions.Forbidden
