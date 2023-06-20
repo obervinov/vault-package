@@ -1,6 +1,7 @@
 """
 This test is necessary to check how the module works with the secrets of the vault instance.
 """
+import time
 import pytest
 
 
@@ -46,6 +47,19 @@ def test_list_secrets(secrets_client, secret_path):
     """
     Testing checks the reading of the list of secrets from the vault
     """
+    response = secrets_client.list_secrets(
+        path=f"{secret_path.split('/')[0]}/"
+    )
+    assert f"{secret_path.split('/')[1]}" in response
+    assert isinstance(response, list)
+
+
+@pytest.mark.order(8)
+def test_token_ttl_exparation(secrets_client, secret_path):
+    """
+    Testing how does the module work with a token that has expired
+    """
+    time.sleep(30)
     response = secrets_client.list_secrets(
         path=f"{secret_path.split('/')[0]}/"
     )

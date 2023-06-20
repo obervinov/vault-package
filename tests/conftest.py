@@ -85,5 +85,6 @@ def fixture_approle(configurator_client, name, policy):
     return configurator_client.create_approle(
         name=name,
         path=name,
-        policy=policy
+        policy=policy,
+        token_ttl='15s'
     )
