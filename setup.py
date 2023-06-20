@@ -38,6 +38,7 @@ setup(
     install_requires=[
         'hvac==1.1.0',
         'keyring==23.13.1',
+        'python-dateutil==2.8.2',
         'logger @ git+https://github.com/obervinov/logger-package.git@v1.0.1',
     ]
 )

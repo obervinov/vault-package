@@ -34,6 +34,7 @@ classifiers = [
 python = "^3.6.2"
 hvac = "^1.1.0"
 keyring = "^23.13.1"
+python-dateutil = "^2.8.2"
 logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.1" }
 
 [tool.pytest.ini_options]
