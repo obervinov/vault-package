@@ -412,6 +412,12 @@ class VaultClient:
                                 mount_point=path
                          )["data"]["secret_id"]
         }
+        keyring.set_password(self.url, "vault-package:approle-data", json.dumps(approle))
+        log.info(
+            '[class.%s] confidential vault login data via approle '
+            'has been stored in your system keystore',
+            __class__.__name__
+        )
         log.info(
             '[class.%s] testing login with new approle...',
             __class__.__name__

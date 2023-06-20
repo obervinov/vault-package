@@ -53,6 +53,7 @@ def test_list_secrets(secrets_client, secret_path):
     assert f"{secret_path.split('/')[1]}" in response
     assert isinstance(response, list)
 
+
 @pytest.mark.order(8)
 def test_token_ttl_exparation(secrets_client, secret_path):
     """
