@@ -432,11 +432,16 @@ class VaultClient:
                 __class__.__name__
             )
         except keyring.errors.NoKeyringError:
+            temporary_file_path = "/tmp/vault-package-approle-data.json"
             log.warning(
-                '[class.%s] confidential vault login data via approle was not saved.',
-                __class__.__name__
+                '[class.%s] confidential vault login data via approle was not saved'
+                'to the system keystore. They will be written to a temporary file %s. '
+                'Please, move this file to a safe place.',
+                __class__.__name__,
+                temporary_file_path
             )
-
+            with open(temporary_file_path, 'w', encoding='UTF-8') as sensitive_file:
+                sensitive_file.write(json.dumps(response))
         log.info(
             '[class.%s] testing login with new approle...',
             __class__.__name__
