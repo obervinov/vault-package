@@ -244,11 +244,17 @@ class VaultClient:
                 __class__.__name__
             )
         except keyring.errors.NoKeyringError:
+            temporary_file_path = "/tmp/vault-package-init-data.json"
             log.warning(
                 '[class.%s] the vault instance was successfully initialized: '
-                'but sensitive data for managing this instance was not saved.',
-                __class__.__name__
+                'but sensitive information could not be written to the system keystore. '
+                'They will be written to a temporary file %s. '
+                'Please, move this file to a safe place.',
+                __class__.__name__,
+                temporary_file_path
             )
+            with open(temporary_file_path, 'w', encoding='UTF-8') as sensitive_file:
+                sensitive_file.write(json.dumps(response))
 
         if client.sys.is_sealed():
             client.sys.submit_unseal_keys(
