@@ -17,7 +17,7 @@ include = ["CHANGELOG.md"]
 "Bug Tracker" = "https://github.com/obervinov/messages-package/issues"
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.10"
 hvac = "^1.1.0"
 keyring = "^23.13.1"
 SecretStorage = "^3.3.3"
