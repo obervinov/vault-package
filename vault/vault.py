@@ -465,7 +465,7 @@ class VaultClient:
         self,
         path: str = None,
         key: str = None
-    ) -> str | dict:
+    ) -> str | dict | None:
         """
         A method for read secret from vault.
 
@@ -477,6 +477,8 @@ class VaultClient:
             (str) 'value'
                 or
             (dict) {'key': 'value'}
+                or
+            None
         """
         try:
             response = self.client.secrets.kv.v2.read_secret_version(
@@ -490,12 +492,12 @@ class VaultClient:
                 return response['data']['data']
         except hvac.exceptions.InvalidPath as invalid_path:
             log.error(
-                '[class.%s] reading secret %s failed: %s',
+                '[class.%s] it looks like the path to the %s secret does not exist: %s',
                 __class__.__name__,
                 path,
                 invalid_path
             )
-            raise hvac.exceptions.InvalidPath
+            return None
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
                 self.client = self.prepare_client_secrets()
