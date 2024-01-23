@@ -39,6 +39,12 @@ class VaultClient:
                 :param id (str): approle-id to receive a token.
                 :param secret-id (str): secret-id to receive a token.
 
+        Environment Variables:
+            VAULT_ADDR: URL of the vault server
+            VAULT_TOKEN: Root token with full access rights
+            VAULT_APPROLE_ID: Approle ID for authentication in the vault server
+            VAULT_APPROLE_SECRETID: Approle Secret ID for authentication in the vault server
+
         Returns:
             None
 
