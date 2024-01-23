@@ -1,7 +1,7 @@
 # Vault Package
-[![Release](https://github.com/obervinov/vault-package/actions/workflows/release.yml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/release.yml)
+[![Release](https://github.com/obervinov/vault-package/actions/workflows/release.yaml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/release.yaml)
 [![CodeQL](https://github.com/obervinov/vault-package/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/github-code-scanning/codeql)
-[![Tests and checks](https://github.com/obervinov/vault-package/actions/workflows/tests.yml/badge.svg?branch=main&event=pull_request)](https://github.com/obervinov/vault-package/actions/workflows/tests.yml)
+[![Tests and checks](https://github.com/obervinov/vault-package/actions/workflows/tests.yaml/badge.svg?branch=main&event=pull_request)](https://github.com/obervinov/vault-package/actions/workflows/tests.yaml)
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/obervinov/vault-package?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/obervinov/vault-package?style=for-the-badge)

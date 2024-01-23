@@ -1,0 +1,25 @@
+name: Release
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+
+jobs:
+  changelog:
+    uses: obervinov/_templates/.github/workflows/changelog.yaml@v1.0.12
+
+  pylint:
+    uses: obervinov/_templates/.github/workflows/pylint.yaml@v1.0.12
+
+  pytest:
+    uses: obervinov/_templates/.github/workflows/pytest.yaml@v1.0.12
+
+  pyproject:
+    uses: obervinov/_templates/.github/workflows/pyproject.yaml@v1.0.12
+
+  create-release:
+    uses: obervinov/_templates/.github/workflows/release.yaml@v1.0.12
+    needs: [changelog, pylint, pytest, pyproject]
