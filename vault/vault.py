@@ -40,10 +40,11 @@ class VaultClient:
                 :param secret-id (str): secret-id to receive a token.
 
         Environment Variables:
-            VAULT_ADDR: URL of the vault server
-            VAULT_TOKEN: Root token with full access rights
-            VAULT_APPROLE_ID: Approle ID for authentication in the vault server
-            VAULT_APPROLE_SECRETID: Approle Secret ID for authentication in the vault server
+            VAULT_ADDR: URL of the vault server.
+            VAULT_TOKEN: Root token with full access rights.
+            VAULT_APPROLE_ID: Approle ID for authentication in the vault server.
+            VAULT_APPROLE_SECRETID: Approle Secret ID for authentication in the vault server.
+            VAULT_MOUNT_POINT: Mount point for the Approle and Secrets Engine.
 
         Returns:
             None
@@ -69,7 +70,11 @@ class VaultClient:
         else:
             self.url = self.get_env('url')
 
-        self.name = name
+        if name:
+            self.name = name
+        else:
+            self.name = self.get_env('mount_point')
+
         self.kwargs = kwargs
 
         if kwargs.get('new'):
@@ -107,6 +112,8 @@ class VaultClient:
                     'id': os.environ['VAULT_APPROLE_ID'],
                     'secret-id': os.environ['VAULT_APPROLE_SECRETID']
                 }
+            if name == 'mount_point':
+                return os.environ['VAULT_MOUNT_POINT']
             return None
         except KeyError as keyerror:
             log.error(
