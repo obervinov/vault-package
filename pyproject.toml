@@ -10,11 +10,11 @@ packages = [{include = "vault"}]
 homepage = "https://github.com/obervinov/vault-package"
 repository = "https://github.com/obervinov/vault-package"
 documentation = "https://github.com/obervinov/vault-package/blob/main/README.md"
-keywords = ["vault", "vault-api", "vault-server"]
+keywords = ["vault", "vault-api", "vault-server", "secrets", "vault-python"]
 include = ["CHANGELOG.md"]
 
 [tool.poetry.urls]
-"Bug Tracker" = "https://github.com/obervinov/messages-package/issues"
+"Bug Tracker" = "https://github.com/obervinov/vault-package/issues"
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -22,7 +22,7 @@ hvac = "^1.1.0"
 keyring = "^23.13.1"
 SecretStorage = "^3.3.3"
 python-dateutil = "^2.8.2"
-logger = { git = "https://github.com/obervinov/logger-package.git", branch = "fix/v1.0.4" }
+logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.4" }
 
 
 [build-system]
