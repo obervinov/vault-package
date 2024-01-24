@@ -19,7 +19,7 @@ This module contains a set of methods for working with secrets and quickly confi
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.4](https://github.com/obervinov/_templates/tree/v1.0.4) |
+| GitHub Actions Templates | [v1.0.12](https://github.com/obervinov/_templates/tree/v1.0.12) |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
 | Variable  | Description | Example |
@@ -85,8 +85,7 @@ response = client.list_secrets(
 )
 ```
 2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
-
-_preparing an existing vault server for your project_
+_preparing a new (not initialized) vault server for your project_
 ```python
 from vault import VaultClient
 
@@ -117,14 +116,15 @@ approle = configurator.create_approle(
         policy=policy
 )
 ```
-_preparing a new (not initialized) vault server for your project_
+
+_preparing an existing vault server for your project_
 ```python
 from vault import VaultClient
 
 configurator = VaultClient(
                 url='http://0.0.0.0:8200',
                 name='project1',
-                new=True,
+                new=False,
                 token='hvs.123456789qwerty'
 )
 
@@ -155,10 +155,19 @@ An example with the required permissions and their description in [policy.hcl](t
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
-# Install current version
-pip install git+https://github.com/obervinov/vault-package.git#egg=vault
-# Install version by branch
-pip install git+https://github.com/obervinov/vault-package.git@main#egg=vault
-# Install version by tag
-pip install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
+tee -a pyproject.toml <<EOF
+[tool.poetry]
+name = myproject"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.0.2" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+EOF
+
+poetry install
 ```
