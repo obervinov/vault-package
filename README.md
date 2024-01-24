@@ -28,7 +28,7 @@ This module contains a set of methods for working with secrets and quickly confi
 | `VAULT_TOKEN` | Root token with full access rights | `hvs.123qwerty` |
 | `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server | `db02de05-fa39-4855-059b-67221c5c2f63` |
 | `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server |  `6a174c20-f6de-a53c-74d2-6018fcceff64` |
-| `VAULT_MOUNT_POINT`  |  Mount point for Approle and Secrets Engine. Can be used instead of the `name` argument in the `VaultClient`` class |  `myproject-1` |
+| `VAULT_MOUNT_POINT`  |  Mount point for Approle and Secrets Engine. Can be used instead of the `name` argument in the `VaultClient` class |  `myproject-1` |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
 __The client can only work with the KV v2 engine__
@@ -85,6 +85,7 @@ response = client.list_secrets(
 )
 ```
 2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
+
 _preparing a new (not initialized) vault server for your project_
 ```python
 from vault import VaultClient
