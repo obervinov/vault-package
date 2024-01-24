@@ -448,7 +448,7 @@ class VaultClient:
                 temporary_file_path
             )
             with open(temporary_file_path, 'w', encoding='UTF-8') as sensitive_file:
-                sensitive_file.write(json.dumps(response))
+                sensitive_file.write(json.dumps(approle))
         log.info(
             '[class.%s] testing login with new approle...',
             __class__.__name__
