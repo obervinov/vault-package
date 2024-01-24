@@ -18,7 +18,7 @@ include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-hvac = "^1.1.0"
+hvac = "^2.1.0"
 keyring = "^23.13.1"
 SecretStorage = "^3.3.3"
 python-dateutil = "^2.8.2"
