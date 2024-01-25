@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## v2.0.2 - 2024-01-24
+## v2.0.2 - 2024-01-25
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.1...v2.0.2 by @obervinov in https://github.com/obervinov/vault-package/pull/42
 #### 🐛 Bug Fixes
