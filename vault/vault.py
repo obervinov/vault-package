@@ -39,6 +39,13 @@ class VaultClient:
                 :param id (str): approle-id to receive a token.
                 :param secret-id (str): secret-id to receive a token.
 
+        Environment Variables:
+            VAULT_ADDR: URL of the vault server.
+            VAULT_TOKEN: Root token with full access rights.
+            VAULT_APPROLE_ID: Approle ID for authentication in the vault server.
+            VAULT_APPROLE_SECRETID: Approle Secret ID for authentication in the vault server.
+            VAULT_MOUNT_POINT: Mount point for the Approle and Secrets Engine.
+
         Returns:
             None
 
@@ -63,7 +70,11 @@ class VaultClient:
         else:
             self.url = self.get_env('url')
 
-        self.name = name
+        if name:
+            self.name = name
+        else:
+            self.name = self.get_env('mount_point')
+
         self.kwargs = kwargs
 
         if kwargs.get('new'):
@@ -101,6 +112,8 @@ class VaultClient:
                     'id': os.environ['VAULT_APPROLE_ID'],
                     'secret-id': os.environ['VAULT_APPROLE_SECRETID']
                 }
+            if name == 'mount_point':
+                return os.environ['VAULT_MOUNT_POINT']
             return None
         except KeyError as keyerror:
             log.error(
@@ -238,11 +251,17 @@ class VaultClient:
                 __class__.__name__
             )
         except keyring.errors.NoKeyringError:
+            temporary_file_path = "/tmp/vault-package-init-data.json"
             log.warning(
                 '[class.%s] the vault instance was successfully initialized: '
-                'but sensitive data for managing this instance was not saved.',
-                __class__.__name__
+                'but sensitive information could not be written to the system keystore. '
+                'They will be written to a temporary file %s. '
+                'Please, move this file to a safe place.',
+                __class__.__name__,
+                temporary_file_path
             )
+            with open(temporary_file_path, 'w', encoding='UTF-8') as sensitive_file:
+                sensitive_file.write(json.dumps(response))
 
         if client.sys.is_sealed():
             client.sys.submit_unseal_keys(
@@ -420,11 +439,16 @@ class VaultClient:
                 __class__.__name__
             )
         except keyring.errors.NoKeyringError:
+            temporary_file_path = "/tmp/vault-package-approle-data.json"
             log.warning(
-                '[class.%s] confidential vault login data via approle was not saved.',
-                __class__.__name__
+                '[class.%s] confidential vault login data via approle was not saved '
+                'to the system keystore. They will be written to a temporary file %s. '
+                'Please, move this file to a safe place.',
+                __class__.__name__,
+                temporary_file_path
             )
-
+            with open(temporary_file_path, 'w', encoding='UTF-8') as sensitive_file:
+                sensitive_file.write(json.dumps(approle))
         log.info(
             '[class.%s] testing login with new approle...',
             __class__.__name__
@@ -459,7 +483,7 @@ class VaultClient:
         self,
         path: str = None,
         key: str = None
-    ) -> str | dict:
+    ) -> str | dict | None:
         """
         A method for read secret from vault.
 
@@ -471,6 +495,8 @@ class VaultClient:
             (str) 'value'
                 or
             (dict) {'key': 'value'}
+                or
+            None
         """
         try:
             response = self.client.secrets.kv.v2.read_secret_version(
@@ -484,12 +510,12 @@ class VaultClient:
                 return response['data']['data']
         except hvac.exceptions.InvalidPath as invalid_path:
             log.error(
-                '[class.%s] reading secret %s failed: %s',
+                '[class.%s] it looks like the path to the %s secret does not exist: %s',
                 __class__.__name__,
                 path,
                 invalid_path
             )
-            raise hvac.exceptions.InvalidPath
+            return None
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
                 self.client = self.prepare_client_secrets()

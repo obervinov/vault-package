@@ -1,7 +1,7 @@
 # Vault Package
-[![Release](https://github.com/obervinov/vault-package/actions/workflows/release.yml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/release.yml)
+[![Release](https://github.com/obervinov/vault-package/actions/workflows/release.yaml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/release.yaml)
 [![CodeQL](https://github.com/obervinov/vault-package/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/github-code-scanning/codeql)
-[![Tests and checks](https://github.com/obervinov/vault-package/actions/workflows/tests.yml/badge.svg?branch=main&event=pull_request)](https://github.com/obervinov/vault-package/actions/workflows/tests.yml)
+[![Tests and checks](https://github.com/obervinov/vault-package/actions/workflows/tests.yaml/badge.svg?branch=main&event=pull_request)](https://github.com/obervinov/vault-package/actions/workflows/tests.yaml)
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/obervinov/vault-package?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/obervinov/vault-package?style=for-the-badge)
@@ -19,7 +19,7 @@ This module contains a set of methods for working with secrets and quickly confi
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.4](https://github.com/obervinov/_templates/tree/v1.0.4) |
+| GitHub Actions Templates | [v1.0.12](https://github.com/obervinov/_templates/tree/v1.0.12) |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
 | Variable  | Description | Example |
@@ -28,6 +28,7 @@ This module contains a set of methods for working with secrets and quickly confi
 | `VAULT_TOKEN` | Root token with full access rights | `hvs.123qwerty` |
 | `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server | `db02de05-fa39-4855-059b-67221c5c2f63` |
 | `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server |  `6a174c20-f6de-a53c-74d2-6018fcceff64` |
+| `VAULT_MOUNT_POINT`  |  Mount point for Approle and Secrets Engine. Can be used instead of the `name` argument in the `VaultClient` class |  `myproject-1` |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
 __The client can only work with the KV v2 engine__
@@ -85,7 +86,7 @@ response = client.list_secrets(
 ```
 2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
 
-_preparing an existing vault server for your project_
+_preparing a new (not initialized) vault server for your project_
 ```python
 from vault import VaultClient
 
@@ -116,14 +117,15 @@ approle = configurator.create_approle(
         policy=policy
 )
 ```
-_preparing a new (not initialized) vault server for your project_
+
+_preparing an existing vault server for your project_
 ```python
 from vault import VaultClient
 
 configurator = VaultClient(
                 url='http://0.0.0.0:8200',
                 name='project1',
-                new=True,
+                new=False,
                 token='hvs.123456789qwerty'
 )
 
@@ -154,10 +156,19 @@ An example with the required permissions and their description in [policy.hcl](t
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
-# Install current version
-pip install git+https://github.com/obervinov/vault-package.git#egg=vault
-# Install version by branch
-pip install git+https://github.com/obervinov/vault-package.git@main#egg=vault
-# Install version by tag
-pip install git+https://github.com/obervinov/vault-package.git@v1.0.0#egg=vault
+tee -a pyproject.toml <<EOF
+[tool.poetry]
+name = myproject"
+version = "1.0.0"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.0.2" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+EOF
+
+poetry install
 ```

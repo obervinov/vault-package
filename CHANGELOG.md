@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## v2.0.2 - 2024-01-25
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.1...v2.0.2 by @obervinov in https://github.com/obervinov/vault-package/pull/42
+#### 🐛 Bug Fixes
+* [Fix badge with tests in README.md](https://github.com/obervinov/vault-package/issues/33)
+* [Not working keyring for ubuntu secrets-tools](https://github.com/obervinov/vault-package/issues/30)
+* [Fix the error that caused the workflow `create_release` to run twice - at pr/main](https://github.com/obervinov/vault-package/issues/37)
+* [Add requirements dependency `dateutil`](https://github.com/obervinov/vault-package/issues/40)
+* [Dependency graph does not work correctly, sort it out and fix it network/dependencies](https://github.com/obervinov/vault-package/issues/41)
+#### 📚 Documentation
+* [Add information about supported environment variables to the doc-string](https://github.com/obervinov/vault-package/issues/36)
+* [Fix badge with tests in README.md](https://github.com/obervinov/vault-package/issues/33)
+#### 🚀 Features
+* [Merge all workflows to single file](https://github.com/obervinov/vault-package/issues/34)
+* [Return None if secret path doesn't exist](https://github.com/obervinov/vault-package/issues/31)
+* [Migration from pip to poetry](https://github.com/obervinov/vault-package/issues/23)
+* [Add support for the environment variable `VAULT_MOUNT_POINT`](https://github.com/obervinov/vault-package/issues/35)
+
+
 ## v2.0.1 - 2023-06-20
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.0...v2.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/27
@@ -16,6 +36,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * [Add to README.md description of dependencies](https://github.com/obervinov/vault-package/issues/22)
 #### 🚀 Features
 * [Add automatic data saving of the newly generated approle to the system keystrore](https://github.com/obervinov/vault-package/issues/29)
+
 
 ## v2.0.0 - 2023-05-22
 ### What's Changed
@@ -47,7 +68,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * updated `description` in `pyproject.toml` 
 
 
-
 ## v1.1.1 - 2023-03-01
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.1.0...v1.1.1 by @obervinov in https://github.com/obervinov/vault-package/pull/9
@@ -56,7 +76,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * added parameter dependency_links in [setup.py](https://github.com/obervinov/vault-package/blob/main/setup.py)
 #### 📚 Documentation
 * rewritten the sample code in [README.md](https://github.com/obervinov/vault-package/blob/main/README.md)
-
 
 
 ## v1.1.0 - 2023-02-28
@@ -87,7 +106,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * updated documentation format in [README.md](https://github.com/obervinov/vault-package/blob/main/README.md)
 
 
-
 ## v1.0.2 - 2023-02-03
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.0.1...v1.0.2 by @obervinov in https://github.com/obervinov/vault-package/pull/2
@@ -100,13 +118,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * updated [README.md](https://github.com/obervinov/vault-package/blob/main/README.md)
 
 
-
 ## v1.0.1 - 2023-02-03
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v1.0.0...v1.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/1
 #### 🐛 Bug Fixes
 * added hvac=1.0.2 dependency in [setup.py](https://github.com/obervinov/vault-package/blob/main/setup.py)
-
 
 
 ## v1.0.0 - 2022-11-05

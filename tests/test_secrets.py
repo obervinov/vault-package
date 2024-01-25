@@ -65,3 +65,19 @@ def test_token_ttl_exparation(secrets_client, secret_path):
     )
     assert f"{secret_path.split('/')[1]}" in response
     assert isinstance(response, list)
+
+
+@pytest.mark.order(9)
+def test_read_secret_invalid_path(secrets_client, secret_path):
+    """
+    Testing reading a secret to the vault if the path is invalid (does not exist)
+    """
+    response_value = secrets_client.read_secret(
+        path=f"{secret_path}/invalid_path",
+        key="invalid_key"
+    )
+    response_dict = secrets_client.read_secret(
+        path=f"{secret_path}/invalid_path",
+    )
+    assert response_value is None
+    assert response_dict is None
