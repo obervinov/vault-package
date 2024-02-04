@@ -3,6 +3,7 @@ This module contains an implementation over the hvac module for interacting with
 """
 import os
 import json
+from typing import Union
 from datetime import datetime, timezone
 from dateutil.parser import isoparse
 import hvac
@@ -88,7 +89,7 @@ class VaultClient:
     def get_env(
         self,
         name: str = None
-    ) -> str | dict | None:
+    ) -> Union[str, dict, None]:
         """
         This method is used to extract a value from an environment variable and error handling
 
@@ -334,7 +335,7 @@ class VaultClient:
         self,
         name: str = None,
         path: str = None
-    ) -> str | None:
+    ) -> Union[str, None]:
         """
         Method of creating a new policy for approle in the vault.
 
@@ -374,7 +375,7 @@ class VaultClient:
         path: str = None,
         policy: str = None,
         token_ttl: str = '1h'
-    ) -> dict | None:
+    ) -> Union[dict, None]:
         """
         Method of creating a new approle for authorization in the vault.
 
@@ -483,7 +484,7 @@ class VaultClient:
         self,
         path: str = None,
         key: str = None
-    ) -> str | dict | None:
+    ) -> Union[str, dict, None]:
         """
         A method for read secret from vault.
 
