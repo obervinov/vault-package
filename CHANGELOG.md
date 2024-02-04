@@ -1,12 +1,11 @@
 # Change Log
-
 All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## v2.0.3 - 2024-02-04
 ### What's Changed
-**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.2...v2.0.3 by @obervinov in https://github.com/obervinov/vault-package/pull/
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.2...v2.0.3 by @obervinov in https://github.com/obervinov/vault-package/pull/45
 #### 🐛 Bug Fixes
 * Fix support for `python 3.9`
 
