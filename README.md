@@ -1,7 +1,7 @@
 # Vault Package
 [![Release](https://github.com/obervinov/vault-package/actions/workflows/release.yaml/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/release.yaml)
 [![CodeQL](https://github.com/obervinov/vault-package/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/obervinov/vault-package/actions/workflows/github-code-scanning/codeql)
-[![Tests and checks](https://github.com/obervinov/vault-package/actions/workflows/tests.yaml/badge.svg?branch=main&event=pull_request)](https://github.com/obervinov/vault-package/actions/workflows/tests.yaml)
+[![Tests and checks](https://github.com/obervinov/vault-package/actions/workflows/pr.yaml/badge.svg?branch=main&event=pull_request)](https://github.com/obervinov/vault-package/actions/workflows/pr.yaml)
 
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/obervinov/vault-package?style=for-the-badge)
 ![GitHub last commit](https://img.shields.io/github/last-commit/obervinov/vault-package?style=for-the-badge)
@@ -19,7 +19,7 @@ This module contains a set of methods for working with secrets and quickly confi
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.12](https://github.com/obervinov/_templates/tree/v1.0.12) |
+| GitHub Actions Templates | [v1.0.13](https://github.com/obervinov/_templates/tree/v1.0.13) |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
 | Variable  | Description | Example |
@@ -163,7 +163,7 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.0.2" }
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.0.4" }
 
 [build-system]
 requires = ["poetry-core"]
