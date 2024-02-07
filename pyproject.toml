@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vault"
-version = "2.0.3"
+version = "2.0.4"
 description = "This is an additional implementation compared to the hvac module. The main purpose of which is to simplify the use and interaction with vault for my standard projects. This module contains a set of methods for working with secrets and quickly configuring Vault."
 authors = ["Bervinov Oleg <obervinov@pm.me>"]
 maintainers = ["Bervinov Oleg <obervinov@pm.me>"]
@@ -19,11 +19,10 @@ include = ["CHANGELOG.md"]
 [tool.poetry.dependencies]
 python = "^3.9 || ^3.10 || ^3.11"
 hvac = "^2"
-keyring = "^23"
+keyring = "^24"
 SecretStorage = "^3"
 python-dateutil = "^2"
-logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.5" }
-
+logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.6" }
 
 [build-system]
 requires = ["poetry-core"]

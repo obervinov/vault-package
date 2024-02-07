@@ -211,7 +211,7 @@ class VaultClient:
             return client
         except hvac.exceptions.Forbidden as forbidden:
             log.error(
-                '[class.%s] failed to log in using the AppRole: %s\n'
+                '[class.%s] failed to login using the AppRole: %s\n'
                 'please, check permissions in your policy.hcl',
                 __class__.__name__,
                 forbidden
@@ -219,7 +219,7 @@ class VaultClient:
             raise hvac.exceptions.Forbidden
         except hvac.exceptions.InvalidRequest as invalid_request:
             log.error(
-                '[class.%s] failed to log in using the AppRole: %s',
+                '[class.%s] failed to login using the AppRole: %s',
                 __class__.__name__,
                 invalid_request
             )
@@ -254,7 +254,7 @@ class VaultClient:
         except keyring.errors.NoKeyringError:
             temporary_file_path = "/tmp/vault-package-init-data.json"
             log.warning(
-                '[class.%s] the vault instance was successfully initialized: '
+                '[class.%s] the vault instance was successfully initialized, '
                 'but sensitive information could not be written to the system keystore. '
                 'They will be written to a temporary file %s. '
                 'Please, move this file to a safe place.',
