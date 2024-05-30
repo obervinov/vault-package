@@ -16,9 +16,9 @@ path "testapp-1/config" {
 }
 # To get a list of secrets
 path "testapp-1/metadata/configuration/*" {
-  capabilities = ["read", "list"]
+  capabilities = ["read", "list", "delete"]
 }
 # To work with secret apllication data
 path "testapp-1/data/configuration/*" {
-  capabilities = ["create", "read", "update", "list"]
+  capabilities = ["create", "read", "update", "list", "delete"]
 }
