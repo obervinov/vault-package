@@ -16,10 +16,6 @@ The main purpose of which is to simplify the use and interaction with vault for 
 
 This module contains a set of methods for working with secrets and quickly configuring Vault.
 
-## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
-| Name  | Version |
-| ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.0.13](https://github.com/obervinov/_templates/tree/v1.0.13) |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
 | Variable  | Description | Example |
@@ -66,9 +62,7 @@ value = client.read_secret(
 
 # Get full dict with the secret body
 # type: dict
-secret = client.read_secret(
-    path='namespace/secret'
-)
+secret = client.read_secret(path='namespace/secret')
 
 # Write new data to a secret
 # type: requests.response
@@ -80,9 +74,11 @@ response = client.write_secret(
 
 # Get a list of secrets on the specified path
 # type: list
-response = client.list_secrets(
-    path='namespace/secret1'
-)
+response = client.list_secrets(path='namespace/secret1')
+
+# Delete a secret
+# type: bool
+response = client.delete_secret(path='namespace/secret')
 ```
 2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
 
@@ -98,9 +94,7 @@ configurator = VaultClient(
 
 # Enable the kv v2 engine and create a new namespace
 # type: str
-namespace = configurator.create_namespace(
-        name='namespace1'
-)
+namespace = configurator.create_namespace(name='namespace1')
 
 # Download a new policy from a local file
 # type: str
@@ -131,9 +125,7 @@ configurator = VaultClient(
 
 # Enable the kv v2 engine and create a new namespace
 # type: str
-namespace = configurator.create_namespace(
-        name='namespace1'
-)
+namespace = configurator.create_namespace(name='namespace1')
 
 # Download a new policy from a local file
 # type: str
@@ -163,7 +155,7 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.0.4" }
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.1.0" }
 
 [build-system]
 requires = ["poetry-core"]
@@ -172,3 +164,8 @@ EOF
 
 poetry install
 ```
+
+## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
+| Name  | Version |
+| ------------------------ | ----------- |
+| GitHub Actions Templates | [v1.2.5](https://github.com/obervinov/_templates/tree/v1.2.5) |
