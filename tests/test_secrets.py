@@ -81,3 +81,29 @@ def test_read_secret_invalid_path(secrets_client, secret_path):
     )
     assert response_value is None
     assert response_dict is None
+
+
+@pytest.mark.order(10)
+def test_list_secrets_invalid_path(secrets_client, secret_path):
+    """
+    Testing checks the reading of the list of secrets from the vault if the path is invalid (does not exist)
+    """
+    response = secrets_client.list_secrets(path=f"{secret_path}/invalid_path")
+    assert response == []
+    assert isinstance(response, list)
+
+
+@pytest.mark.order(10)
+def test_delete_secret(secrets_client, test_data, secret_path):
+    """
+    Testing deleting a secret from the vault
+    """
+    for key, value in test_data.items():
+        _ = secrets_client.write_secret(
+            path=secret_path,
+            key=key,
+            value=value
+        )
+        response = secrets_client.delete_secret(path=secret_path)
+        assert response == True
+        assert isinstance(response, bool)

@@ -483,7 +483,7 @@ class VaultClient:
     def list_secrets(
         self,
         path: str = None
-    ) -> Union[list, None]:
+    ) -> list:
         """
         A method for list secrets from vault.
 
@@ -493,7 +493,7 @@ class VaultClient:
         Returns:
             (list) ['key1','key2','key3']
                 or
-            None
+            (list) []
         """
         try:
             return self.client.secrets.kv.v2.list_secrets(
@@ -502,10 +502,40 @@ class VaultClient:
             )['data']['keys']
         except hvac.exceptions.InvalidPath as invalid_path:
             log.error('[class.%s] it looks like the path %s does not exist: %s', __class__.__name__, path, invalid_path)
-            return None
+            return []
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
                 self.client = self.prepare_client_secrets()
                 return self.list_secrets(path=path)
             log.error('[class.%s] listing secret failed: %s', __class__.__name__, forbidden)
+            raise hvac.exceptions.Forbidden
+
+    def delete_secret(
+        self,
+        path: str = None
+    ) -> bool:
+        """
+        A method for delete secret from vault.
+
+        Args:
+            :param path (str): the path to the secret in vault.
+
+        Returns:
+            (bool) True
+                or
+            (bool) False
+        """
+        try:
+            return self.client.secrets.kv.v2.delete_metadata_and_all_versions(
+                path=path,
+                mount_point=self.name
+            )
+        except hvac.exceptions.InvalidPath as invalid_path:
+            log.error('[class.%s] it looks like the path %s does not exist: %s', __class__.__name__, path, invalid_path)
+            return False
+        except hvac.exceptions.Forbidden as forbidden:
+            if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
+                self.client = self.prepare_client_secrets()
+                return self.delete_secret(path=path)
+            log.error('[class.%s] deleting secret failed: %s', __class__.__name__, forbidden)
             raise hvac.exceptions.Forbidden
