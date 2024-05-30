@@ -105,5 +105,5 @@ def test_delete_secret(secrets_client, test_data, secret_path):
             value=value
         )
         response = secrets_client.delete_secret(path=secret_path)
-        assert response == True
+        assert response is True
         assert isinstance(response, bool)

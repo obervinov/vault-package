@@ -526,10 +526,14 @@ class VaultClient:
             (bool) False
         """
         try:
-            return self.client.secrets.kv.v2.delete_metadata_and_all_versions(
+            response = self.client.secrets.kv.v2.delete_metadata_and_all_versions(
                 path=path,
                 mount_point=self.name
             )
+            if response.status_code == 204:
+                return True
+            log.error("[class.%s] failed to delete secret: %s", __class__.__name__, response)
+            return False
         except hvac.exceptions.InvalidPath as invalid_path:
             log.error('[class.%s] it looks like the path %s does not exist: %s', __class__.__name__, path, invalid_path)
             return False
