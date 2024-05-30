@@ -20,3 +20,7 @@ jobs:
 
   pyproject:
     uses: obervinov/_templates/.github/workflows/pyproject.yaml@v1.2.5
+  
+  pr:
+    uses: obervinov/_templates/.github/workflows/pr.yaml@v1.2.5
+    needs: [changelog, pylint, pytest, pyproject]

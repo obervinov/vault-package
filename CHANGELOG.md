@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * [cryptography NULL pointer dereference with pkcs12.serialize_key_and_certificates when called with a non-matching certificate and private key and an hmac_hash override ](https://github.com/obervinov/vault-package/security/dependabot/1)
 * [Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode](https://github.com/obervinov/vault-package/security/dependabot/2)
 * [Return `None` if the path does not exist when the `list_secrets()` method is called](https://github.com/obervinov/vault-package/issues/46)
+* [Add delete() method in class](https://github.com/obervinov/vault-package/issues/38)
+*
 
 
 ## v2.0.4 - 2024-02-07
