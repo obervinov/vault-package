@@ -6,7 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## v2.1.0 - 2024-05-30
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.4...v2.1.0 by @obervinov in https://github.com/obervinov/vault-package/pull/47
+#### 📚 Documentation
+* Update `*.md` templates for issues and pull requests
 #### 🚀 Features
+* [cryptography NULL pointer dereference with pkcs12.serialize_key_and_certificates when called with a non-matching certificate and private key and an hmac_hash override ](https://github.com/obervinov/vault-package/security/dependabot/1)
+* [Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode](https://github.com/obervinov/vault-package/security/dependabot/2)
 * [Return `None` if the path does not exist when the `list_secrets()` method is called](https://github.com/obervinov/vault-package/issues/46)
 
 
