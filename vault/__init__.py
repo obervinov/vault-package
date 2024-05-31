@@ -3,9 +3,13 @@ This is just a special file that tells pip that your main module is in this fold
 No need to add anything here. Feel free to delete this line when you make your own package
 Leave it empty
 """
-# flake8: noqa
-from .auth import VaultAuth
-from .kv2_engine import VaultSecrets
-from .deprecated import VaultDeprecated
-from .database_engine import VaultDatabase
+from .kv2_engine import KV2Engine
+from .db_engine import DBEngine
+from .exceptions import WrongKV2Configuration, WrongDBConfiguration
 
+__all__ = [
+    'KV2Engine',
+    'DBEngine',
+    'WrongKV2Configuration',
+    'WrongDBConfiguration'
+]
