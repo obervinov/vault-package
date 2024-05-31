@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## v2.1.0 - 2024-05-30
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.4...v2.1.0 by @obervinov in https://github.com/obervinov/vault-package/pull/47
+#### 💥 Breaking Changes
+* Methods `get_env()`, `prepare_client_configurator()`, `prepare_client_secrets()` and `init_instance()` of class `VaultClient()` have been privatized
 #### 📚 Documentation
 * Update `*.md` templates for issues and pull requests
 #### 🚀 Features

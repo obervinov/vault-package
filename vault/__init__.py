@@ -4,4 +4,8 @@ No need to add anything here. Feel free to delete this line when you make your o
 Leave it empty
 """
 # flake8: noqa
-from .vault import *
+from .auth import VaultAuth
+from .kv2_engine import VaultSecrets
+from .deprecated import VaultDeprecated
+from .database_engine import VaultDatabase
+

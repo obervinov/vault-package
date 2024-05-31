@@ -51,7 +51,7 @@ class VaultClient:
             None
 
         Examples:
-            >>> init_instance = VaultClient(
+            >>> _init_instance = VaultClient(
                     url='http://vault:8200',
                     name='myapp-1'
                 )
@@ -69,24 +69,24 @@ class VaultClient:
         if url:
             self.url = url
         else:
-            self.url = self.get_env('url')
+            self.url = self._get_env('url')
 
         if name:
             self.name = name
         else:
-            self.name = self.get_env('mount_point')
+            self.name = self._get_env('mount_point')
 
         self.kwargs = kwargs
 
         if kwargs.get('new'):
             self.token = None
-            self.client = self.prepare_client_configurator()
+            self.client = self._prepare_client_configurator()
         else:
             self.approle = {}
             self.token_expire_date = None
-            self.client = self.prepare_client_secrets()
+            self.client = self._prepare_client_secrets()
 
-    def get_env(
+    def _get_env(
         self,
         name: str = None
     ) -> Union[str, dict, None]:
@@ -124,7 +124,7 @@ class VaultClient:
                 "when creating an instance of VaultClient(arg=value)"
             ) from keyerror
 
-    def prepare_client_configurator(self) -> hvac.Client:
+    def _prepare_client_configurator(self) -> hvac.Client:
         """
         This method is used to prepare the client for setting up a new vault server
         to work with my typical projects.
@@ -144,17 +144,17 @@ class VaultClient:
             url=self.url
         )
         if not client.sys.is_initialized():
-            self.token = self.init_instance(client=client)['root_token']
+            self.token = self._init_instance(client=client)['root_token']
         elif self.kwargs.get('token'):
             self.token = self.kwargs.get('token')
         else:
-            self.token = self.get_env('token')
+            self.token = self._get_env('token')
         return hvac.Client(
             url=self.url,
             token=self.token
         )
 
-    def prepare_client_secrets(self) -> hvac.Client:
+    def _prepare_client_secrets(self) -> hvac.Client:
         """
         This method is used to prepare the client to work with the secrets of the kv v2 engine.
         - read secrets
@@ -170,7 +170,7 @@ class VaultClient:
         if self.kwargs.get('approle'):
             self.approle = self.kwargs.get('approle')
         else:
-            self.approle = self.get_env('approle')
+            self.approle = self._get_env('approle')
         client = hvac.Client(
             url=self.url,
             namespace=self.name
@@ -197,7 +197,7 @@ class VaultClient:
             log.error('[class.%s] failed to login using the AppRole: %s', __class__.__name__, invalid_request)
             raise hvac.exceptions.InvalidRequest
 
-    def init_instance(
+    def _init_instance(
         self,
         client: hvac.Client = None
     ) -> dict:
@@ -415,7 +415,7 @@ class VaultClient:
             return None
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
-                self.client = self.prepare_client_secrets()
+                self.client = self._prepare_client_secrets()
                 return self.read_secret(
                     path=path,
                     key=key
@@ -467,7 +467,7 @@ class VaultClient:
             )
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
-                self.client = self.prepare_client_secrets()
+                self.client = self._prepare_client_secrets()
                 return self.write_secret(
                     path=path,
                     key=key,
@@ -505,7 +505,7 @@ class VaultClient:
             return []
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
-                self.client = self.prepare_client_secrets()
+                self.client = self._prepare_client_secrets()
                 return self.list_secrets(path=path)
             log.error('[class.%s] listing secret failed: %s', __class__.__name__, forbidden)
             raise hvac.exceptions.Forbidden
@@ -539,7 +539,7 @@ class VaultClient:
             return False
         except hvac.exceptions.Forbidden as forbidden:
             if self.token_expire_date <= datetime.now(timezone.utc).replace(tzinfo=None):
-                self.client = self.prepare_client_secrets()
+                self.client = self._prepare_client_secrets()
                 return self.delete_secret(path=path)
             log.error('[class.%s] deleting secret failed: %s', __class__.__name__, forbidden)
             raise hvac.exceptions.Forbidden
