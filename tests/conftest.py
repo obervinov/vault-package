@@ -3,7 +3,7 @@ This module stores fixtures for performing tests.
 """
 import os
 import pytest
-from vault.vault import VaultClient
+from vault.client import VaultClient
 
 
 @pytest.fixture(name="url", scope='session')

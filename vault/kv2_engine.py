@@ -2,9 +2,11 @@
 This module contains the class and methods for working with the kv v2 engine in the vault.
 """
 from typing import Union
+from logger import log
+
 import hvac
 import hvac.exceptions
-from logger import log
+
 from .exceptions import WrongKV2Configuration
 
 
@@ -18,10 +20,10 @@ class KV2Engine:
         - delete secret
     """
     def __init__(
-            self,
-            client: hvac.Client = None,
-            mount_point: str = None,
-            **kwargs
+        self,
+        client: hvac.Client = None,
+        mount_point: str = None,
+        **kwargs
     ) -> None:
         """
         A method for creating an instance of the kv v2 engine.
@@ -47,7 +49,7 @@ class KV2Engine:
             >>> kv2 = KV2Engine(client=Client(), mount_point='secret', max_versions=10, cas_required=False, raise_on_deleted_version=True)
             >>> kv2.read_secret(path='path/to/secret')
         """
-        log.info('[class.%s] configuration kv2 engine for client %s', client)
+        log.info('[VaultClient] configuration kv2 engine for client %s', client)
 
         self.client = client
         self.max_versions = kwargs.get('max_versions', 10)
@@ -61,7 +63,7 @@ class KV2Engine:
                 mount_point=self.mount_point,
                 cas_required=self.cas_required
             )
-            log.inf('[class.%s] configuration kv2 engine for client %s has been completed', client)
+            log.inf('[VaultClient] configuration kv2 engine for client %s has been completed', client)
         else:
             raise WrongKV2Configuration("Mount point not specified, kv2 engine configuration error. Please set the argument mount_point=<mount_point_name>.")
 
@@ -94,7 +96,7 @@ class KV2Engine:
                 return response['data']['data'][key]
             return response['data']['data']
         except hvac.exceptions.InvalidPath as invalid_path:
-            log.warning('[class.%s] the path %s/%s does not exist: %s', __class__.__name__, path, key, invalid_path)
+            log.warning('[VaultClient] the path %s/%s does not exist: %s', path, key, invalid_path)
             return None
 
     def write_secret(
@@ -160,7 +162,7 @@ class KV2Engine:
                 mount_point=self.mount_point
             )['data']['keys']
         except hvac.exceptions.InvalidPath as invalid_path:
-            log.error('[class.%s] the path %s does not exist: %s', __class__.__name__, path, invalid_path)
+            log.error('[VaultClient] the path %s does not exist: %s', path, invalid_path)
             return []
 
     def delete_secret(
@@ -184,10 +186,10 @@ class KV2Engine:
                 mount_point=self.mount_point
             )
             if response.status_code == 204:
-                log.info('[class.%s] the secret %s has been deleted: ', __class__.__name__, path, response)
+                log.info('[VaultClient] the secret %s has been deleted: ', path, response)
                 return True
-            log.error("[class.%s] failed to delete secret %s: %s", __class__.__name__, path, response)
+            log.error("[VaultClient] failed to delete secret %s: %s", path, response)
             return False
         except hvac.exceptions.InvalidPath as invalid_path:
-            log.error('[class.%s] it looks like the path %s does not exist: %s', __class__.__name__, path, invalid_path)
+            log.error('[VaultClient] it looks like the path %s does not exist: %s', path, invalid_path)
             return False

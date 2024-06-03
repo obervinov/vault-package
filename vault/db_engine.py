@@ -2,9 +2,11 @@
 This module contains the class and methods for working with the database engine in the vault.
 """
 from typing import Union
+from logger import log
+
 import hvac
 import hvac.exceptions
-from logger import log
+
 from .exceptions import WrongDBConfiguration
 
 
@@ -57,7 +59,7 @@ class DBEngine:
             ...     password='postgres'
             ... )
         """
-        log.info('[class.%s] configuration database engine for client %s', client)
+        log.info('[VaultClient] configuration database engine for client %s', client)
 
         self.client = client
         self.connection_name = connection_name
@@ -77,7 +79,7 @@ class DBEngine:
                 username=self.username,
                 password=self.password
             )
-            log.info('[class.%s] database engine configured successfully', client)
+            log.info('[VaultClient] database engine configured successfully', client)
         else:
             raise WrongDBConfiguration('Incorrect database engine configuration. Check the required parameters.')
 
@@ -102,8 +104,8 @@ class DBEngine:
                 name=role,
                 mount_point=self.mount_point
             )
-            log.info('[class.%s] generated database credentials for role %s', self.client, role)
+            log.info('[VaultClient] generated database credentials for role %s', self.client, role)
             return response['data']
         except hvac.exceptions.InvalidPath:
-            log.error('[class.%s] database role %s does not exist', self.client, role)
+            log.error('[VaultClient] database role %s does not exist', self.client, role)
             return None
