@@ -2,10 +2,6 @@
 This module contains an implementation over the hvac module for interacting with the Vault Engines.
 """
 import os
-from typing import Union
-from datetime import datetime, timezone
-from dateutil.parser import isoparse
-import keyring
 
 import hvac
 import hvac.exceptions
@@ -17,6 +13,9 @@ from .db_engine import DBEngine
 from .decorators import deprecated_method
 
 
+# will be removed in the v3.0.0
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-few-public-methods
 class VaultClient:
     """
     This class contains classes and methods for working with Vault Engines:
@@ -146,10 +145,10 @@ class VaultClient:
             raise hvac.exceptions.InvalidRequest
 
         # Attributes to support compatibility of deleted methods in the new major version
+        # Will be removed in the v3.0.0
         self.read_secret = deprecated_method(self.kv2engine.read_secret)
         self.write_secret = deprecated_method(self.kv2engine.write_secret)
         self.list_secrets = deprecated_method(self.kv2engine.list_secrets)
-        
 
     def authentication(self) -> hvac.Client:
         """
