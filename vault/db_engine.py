@@ -8,6 +8,8 @@ import hvac
 import hvac.exceptions
 
 from .exceptions import WrongDBConfiguration
+from .decorators import reauthenticate_on_forbidden
+
 
 
 # pylint: disable=too-many-instance-attributes
@@ -83,6 +85,7 @@ class DBEngine:
         else:
             raise WrongDBConfiguration('Incorrect database engine configuration. Check the required parameters.')
 
+    @reauthenticate_on_forbidden
     def generate_credentials(
         self,
         role: str

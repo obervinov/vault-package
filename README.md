@@ -27,6 +27,9 @@ This module contains a set of methods for working with secrets and quickly confi
 | `VAULT_MOUNT_POINT`  |  Mount point for Approle and Secrets Engine. Can be used instead of the `name` argument in the `VaultClient` class |  `myproject-1` |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
+__Deprecation Notice__
+[Detailed information](DEPRECATED.md)
+
 __The client can only work with the KV v2 engine__
 - Client: Authentication using the AppRole
 - Client: Reading a secrets

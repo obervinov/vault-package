@@ -8,6 +8,7 @@ import hvac
 import hvac.exceptions
 
 from .exceptions import WrongKV2Configuration
+from .decorators import reauthenticate_on_forbidden
 
 
 class KV2Engine:
@@ -67,6 +68,7 @@ class KV2Engine:
         else:
             raise WrongKV2Configuration("Mount point not specified, kv2 engine configuration error. Please set the argument mount_point=<mount_point_name>.")
 
+    @reauthenticate_on_forbidden
     def read_secret(
         self,
         path: str = None,
@@ -99,6 +101,7 @@ class KV2Engine:
             log.warning('[VaultClient] the path %s/%s does not exist: %s', path, key, invalid_path)
             return None
 
+    @reauthenticate_on_forbidden
     def write_secret(
         self,
         path: str = None,
@@ -141,6 +144,7 @@ class KV2Engine:
                 mount_point=self.mount_point
             )
 
+    @reauthenticate_on_forbidden
     def list_secrets(
         self,
         path: str = None
@@ -165,6 +169,7 @@ class KV2Engine:
             log.error('[VaultClient] the path %s does not exist: %s', path, invalid_path)
             return []
 
+    @reauthenticate_on_forbidden
     def delete_secret(
         self,
         path: str = None

@@ -1,6 +1,4 @@
 """Custom exceptions for the vault package"""
-
-
 class WrongKV2Configuration(Exception):
     """
     Raised when the configuration for a kv2 engine is incorrect.
