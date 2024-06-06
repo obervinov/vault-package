@@ -27,6 +27,11 @@ cryptography = "^42"
 idna = "^3"
 logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.6" }
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.2"
+pylint = "^3.2.2"
+flake8 = "^7.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
