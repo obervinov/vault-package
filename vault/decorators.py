@@ -14,18 +14,6 @@ def reauthenticate_on_forbidden(method):
         except hvac.exceptions.Forbidden:
             log.warning('[VaultClient]: Forbidden exception caught, re-authenticating...')
             self.vault_client.client = self.vault_client.authentication()
+            self.client = self.vault_client.client
             return method(self, *args, **kwargs)
-    return wrapper
-
-
-def deprecated_method(method):
-    """
-    Decorator for deprecated methods.
-    """
-    def wrapper(*args, **kwargs):
-        log.warning(
-            '[VaultClient]: method is deprecated and will be removed in the next major release, please use another method.'
-            'More information at https://github.com/obervinov/vault-package/blob/main/DEPRECATED.md',
-        )
-        return method(*args, **kwargs)
     return wrapper
