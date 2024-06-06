@@ -64,7 +64,7 @@ def fixture_prepare_vault(url, namespace, policy_path):
         token_type='service',
         secret_id_num_uses=0,
         token_num_uses=0,
-        token_ttl='60s',
+        token_ttl='15s',
         bind_secret_id=True,
         token_no_default_policy=True,
         mount_point=namespace
