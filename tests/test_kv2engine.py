@@ -76,7 +76,7 @@ def test_read_secret_invalid_path(approle_client, secret_path):
         path=f"{secret_path}/invalid_path",
         key="invalid_key"
     )
-    response_dict = approle_client.read_secret(
+    response_dict = approle_client.kv2engine.read_secret(
         path=f"{secret_path}/invalid_path",
     )
     assert response_value is None
