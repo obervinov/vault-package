@@ -191,7 +191,7 @@ class KV2Engine:
                 mount_point=self.mount_point
             )
             if response.status_code == 204:
-                log.info('[VaultClient] the secret %s has been deleted: ', path, response)
+                log.info('[VaultClient] the secret %s has been deleted: %s', path, response)
                 return True
             log.error("[VaultClient] failed to delete secret %s: %s", path, response)
             return False

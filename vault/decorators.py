@@ -25,8 +25,7 @@ def deprecated_method(method):
     def wrapper(*args, **kwargs):
         log.warning(
             '[VaultClient]: method is deprecated and will be removed in the next major release, please use another method.'
-            'More information at https://github.com/obervinov/vault-package/blob/v2.1.0/DEPRECATED.md',
-            method.__name__
+            'More information at https://github.com/obervinov/vault-package/blob/main/DEPRECATED.md',
         )
         return method(*args, **kwargs)
     return wrapper

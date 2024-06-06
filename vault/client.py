@@ -186,7 +186,7 @@ class VaultClient:
                     log.info('[VaultClient]: vault token with id %s created successful', client.lookup_token()['data']['entity_id'])
             except FileNotFoundError as file_not_found:
                 log.error('[VaultClient]: failed to login using the Kubernetes: %s\nplease, check the path to the kubernetes service account token', file_not_found)
-                raise FileNotFoundError
+                raise FileNotFoundError from file_not_found
             except hvac.exceptions.Forbidden as forbidden:
                 log.error('[VaultClient]: failed to login using the Kubernetes: %s\nplease, check the role in the Kubernetes', forbidden)
                 raise hvac.exceptions.Forbidden

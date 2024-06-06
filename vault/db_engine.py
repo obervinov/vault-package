@@ -11,7 +11,6 @@ from .exceptions import WrongDBConfiguration
 from .decorators import reauthenticate_on_forbidden
 
 
-
 # pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 class DBEngine:
