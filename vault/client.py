@@ -127,6 +127,7 @@ class VaultClient:
             self.client = self.authentication()
             self.kv2engine = KV2Engine(
                 client=self.client,
+                vault_client=self,
                 mount_point=self.namespace,
                 **kwargs.get('kv2engine', {})
             )
@@ -134,6 +135,7 @@ class VaultClient:
             if 'connection_name' in dbengine and 'connection_url' in dbengine:
                 self.dbengine = DBEngine(
                     client=self.client,
+                    vault_client=self,
                     mount_point=self.namespace,
                     **dbengine
                 )

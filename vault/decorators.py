@@ -13,7 +13,7 @@ def reauthenticate_on_forbidden(method):
             return method(self, *args, **kwargs)
         except hvac.exceptions.Forbidden:
             log.warning('[VaultClient]: Forbidden exception caught, re-authenticating...')
-            self.client = self.authentication()
+            self.vault_client.client = self.vault_client.authentication()
             return method(self, *args, **kwargs)
     return wrapper
 

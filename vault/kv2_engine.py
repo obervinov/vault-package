@@ -22,16 +22,14 @@ class KV2Engine:
     """
     def __init__(
         self,
-        client: hvac.Client = None,
-        mount_point: str = None,
+        vault_client: object = None,
         **kwargs
     ) -> None:
         """
         A method for creating an instance of the kv v2 engine.
 
         Args:
-            :param client (hvac.Client): client instance with a connection to the vault
-            :param mount_point (str): kv2 engine mount point
+            :param vault_client (object): vault client instance with VaultClient class and attribute hvac.Client
 
         Keyword Args:
             :param max_versions (int): maximum number of versions of the secret available for storage (default 10)
@@ -45,26 +43,32 @@ class KV2Engine:
             None
 
         Examples:
-            >>> from vault import KV2Engine
-            >>> from hvac import Client
-            >>> kv2 = KV2Engine(client=Client(), mount_point='secret', max_versions=10, cas_required=False, raise_on_deleted_version=True)
-            >>> kv2.read_secret(path='path/to/secret')
+            >>> from vault import KV2Engine, VaultClient
+            >>> client = VaultClient(url='http://localhost:8200', namespace='test')
+            >>> kv2 = KV2Engine(
+            ...     vault_client=client,
+            ...     mount_point='secret',
+            ...     max_versions=10,
+            ...     cas_required=False,
+            ...     raise_on_deleted_version=True
+            ... )
         """
-        log.info('[VaultClient] configuration kv2 engine for client %s', client)
+        log.info('[VaultClient] configuration kv2 engine for client %s', vault_client.client)
 
-        self.client = client
+        self.client = vault_client.client
+        self.vault_client = vault_client
         self.max_versions = kwargs.get('max_versions', 10)
-        self.mount_point = mount_point
+        self.mount_point = vault_client.namespace
         self.cas_required = kwargs.get('cas_required', False)
         self.raise_on_deleted_version = kwargs.get('raise_on_deleted_version', True)
 
         if self.mount_point and self.client:
-            client.secrets.kv.v2.configure(
+            self.client.secrets.kv.v2.configure(
                 max_versions=self.max_versions,
                 mount_point=self.mount_point,
                 cas_required=self.cas_required
             )
-            log.info('[VaultClient] configuration kv2 engine for client %s has been completed', client)
+            log.info('[VaultClient] configuration kv2 engine for client %s has been completed', self.client)
         else:
             raise WrongKV2Configuration("Mount point not specified, kv2 engine configuration error. Please set the argument mount_point=<mount_point_name>.")
 

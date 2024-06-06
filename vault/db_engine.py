@@ -11,7 +11,6 @@ from .exceptions import WrongDBConfiguration
 from .decorators import reauthenticate_on_forbidden
 
 
-# pylint: disable=too-many-instance-attributes
 # pylint: disable=too-few-public-methods
 class DBEngine:
     """
@@ -21,68 +20,66 @@ class DBEngine:
     """
     def __init__(
         self,
-        client: hvac.Client = None,
-        connection_name: str = None,
-        connection_url: str = None,
-        mount_point: str = None,
-        **kwargs
+        vault_client: object = None,
+        connection: dict = None
     ) -> None:
         """
         A method for creating an instance of the database engine.
 
         Args:
-            :param client (hvac.Client): client instance with a connection to the vault
-            :param connection_name (str): database connection name
-            :param connection_url (str): database connection url, example `postgresql://{{{{username}}}}:{{{{password}}}}@postgres:5432/postgres?sslmode=disable`
-            :param mount_point (str): database engine mount point
-
-        Keyword Args:
-            :param plugin_name (str): database plugin name (default 'postgresql-database-plugin')
-            :param allowed_roles (list): database roles allowed to access the database (default same as `connection_name`)
-            :param username (str): database username, default `postgres`
-            :param password (str): database password, default `postgres`
+            :param vault_client (object): vault client instance with VaultClient class and attribute hvac.Client
+            :param connection (dict): dictionary with database connection configuration.
+                :param name (str): database connection name
+                :param url (str): database connection url, example `postgresql://{{{{username}}}}:{{{{password}}}}@postgres:5432/postgres?sslmode=disable`
+                :param mount_point (str): database engine mount point
+                :param plugin_name (str): database plugin name (default 'postgresql-database-plugin')
+                :param allowed_roles (list): database roles allowed to access the database (default same as `connection_name`)
+                :param username (str): database username, default `postgres`
+                :param password (str): database password, default `postgres`
 
         Returns:
             None
 
         Examples:
-            >>> from vault import DBEngine
-            >>> from hvac import Client
-            >>> client = Client()
+            >>> from vault import DBEngine, VaultClient
+            >>> client = VaultClient(url='http://localhost:8200', namespace='test')
             >>> db_engine = DBEngine(
-            ...     client=client,
-            ...     connection_name='postgresql',
-            ...     connection_url='postgresql://{{username}}:{{password}}@postgres:5432/postgres?sslmode=disable',
-            ...     mount_point='database',
-            ...     plugin_name='postgresql-database-plugin',
-            ...     allowed_roles=['readonly', 'readwrite'],
-            ...     username='postgres',
-            ...     password='postgres'
+            ...     vault_client=client,
+            ...     connection={
+            ...         'name': 'mydb',
+            ...         'url': 'postgresql',
+            ...         'mount_point': 'database',
+            ...         'plugin_name': 'postgresql-database-plugin',
+            ...         'allowed_roles': ['readonly', 'readwrite'],
+            ...         'username': 'postgres',
+            ...         'password': 'postgres'
+            ...     }
             ... )
         """
-        log.info('[VaultClient] configuration database engine for client %s', client)
+        log.info('[VaultClient] configuration database engine for client %s', vault_client.client)
 
-        self.client = client
-        self.connection_name = connection_name
-        self.connection_url = connection_url
-        self.mount_point = mount_point
-        self.plugin_name = kwargs.get('plugin_name', 'postgresql-database-plugin')
-        self.allowed_roles = kwargs.get('allowed_roles', list[connection_name])
-        self.username = kwargs.get('username', 'postgres')
-        self.password = kwargs.get('password', 'postgres')
+        self.client = vault_client.client
+        self.vault_client = vault_client
+        self.connection = connection
 
-        if self.client and self.connection_name and self.connection_url and self.mount_point:
-            self.client.secrets.database.configure(
-                name=self.connection_name,
-                plugin_name=self.plugin_name,
-                allowed_roles=self.allowed_roles,
-                connection_url=self.connection_url,
-                username=self.username,
-                password=self.password
-            )
-            log.info('[VaultClient] database engine configured successfully: %s', client)
-        else:
+        # Check required keys in connection dictionary
+        if not all(key in self.connection for key in ['name', 'url', 'username', 'password']):
             raise WrongDBConfiguration('Incorrect database engine configuration. Check the required parameters.')
+
+        # Set default parameters if don't exist
+        self.connection['mount_point'] = self.connection.get('mount_point', self.vault_client.namespace)
+        self.connection['plugin_name'] = self.connection.get('plugin_name', 'postgresql-database-plugin')
+        self.connection['allowed_roles'] = self.connection.get('allowed_roles', [self.vault_client.namespace])
+
+        self.client.secrets.database.configure(
+            name=self.connection['name'],
+            plugin_name=self.connection['plugin_name'],
+            allowed_roles=self.connection['allowed_roles'],
+            connection_url=self.connection['url'],
+            username=self.connection['username'],
+            password=self.connection['password']
+        )
+        log.info('[VaultClient] database engine configured successfully: %s', self.client)
 
     @reauthenticate_on_forbidden
     def generate_credentials(
@@ -102,10 +99,7 @@ class DBEngine:
             >>> credentials = db_engine.generate_credentials(role='readonly')
         """
         try:
-            response = self.client.secrets.database.generate_credentials(
-                name=role,
-                mount_point=self.mount_point
-            )
+            response = self.client.secrets.database.generate_credentials(name=role, mount_point=self.connection['mount_point'])
             log.info('[VaultClient] generated database credentials for role %s', role)
             return response['data']
         except hvac.exceptions.InvalidPath:
