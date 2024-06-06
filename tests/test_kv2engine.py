@@ -20,7 +20,7 @@ def test_write_secret(approle_client, test_data, secret_path):
     Testing writing a secret to the vault
     """
     for key, value in test_data.items():
-        response = approle_client.write_secret(
+        response = approle_client.kv2engine.write_secret(
             path=secret_path,
             key=key,
             value=value
@@ -34,7 +34,7 @@ def test_read_secret(approle_client, test_data, secret_path):
     Testing reading a secret to the vault
     """
     for key, value in test_data.items():
-        response = approle_client.read_secret(
+        response = approle_client.kv2engine.read_secret(
           path=secret_path,
           key=key
         )
@@ -47,7 +47,7 @@ def test_list_secrets(approle_client, secret_path):
     """
     Testing checks the reading of the list of secrets from the vault
     """
-    response = approle_client.list_secrets(
+    response = approle_client.kv2engine.list_secrets(
         path=f"{secret_path.split('/')[0]}/"
     )
     assert f"{secret_path.split('/')[1]}" in response
@@ -60,7 +60,7 @@ def test_token_ttl_exparation(approle_client, secret_path):
     Testing how does the module work with a token that has expired
     """
     time.sleep(30)
-    response = approle_client.list_secrets(
+    response = approle_client.kv2engine.list_secrets(
         path=f"{secret_path.split('/')[0]}/"
     )
     assert f"{secret_path.split('/')[1]}" in response
@@ -72,7 +72,7 @@ def test_read_secret_invalid_path(approle_client, secret_path):
     """
     Testing reading a secret to the vault if the path is invalid (does not exist)
     """
-    response_value = approle_client.read_secret(
+    response_value = approle_client.kv2engine.read_secret(
         path=f"{secret_path}/invalid_path",
         key="invalid_key"
     )
@@ -88,7 +88,7 @@ def test_list_secrets_invalid_path(approle_client, secret_path):
     """
     Testing checks the reading of the list of secrets from the vault if the path is invalid (does not exist)
     """
-    response = approle_client.list_secrets(path=f"{secret_path}/invalid_path")
+    response = approle_client.kv2engine.list_secrets(path=f"{secret_path}/invalid_path")
     assert response == []
     assert isinstance(response, list)
 
@@ -99,11 +99,11 @@ def test_delete_secret(approle_client, test_data, secret_path):
     Testing deleting a secret from the vault
     """
     for key, value in test_data.items():
-        _ = approle_client.write_secret(
+        _ = approle_client.kv2engine.write_secret(
             path=secret_path,
             key=key,
             value=value
         )
-        response = approle_client.delete_secret(path=secret_path)
+        response = approle_client.kv2engine.delete_secret(path=secret_path)
         assert response is True
         assert isinstance(response, bool)
