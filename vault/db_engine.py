@@ -80,7 +80,7 @@ class DBEngine:
                 username=self.username,
                 password=self.password
             )
-            log.info('[VaultClient] database engine configured successfully', client)
+            log.info('[VaultClient] database engine configured successfully: %s', client)
         else:
             raise WrongDBConfiguration('Incorrect database engine configuration. Check the required parameters.')
 
@@ -106,8 +106,8 @@ class DBEngine:
                 name=role,
                 mount_point=self.mount_point
             )
-            log.info('[VaultClient] generated database credentials for role %s', self.client, role)
+            log.info('[VaultClient] generated database credentials for role %s', role)
             return response['data']
         except hvac.exceptions.InvalidPath:
-            log.error('[VaultClient] database role %s does not exist', self.client, role)
+            log.error('[VaultClient] database role %s does not exist', role)
             return None
