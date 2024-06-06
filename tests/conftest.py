@@ -32,17 +32,27 @@ def fixture_prepare_vault(url, namespace, policy_path):
     """Returns the vault client"""
     client = hvac.Client(url=url)
     init_data = client.sys.initialize()
+
     # Unseal the vault
     if client.sys.is_sealed():
         client.sys.submit_unseal_keys(keys=[init_data['keys'][0], init_data['keys'][1], init_data['keys'][2]])
     # Authenticate in the vault server using the root token
     client = hvac.Client(url=url, token=init_data['root_token'])
+
     # Create policy
     with open(policy_path, 'rb') as policyfile:
         _ = client.sys.create_or_update_policy(
             name=namespace,
             policy=policyfile.read().decode("utf-8"),
         )
+
+    # Create Namespace
+    _ = client.sys.enable_secrets_engine(
+        backend_type='kv',
+        path=namespace,
+        options={'version': 2}
+    )
+
     # Prepare AppRole for the namespace
     client.sys.enable_auth_method(
         method_type='approle',
