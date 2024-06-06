@@ -130,12 +130,12 @@ class VaultClient:
                 mount_point=self.namespace,
                 **kwargs.get('kv2engine', {})
             )
-
-            if ['connection_name', 'connection_url'] in kwargs.get('dbengine', {}).keys():
+            dbengine = kwargs.get('dbengine', {})
+            if 'connection_name' in dbengine and 'connection_url' in dbengine:
                 self.dbengine = DBEngine(
                     client=self.client,
                     mount_point=self.namespace,
-                    **kwargs.get('dbengine', {})
+                    **dbengine
                 )
         except hvac.exceptions.InvalidRequest as invalid_request:
             log.error('[VaultClient]: failed to initialize the vault client: %s', invalid_request)
