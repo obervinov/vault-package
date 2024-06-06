@@ -64,7 +64,7 @@ class KV2Engine:
                 mount_point=self.mount_point,
                 cas_required=self.cas_required
             )
-            log.inf('[VaultClient] configuration kv2 engine for client %s has been completed', client)
+            log.info('[VaultClient] configuration kv2 engine for client %s has been completed', client)
         else:
             raise WrongKV2Configuration("Mount point not specified, kv2 engine configuration error. Please set the argument mount_point=<mount_point_name>.")
 
