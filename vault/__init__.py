@@ -6,7 +6,7 @@ Leave it empty
 from .client import VaultClient
 from .kv2_engine import KV2Engine
 from .db_engine import DBEngine
-from .exceptions import WrongKV2Configuration, WrongDBConfiguration
+from .exceptions import WrongKV2Configuration
 from .decorators import reauthenticate_on_forbidden
 
 __all__ = [
@@ -14,6 +14,5 @@ __all__ = [
     'KV2Engine',
     'DBEngine',
     'WrongKV2Configuration',
-    'WrongDBConfiguration',
     'reauthenticate_on_forbidden'
 ]
