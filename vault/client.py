@@ -163,7 +163,7 @@ class VaultClient:
 
             # AppRole authentication
             elif self.auth['type'] == 'approle':
-                response = client.auth.approle.login(
+                _ = client.auth.approle.login(
                             role_id=self.auth['approle']['id'],
                             secret_id=self.auth['approle']['secret-id'],
                             mount_point=self.namespace
@@ -181,7 +181,7 @@ class VaultClient:
 
             # Check the authentication status (Maybe it only works with the root token ???)
             if client.is_authenticated():
-                log.info('[VaultClient]: vault token with id %s created successful', response['entity_id'])
+                log.info('[VaultClient]: successfully authenticated in the vault server with the %s', self.auth['type'].upper())
             else:
                 log.error('[VaultClient]: failed to authenticate in the vault server: %s\nplease, check the authentication data', client.is_authenticated())
                 raise hvac.exceptions.Forbidden
