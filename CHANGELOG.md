@@ -3,9 +3,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## v3.0.0 - 2024-06-06
+## v3.0.0 - 2024-06-09
 ### What's Changed
-**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.4...v2.1.0 by @obervinov in https://github.com/obervinov/vault-package/pull/48
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.4...v3.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/48
 #### 💥 Breaking Changes
 * Changed environment variables
 * Changed general class `VaultClient()` incoming parameters

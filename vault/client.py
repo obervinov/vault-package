@@ -153,44 +153,41 @@ class VaultClient:
         Returns:
             (hvac.Client) client
         """
-        if self.auth['type'] == 'approle':
-            client = hvac.Client(url=self.url, namespace=self.namespace)
-            try:
-                log.info('[VaultClient]: authenticating in the vault server using the AppRole...')
+        log.info('[VaultClient]: authenticating in the vault server using the %s...', self.auth['type'].upper())
+        client = hvac.Client(url=self.url, namespace=self.namespace)
+        try:
+
+            # Root token authentication
+            if self.auth['type'] == 'token':
+                client = hvac.Client(url=self.url, token=self.auth['token'], namespace=self.namespace)
+
+            # AppRole authentication
+            elif self.auth['type'] == 'approle':
                 response = client.auth.approle.login(
                             role_id=self.auth['approle']['id'],
                             secret_id=self.auth['approle']['secret-id'],
                             mount_point=self.namespace
                 )['auth']
+
+            # Kubernetes service account token authentication
+            elif self.auth['type'] == 'kubernetes':
+                if os.path.exists(self.auth['kubernetes']):
+                    with open(self.auth['kubernetes'], 'r', encoding='UTF-8') as kubernetes_token:
+                        jwt = kubernetes_token.read()
+                        Kubernetes(self.client.adapter).login(role=self.namespace, jwt=jwt)
+                else:
+                    log.error('[VaultClient]: not found the kubernetes service account token: %s', self.auth['kubernetes'])
+                    raise FileNotFoundError
+
+            # Check the authentication status (Maybe it only works with the root token ???)
+            if client.is_authenticated():
                 log.info('[VaultClient]: vault token with id %s created successful', response['entity_id'])
-            except hvac.exceptions.Forbidden as forbidden:
-                log.error('[VaultClient]: failed to login using the AppRole: %s\nplease, check permissions in your policy.hcl', forbidden)
+            else:
+                log.error('[VaultClient]: failed to authenticate in the vault server: %s\nplease, check the authentication data', client.is_authenticated())
                 raise hvac.exceptions.Forbidden
 
-        elif self.auth['type'] == 'token':
-            client = hvac.Client(url=self.url, token=self.auth['token'], namespace=self.namespace)
-            log.info('[VaultClient]: authenticating in the vault server using the token...')
-            if not client.is_authenticated():
-                log.error('[VaultClient]: failed to login using the token: %s\nplease, check the token', client.is_authenticated())
-                raise hvac.exceptions.InvalidRequest
-            log.info('[VaultClient]: vault token with id %s created successful', client.lookup_token()['data']['entity_id'])
-
-        elif self.auth['type'] == 'kubernetes':
-            log.info('[VaultClient]: authenticating in the vault server using the Kubernetes...')
-            client = hvac.Client(url=self.url, namespace=self.namespace)
-            try:
-                with open(self.auth['kubernetes'], 'r', encoding='UTF-8') as kubernetes_token:
-                    jwt = kubernetes_token.read()
-                    Kubernetes(self.client.adapter).login(
-                        role=self.namespace,
-                        jwt=jwt
-                    )
-                    log.info('[VaultClient]: vault token with id %s created successful', client.lookup_token()['data']['entity_id'])
-            except FileNotFoundError as file_not_found:
-                log.error('[VaultClient]: failed to login using the Kubernetes: %s\nplease, check the path to the kubernetes service account token', file_not_found)
-                raise FileNotFoundError from file_not_found
-            except hvac.exceptions.Forbidden as forbidden:
-                log.error('[VaultClient]: failed to login using the Kubernetes: %s\nplease, check the role in the Kubernetes', forbidden)
-                raise hvac.exceptions.Forbidden
+        except hvac.exceptions.Forbidden as forbidden:
+            log.error('[VaultClient]: failed to authenticate in the vault server: %s\nplease, check the authentication data', forbidden)
+            raise hvac.exceptions.Forbidden from forbidden
 
         return client

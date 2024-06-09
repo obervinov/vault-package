@@ -7,12 +7,20 @@ import hvac
 from vault.client import VaultClient
 
 
-@pytest.fixture(name="url", scope='session')
-def fixture_url():
+@pytest.fixture(name="vault_url", scope='session')
+def fixture_vault_url():
     """Returns the vault url"""
     if os.getenv("CI"):
         return "http://localhost:8200"
     return "http://0.0.0.0:8200"
+
+
+@pytest.fixture(name="postgres_url", scope='session')
+def fixture_postgres_url():
+    """Returns the postgres url"""
+    if os.getenv("CI"):
+        return "postgresql://{{username}}:{{password}}@localhost:5432/postgres"
+    return "postgresql://{{username}}:{{password}}@0.0.0.0:5432/postgres"
 
 
 @pytest.fixture(name="namespace", scope='session')
@@ -28,16 +36,16 @@ def fixture_policy_path():
 
 
 @pytest.fixture(name="prepare_vault", scope='session')
-def fixture_prepare_vault(url, namespace, policy_path):
+def fixture_prepare_vault(vault_url, namespace, policy_path):
     """Returns the vault client"""
-    client = hvac.Client(url=url)
+    client = hvac.Client(url=vault_url)
     init_data = client.sys.initialize()
 
     # Unseal the vault
     if client.sys.is_sealed():
         client.sys.submit_unseal_keys(keys=[init_data['keys'][0], init_data['keys'][1], init_data['keys'][2]])
     # Authenticate in the vault server using the root token
-    client = hvac.Client(url=url, token=init_data['root_token'])
+    client = hvac.Client(url=vault_url, token=init_data['root_token'])
 
     # Create policy
     with open(policy_path, 'rb') as policyfile:
@@ -70,10 +78,50 @@ def fixture_prepare_vault(url, namespace, policy_path):
         mount_point=namespace
     )
     approle_adapter = hvac.api.auth_methods.AppRole(client.adapter)
+
+    # Prepare database engine configuration
+    client.sys.enable_secrets_engine(
+        backend_type='database',
+        path=namespace
+    )
+    _ = client.secrets.database.configure(
+        plugin_name='postgresql-database-plugin',
+        allowed_roles=[namespace],
+        connection_url='postgresql://{{username}}:{{password}}@localhost:5432/mydb?sslmode=disable',
+        username='vault',
+        password='vault',
+        db_name='mydb',
+        mount_point=namespace
+    )
+
     return {
         'id': approle_adapter.read_role_id(role_name=namespace, mount_point=namespace)["data"]["role_id"],
         'secret-id': approle_adapter.generate_secret_id(role_name=namespace, mount_point=namespace)["data"]["secret_id"]
     }
+
+
+@pytest.fixture(name="prepare_postgres", scope='session')
+def fixture_prepare_postgres(postgres_url):
+    """Prepare database engine configuration"""
+    # Configure database engine
+    _ = hvac.Client().secrets.database.configure(
+        name="postgresql",
+        plugin_name="postgresql-database-plugin",
+        verify_connection=True,
+        allowed_roles=["test_role"],
+        username="postgres",
+        password="postgres",
+        connection_url=postgres_url
+    )
+
+    # Create role for the database
+    _ = hvac.Client().secrets.database.create_role(
+        name="test_role",
+        db_name="postgres",
+        creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
+        default_ttl="1h",
+        max_ttl="24h"
+    )
 
 
 @pytest.fixture(name="test_data", scope='session')
@@ -93,10 +141,10 @@ def fixture_secret_path():
 
 
 @pytest.fixture(name="approle_client", scope='session')
-def fixture_configurator_client(url, namespace, prepare_vault):
+def fixture_configurator_client(vault_url, namespace, prepare_vault):
     """Returns client of the configurator"""
     return VaultClient(
-        url=url,
+        url=vault_url,
         namespace=namespace,
         auth={
             'type': 'approle',
