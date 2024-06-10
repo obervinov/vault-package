@@ -18,9 +18,7 @@ def fixture_vault_url():
 @pytest.fixture(name="postgres_url", scope='session')
 def fixture_postgres_url():
     """Returns the postgres url"""
-    if os.getenv("CI"):
-        return "postgresql://{{username}}:{{password}}@localhost:5432/postgres"
-    return "postgresql://{{username}}:{{password}}@0.0.0.0:5432/postgres"
+    return "postgresql://{{username}}:{{password}}@0.0.0.0:5432/postgres?sslmode=disable"
 
 
 @pytest.fixture(name="namespace", scope='session')
