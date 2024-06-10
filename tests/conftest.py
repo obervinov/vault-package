@@ -92,7 +92,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path):
         username='vault',
         password='vault',
         db_name='mydb',
-        mount_point=namespace
+        mount_point='database'
     )
 
     return {
