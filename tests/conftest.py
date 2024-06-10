@@ -1,7 +1,6 @@
 """
 This module stores fixtures for performing tests.
 """
-import os
 import pytest
 import hvac
 from vault.client import VaultClient
@@ -10,8 +9,6 @@ from vault.client import VaultClient
 @pytest.fixture(name="vault_url", scope='session')
 def fixture_vault_url():
     """Returns the vault url"""
-    if os.getenv("CI"):
-        return "http://localhost:8200"
     return "http://0.0.0.0:8200"
 
 
@@ -82,26 +79,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
         backend_type='database',
         path='database'
     )
-    _ = client.secrets.database.configure(
-        name='postgresql',
-        plugin_name='postgresql-database-plugin',
-        allowed_roles=[namespace],
-        connection_url=postgres_url,
-        username='vault',
-        password='vault',
-        db_name='postgres',
-        mount_point='database'
-    )
 
-    return {
-        'id': approle_adapter.read_role_id(role_name=namespace, mount_point=namespace)["data"]["role_id"],
-        'secret-id': approle_adapter.generate_secret_id(role_name=namespace, mount_point=namespace)["data"]["secret_id"]
-    }
-
-
-@pytest.fixture(name="prepare_postgres", scope='session')
-def fixture_prepare_postgres(postgres_url):
-    """Prepare database engine configuration"""
     # Configure database engine
     _ = hvac.Client().secrets.database.configure(
         name="postgresql",
@@ -121,6 +99,11 @@ def fixture_prepare_postgres(postgres_url):
         default_ttl="1h",
         max_ttl="24h"
     )
+
+    return {
+        'id': approle_adapter.read_role_id(role_name=namespace, mount_point=namespace)["data"]["role_id"],
+        'secret-id': approle_adapter.generate_secret_id(role_name=namespace, mount_point=namespace)["data"]["secret_id"]
+    }
 
 
 @pytest.fixture(name="test_data", scope='session')
