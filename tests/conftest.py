@@ -100,7 +100,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
         default_ttl="1h",
         max_ttl="24h"
     )
-    print(f"Created role: {role}")
+    print(f"Created role: {role.data}")
 
     return {
         'id': approle_adapter.read_role_id(role_name=namespace, mount_point=namespace)["data"]["role_id"],
