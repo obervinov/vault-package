@@ -82,7 +82,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path):
     # Prepare database engine configuration
     client.sys.enable_secrets_engine(
         backend_type='database',
-        path=namespace
+        path='database'
     )
     _ = client.secrets.database.configure(
         plugin_name='postgresql-database-plugin',
