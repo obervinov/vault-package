@@ -9,7 +9,7 @@ def test_generate_credentials(approle_client):
     """
     Testing the generation of database credentials
     """
-    response = approle_client.dbengine.generate_credentials(role='test_role')
+    response = approle_client.dbengine.generate_credentials(role='test-role')
     assert isinstance(response, dict)
     assert response['lease_id']
     assert response['lease_duration']
