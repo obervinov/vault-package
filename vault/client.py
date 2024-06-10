@@ -45,13 +45,6 @@ class VaultClient:
                 :param cas_required (bool): all keys will require the cas parameter to be set on all write requests
                 :param max_versions (int): maximum number of versions of the secret available for storage
                 :param raise_on_deleted_version (bool): changes the behavior when the requested version is deleted
-            :param dbengine (dict): dictionary with database engine configuration.
-                :param connection_name (str): database connection name
-                :param connection_url (str): database connection url
-                :param plugin_name (str): database plugin name
-                :param allowed_roles (list): database roles allowed to access the database
-                :param username (str): database username
-                :param password (str): database password
 
         Environment Variables:
             VAULT_ADDR: URL of the vault server.
@@ -125,20 +118,8 @@ class VaultClient:
         try:
             log.info('[VaultClient]: preparing the client for the vault server...')
             self.client = self.authentication()
-            self.kv2engine = KV2Engine(
-                client=self.client,
-                vault_client=self,
-                mount_point=self.namespace,
-                **kwargs.get('kv2engine', {})
-            )
-            dbengine = kwargs.get('dbengine', {})
-            if 'connection_name' in dbengine and 'connection_url' in dbengine:
-                self.dbengine = DBEngine(
-                    client=self.client,
-                    vault_client=self,
-                    mount_point=self.namespace,
-                    **dbengine
-                )
+            self.kv2engine = KV2Engine(vault_client=self, **kwargs.get('kv2engine', {}))
+            self.dbengine = DBEngine(vault_client=self)
         except hvac.exceptions.InvalidRequest as invalid_request:
             log.error('[VaultClient]: failed to initialize the vault client: %s', invalid_request)
             raise hvac.exceptions.InvalidRequest
