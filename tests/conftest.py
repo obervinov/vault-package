@@ -95,7 +95,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
     # Create role for the database
     role = client.secrets.database.create_role(
         name="test-role",
-        db_name="postgres",
+        db_name="postgresql",
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
         default_ttl="1h",
         max_ttl="24h"
