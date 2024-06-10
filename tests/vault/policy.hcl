@@ -34,6 +34,6 @@ path "testapp-1/data/configuration/*" {
 }
 
 # To work with database engine
-path "testapp-1/creds/*" {
+path "database/creds/*" {
   capabilities = ["create", "read", "update", "list", "delete"]
 }
