@@ -85,6 +85,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path):
         path='database'
     )
     _ = client.secrets.database.configure(
+        name='postgresql',
         plugin_name='postgresql-database-plugin',
         allowed_roles=[namespace],
         connection_url='postgresql://{{username}}:{{password}}@localhost:5432/mydb?sslmode=disable',
