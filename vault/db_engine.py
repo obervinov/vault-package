@@ -60,6 +60,6 @@ class DBEngine:
             response = self.client.secrets.database.generate_credentials(name=role, mount_point=self.vault_client.namespace)
             log.info('[VaultClient] generated database credentials for role %s', role)
             return response['data']
-        except hvac.exceptions.InvalidPath:
-            log.error('[VaultClient] database role %s does not exist', role)
+        except hvac.exceptions.InvalidPath as error:
+            log.error('[VaultClient] database role %s does not exist: %s', role, error)
             return None
