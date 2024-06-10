@@ -14,6 +14,12 @@ path "auth/token/lookup-self" {
 path "testapp-1/config" {
   capabilities = ["read", "list", "update"]
 }
+
+# To read and update database configuration
+path "database/config/postgresql"{
+  capabilities = ["create", "read", "update", "list", "delete"]
+}
+
 # To get a list of secrets
 path "testapp-1/metadata/configuration/*" {
   capabilities = ["read", "list", "delete"]
