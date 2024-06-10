@@ -81,7 +81,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
     )
 
     # Configure database engine
-    _ = hvac.Client().secrets.database.configure(
+    _ = client.secrets.database.configure(
         name="postgresql",
         plugin_name="postgresql-database-plugin",
         verify_connection=False,
@@ -92,7 +92,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
     )
 
     # Create role for the database
-    _ = hvac.Client().secrets.database.create_role(
+    _ = client.secrets.database.create_role(
         name="test_role",
         db_name="postgres",
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
