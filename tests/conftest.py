@@ -106,7 +106,7 @@ def fixture_prepare_postgres(postgres_url):
     _ = hvac.Client().secrets.database.configure(
         name="postgresql",
         plugin_name="postgresql-database-plugin",
-        verify_connection=True,
+        verify_connection=False,
         allowed_roles=["test_role"],
         username="postgres",
         password="postgres",
