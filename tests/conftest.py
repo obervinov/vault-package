@@ -36,7 +36,7 @@ def fixture_policy_path():
 
 
 @pytest.fixture(name="prepare_vault", scope='session')
-def fixture_prepare_vault(vault_url, namespace, policy_path):
+def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
     """Returns the vault client"""
     client = hvac.Client(url=vault_url)
     init_data = client.sys.initialize()
@@ -88,10 +88,10 @@ def fixture_prepare_vault(vault_url, namespace, policy_path):
         name='postgresql',
         plugin_name='postgresql-database-plugin',
         allowed_roles=[namespace],
-        connection_url='postgresql://{{username}}:{{password}}@localhost:5432/mydb?sslmode=disable',
+        connection_url=postgres_url,
         username='vault',
         password='vault',
-        db_name='mydb',
+        db_name='postgres',
         mount_point='database'
     )
 
