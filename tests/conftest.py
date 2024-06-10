@@ -81,7 +81,7 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
     )
 
     # Configure database engine
-    _ = client.secrets.database.configure(
+    configuration = client.secrets.database.configure(
         name="postgresql",
         plugin_name="postgresql-database-plugin",
         verify_connection=False,
@@ -90,15 +90,17 @@ def fixture_prepare_vault(vault_url, namespace, policy_path, postgres_url):
         password="postgres",
         connection_url=postgres_url
     )
+    print(f"Configured database engine: {configuration}")
 
     # Create role for the database
-    _ = client.secrets.database.create_role(
+    role = client.secrets.database.create_role(
         name="test_role",
         db_name="postgres",
         creation_statements="CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}';",
         default_ttl="1h",
         max_ttl="24h"
     )
+    print(f"Created role: {role}")
 
     return {
         'id': approle_adapter.read_role_id(role_name=namespace, mount_point=namespace)["data"]["role_id"],
