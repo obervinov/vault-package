@@ -10,7 +10,6 @@ assignees: 'obervinov'
 - [ ] KV2 Engine
 - [ ] DB Engine
 - [ ] Authentication in Vault
-- [ ] Vault server initialization
 
 **Describe the bug**
 Not working <describe> in <class> as expected.
