@@ -11,6 +11,7 @@ def test_generate_credentials(approle_client):
     """
     response = approle_client.dbengine.generate_credentials(role='test-role')
     assert isinstance(response, dict)
+    print(response)
     assert response['lease_id']
     assert response['lease_duration']
     assert response['data']['username']
