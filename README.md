@@ -10,144 +10,173 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/obervinov/vault-package?style=for-the-badge)
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/book.png" width="25" title="about"> About this project
-This is an additional implementation compared to the **hvac** module.
-
-The main purpose of which is to simplify the use and interaction with vault for my standard projects.
-
-This module contains a set of methods for working with secrets and quickly configuring Vault.
+This is an additional implementation compared to the **hvac** module.</br>
+The main purpose of which is to simplify the use and interaction with vault for my standard projects.</br>
+This module contains a set of methods for working with `secrets` and `database` engines in vault.
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
-| Variable  | Description | Example |
-| ------------- | ------------- | ------------- |
-| `VAULT_ADDR`  | URL of the vault server | `http://vault.example.com:8200` |
-| `VAULT_TOKEN` | Root token with full access rights | `hvs.123qwerty` |
-| `VAULT_APPROLE_ID`  | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server | `db02de05-fa39-4855-059b-67221c5c2f63` |
-| `VAULT_APPROLE_SECRETID`  | [Approle Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for authentication in the vault server |  `6a174c20-f6de-a53c-74d2-6018fcceff64` |
-| `VAULT_MOUNT_POINT`  |  Mount point for Approle and Secrets Engine. Can be used instead of the `name` argument in the `VaultClient` class |  `myproject-1` |
+| Variable                    | Description                                                                                                  | Example                                 |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| `VAULT_ADDR`                | Vault server address                                                                                         | `http://vault:8200`                             |
+| `VAULT_AUTH_TYPE`           | Type of authentication in the vault server (token, approle, kubernetes)                                      | `approle`                               |
+| `VAULT_NAMESPACE`           | Namespace in the vault server                                                                                | `namespace1`                            |
+| `VAULT_TOKEN`               | Token for authentication in the vault server                                                                 | `s.123456789qwerty`                        |
+| `VAULT_APPROLE_ID`          | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for get token in the vault server      | `db02de05-fa39-4855-059b-67221c5c2f63`  |
+| `VAULT_APPROLE_SECRET_ID`   | [Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for get token in the vault server       | `6a174c20-f6de-a53c-74d2-6018fcceff64`  |
+| `VAULT_KUBERNETES_SA_TOKEN` | File path to the service account token in the kubernetes cluster                                             | `/var/run/secrets/kubernetes.io/serviceaccount/token`     |
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
+
 __Deprecation Notice__
 [Detailed information](DEPRECATED.md)
 
-__The client can only work with the KV v2 engine__
-- Client: Authentication using the AppRole
-- Client: Reading a secrets
-- Client: Listing a secrets
-- Client: Writing a secrets
-- Configurator: Initializing a new vault instance
-- Configurator: Unsealing a new vault instance
-- Configurator: Creating a new namespace and enabling the kvv2 engine
-- Configurator: Creating a new AppRole ID and a generating a new AppRole Secret ID
-- Configurator: Uploading a new vault policy
+__Authentications__
+- `Token`
+- `Approle`
+- `Kubernetes`
+
+__KV2 Engine__
+- `read_secret()`
+- `write_secret()`
+- `list_secrets()`
+- `delete_secret()`
+
+__Database Engine__
+- `generate_credentials()`
+
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="mods"> Usage examples
-This module can operate in two types of modes:
-1. Working with the kv secrets engine (v2): `read`/`write`/`update`/`list` of secrets
+This module supports the following functionality
+1. Authentication in vault
+   - `token`
+   - `approle`
+   - `kubernetes`
+```python
+from vault import VaultClient
+
+# Approle authentication
+client = VaultClient(
+        url='http://vault:8200',
+        namespace='project1',
+        auth={
+                'type': 'approle',
+                'role_id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                'secret_id': '6a1740c20-f6de-a53c-74d2-6018fcceff64'
+        }
+)
+
+# Token authentication
+client = VaultClient(
+        url='http://vault:8200',
+        namespace='project1',
+        auth={
+                'type': 'token',
+                'token': 's.123456789qwerty'
+        }
+)
+
+# Kubernetes authentication
+client = VaultClient(
+        url='http://vault:8200',
+        namespace='project1',
+        auth={
+                'type': 'kubernetes',
+                'token': '/var/run/secrets/kubernetes.io/serviceaccount/token'
+        }
+)
+```
+
+
+2. Interaction with kv2 secrets engine
+   - `read` specific key from the secret or the full secret body
+   - `create` new secret with the specified key and value
+   - `update` specific key in the secret with a new value
+   - `list` secrets on the specified path
+   - `delete` all versions of the secret on the specified path
 ```python
 from vault import VaultClient
 
 client = VaultClient(
-            url='http://0.0.0.0:8200',
-            name='project1',
-            approle={
-                'id': 'db02de05-fa39-4855-059b-67221c5c2f63',
-                'secret-id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
-            }
+        url='http://0.0.0.0:8200',
+        namespace='project1',
+        auth={
+                'type': 'approle',
+                'role_id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                'secret_id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+        }
 )
 
-# Get only the key value from the secret
+# Get value of the specific key in the secret
 # type: str
-value = client.read_secret(
+value = client.kv2engine.read_secret(
     path='namespace/secret',
     key='key'
 )
 
-# Get full dict with the secret body
+# Get the full secret body
 # type: dict
-secret = client.read_secret(path='namespace/secret')
+secret = client.kv2engine.read_secret(path='namespace/secret')
 
-# Write new data to a secret
-# type: requests.response
-response = client.write_secret(
-     path='namespace/secret',
-     key='key',
-     value='value'
+# Create a new secret with the specified key and value
+# type: object
+response = client.kv2engine.write_secret(
+        path='namespace/secret',
+        key='key',
+        value='value'
 )
 
-# Get a list of secrets on the specified path
+# Update specific key in the secret with a new value
+# type: object
+response = client.kv2engine.write_secret(
+        path='namespace/secret',
+        key='key',
+        value='new_value'
+)
+
+# List secrets on the specified path
 # type: list
-response = client.list_secrets(path='namespace/secret1')
+secret_list = client.kv2engine.list_secrets(path='namespace/secret')
 
-# Delete a secret
+# Delete all versions of the secret on the specified path
 # type: bool
-response = client.delete_secret(path='namespace/secret')
+deleted = client.kv2engine.delete_secret(path='namespace/secret')
 ```
-2. Working with the `configuration` of a vault instance: create or update `engine`/`namespace`/`policy`/`approle`</br>
-
-_preparing a new (not initialized) vault server for your project_
+2. Interaction with database engine
+   - `generate` new credentials for the specified role
 ```python
+import psycopg2
 from vault import VaultClient
 
-configurator = VaultClient(
-                url='http://0.0.0.0:8200',
-                name='project1',
-                new=True,
+client = VaultClient(
+        url='http://vault:8200',
+        namespace='project1',
+        auth={
+                'type': 'approle',
+                'role_id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                'secret_id': '6a1740c20-f6de-a53c-74d2-6018fcceff64'
+        }
 )
-
-# Enable the kv v2 engine and create a new namespace
-# type: str
-namespace = configurator.create_namespace(name='namespace1')
-
-# Download a new policy from a local file
-# type: str
-policy = configurator.create_policy(
-        name='policy1',
-        path='tests/vault/policy.hcl'
-)
-
-# Create a new approle
+# Read the secret with the specified path
 # type: dict
-approle = configurator.create_approle(
-        name='approle1',
-        path=namespace,
-        policy=policy
-)
-```
+db_config = client.kv2engine.read_secret(path='project1/db')
 
-_preparing an existing vault server for your project_
-```python
-from vault import VaultClient
-
-configurator = VaultClient(
-                url='http://0.0.0.0:8200',
-                name='project1',
-                new=False,
-                token='hvs.123456789qwerty'
-)
-
-# Enable the kv v2 engine and create a new namespace
-# type: str
-namespace = configurator.create_namespace(name='namespace1')
-
-# Download a new policy from a local file
-# type: str
-policy = configurator.create_policy(
-        name='policy1',
-        path='tests/vault/policy.hcl'
-)
-
-# Create a new approle
+# Generate new credentials for the specified role
 # type: dict
-approle = configurator.create_approle(
-        name='approle1',
-        path=namespace,
-        policy=policy
+db_credentials = client.dbengine.generate_credentials(role='project1-role')
+
+# Connect to the database
+conn = psycopg2.connect(
+        dbname=db_config['dbname'],
+        user=db_credentials['username'],
+        password=db_credentials['password'],
+        host=db_config['host'],
+        port=db_config['port']
 )
 ```
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/vault.png" width="25" title="usage"> Vault Policy structure
-An example with the required permissions and their description in [policy.hcl](tests/vault/policy.hcl)
+An example with the required permissions and their description for this module is shown in the file [policy.hcl](tests/vault/policy.hcl)
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/stack2.png" width="20" title="install"> Installing
 ```bash
@@ -158,7 +187,7 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v2.1.0" }
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v3.0.0" }
 
 [build-system]
 requires = ["poetry-core"]

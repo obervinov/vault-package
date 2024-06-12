@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "vault"
 version = "3.0.0"
-description = "This is an additional implementation compared to the hvac module. The main purpose of which is to simplify the use and interaction with vault for my standard projects. This module contains a set of methods for working with secrets and quickly configuring Vault."
+description = "This is an additional implementation compared to the hvac module. The main purpose of which is to simplify the use and interaction with vault for my standard projects. This module contains a set of methods for working with secrets and database engines in vault."
 authors = ["Bervinov Oleg <obervinov@pm.me>"]
 maintainers = ["Bervinov Oleg <obervinov@pm.me>"]
 license = "MIT"
