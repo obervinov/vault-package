@@ -1,6 +1,4 @@
-"""
-This module contains the class and methods for working with the database engine in the vault.
-"""
+"""This module contains the class and methods for working with the database engine in the Vault"""
 from typing import Union
 from logger import log
 
@@ -33,11 +31,10 @@ class DBEngine:
             None
 
         Examples:
-            >>> from vault import DBEngine, VaultClient
-            >>> client = VaultClient(url='http://localhost:8200', namespace='test')
-            >>> db_engine = DBEngine(vault_client=client)
+            >>> from vault import DBEngine
+            >>> db_engine = DBEngine(vault_client=client, mount_point='database')
         """
-        log.info('[VaultClient] configuration database engine for client %s', vault_client.client)
+        log.info('[VaultClient] configuration Database Engine for client %s', vault_client.client)
         self.client = vault_client.client
         self.vault_client = vault_client
         self.mount_point = mount_point
@@ -57,7 +54,7 @@ class DBEngine:
             dict: database credentials
 
         Examples:
-            >>> credentials = db_engine.generate_credentials(role='readonly')
+            >>> credentials = dbengine.generate_credentials(role='readonly')
         """
         try:
             response = self.client.secrets.database.generate_credentials(name=role, mount_point=self.mount_point)
