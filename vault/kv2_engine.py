@@ -1,6 +1,4 @@
-"""
-This module contains the class and methods for working with the kv v2 engine in the vault.
-"""
+"""This module contains the class and methods for working with the kv v2 engine in the vault"""
 from typing import Union
 from logger import log
 
@@ -16,7 +14,7 @@ class KV2Engine:
     This class is responsible for working with the kv v2 engine in the vault.
     Supported methods for:
         - read secret
-        - write secret
+        - create or update secret
         - list secrets
         - delete secret
     """
@@ -53,7 +51,7 @@ class KV2Engine:
             ...     raise_on_deleted_version=True
             ... )
         """
-        log.info('[VaultClient] configuration kv2 engine for client %s', vault_client.client)
+        log.info('[VaultClient] configuration KV2 Engine for client %s', vault_client.client)
 
         self.client = vault_client.client
         self.vault_client = vault_client
@@ -68,9 +66,9 @@ class KV2Engine:
                 mount_point=self.mount_point,
                 cas_required=self.cas_required
             )
-            log.info('[VaultClient] configuration kv2 engine for client %s has been completed', self.client)
+            log.info('[VaultClient] configuration KV2 Engine for client %s has been completed', self.client)
         else:
-            raise WrongKV2Configuration("Mount point not specified, kv2 engine configuration error. Please set the argument mount_point=<mount_point_name>.")
+            raise WrongKV2Configuration("Mount point not specified, KV2 Engine configuration error. Please set the argument mount_point=<mount_point_name>.")
 
     @reauthenticate_on_forbidden
     def read_secret(
@@ -79,7 +77,7 @@ class KV2Engine:
         key: str = None
     ) -> Union[str, dict, None]:
         """
-        A method for read secret from kv2 engine.
+        A method for read secret from KV2 Engine.
 
         Args:
             :param path (str): the path to the secret in vault.
@@ -113,7 +111,7 @@ class KV2Engine:
         value: str = None
     ) -> object:
         """
-        A method for write secret from vault.
+        A method for create or update secret in KV2 Engine.
 
         Args:
             :param path (str): the path to the secret in vault.
@@ -154,7 +152,7 @@ class KV2Engine:
         path: str = None
     ) -> list:
         """
-        A method for list secrets from vault.
+        A method for list secrets from KV2 Engine.
 
         Args:
             :param path (str): the path to the secret in vault.
@@ -179,7 +177,7 @@ class KV2Engine:
         path: str = None
     ) -> bool:
         """
-        A method for delete secret from vault.
+        A method for delete secret from KV2 Engine.
 
         Args:
             :param path (str): the path to the secret in vault.
