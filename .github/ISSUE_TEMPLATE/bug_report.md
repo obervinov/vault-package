@@ -1,38 +1,35 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+about: Create a bug report to help us improve
+title: 'Bug: <describe>'
+labels: 'bug' 
+assignees: 'obervinov'
 
 ---
+**Choose the component of the module where the bug is located**
+- [ ] KV2 Engine
+- [ ] DB Engine
+- [ ] Authentication in Vault
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+Not working <describe> in <class> as expected.
+Log link: [link](<paste here>)
+Error message:
+```bash
+<error message>
+```
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+**Additional context**
+- Vault version: <version>
+- Module version: <version>
+- Auth method: <method one of: token, approle, kubernetes>
+- Engine: <engine one of: kv2, db>
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+**Possible correction**
+If you have a possible solution to the bug, please describe it.
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
+**Check list after fixing the bug**
+- [ ] Fix 1 in workflow 1 tested and working

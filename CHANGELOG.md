@@ -3,6 +3,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v3.0.0 - 2024-06-12
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.4...v3.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/48
+#### 💥 Breaking Changes
+* Changed environment variables. More details in the https://github.com/obervinov/vault-package/blob/v3.0.0/DEPRECATED.md
+* Changed general class `VaultClient()` incoming parameters. More details in the https://github.com/obervinov/vault-package/blob/v3.0.0/vault/client.py#L29-L89
+* Decomposition of one overloaded `VaultClient()` class into several smaller classes responsible for their own aspect of interaction with vault. More details in the https://github.com/obervinov/vault-package/blob/v3.0.0/DEPRECATED.md
+* Remove outdated methods and classes. More details in the https://github.com/obervinov/vault-package/blob/v3.0.0/DEPRECATED.md
+#### 📚 Documentation
+* Update `*.md` templates for issues and pull requests
+* Update documentation for the new version of the module
+* Add `DEPRECATED.md` with information about deprecated methods and classes
+#### 🚀 Features
+* [cryptography NULL pointer dereference with pkcs12.serialize_key_and_certificates when called with a non-matching certificate and private key and an hmac_hash override ](https://github.com/obervinov/vault-package/security/dependabot/1)
+* [Internationalized Domain Names in Applications (IDNA) vulnerable to denial of service from specially crafted inputs to idna.encode](https://github.com/obervinov/vault-package/security/dependabot/2)
+* [Return `None` if the path does not exist when the `list_secrets()` method is called](https://github.com/obervinov/vault-package/issues/46)
+* [Add delete() method in class](https://github.com/obervinov/vault-package/issues/38)
+* [Add support for the database engine component](https://github.com/obervinov/vault-package/issues/32)
+* [Add support kubernetes auth](https://github.com/obervinov/vault-package/issues/39)
+
+
 ## v2.0.4 - 2024-02-07
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.3...v2.0.4 by @obervinov in https://github.com/obervinov/vault-package/pull/43
