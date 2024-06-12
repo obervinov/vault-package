@@ -1,9 +1,9 @@
-"""Custom exceptions for the vault package"""
+"""Custom exceptions for the Vault Package"""
 
 
 class WrongKV2Configuration(Exception):
     """
-    Raised when the configuration for a kv2 engine is incorrect.
+    Raised when the configuration for a KV2 Engine is incorrect.
 
     Args:
         message (str): The error message.
