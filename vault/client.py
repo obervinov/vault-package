@@ -1,6 +1,4 @@
-"""
-This module contains an implementation over the hvac module for interacting with the Vault Engines.
-"""
+"""This module contains an implementation over the hvac module for interacting with the Vault Engines"""
 import os
 
 import hvac
@@ -16,8 +14,8 @@ from .db_engine import DBEngine
 class VaultClient:
     """
     This class contains classes and methods for working with Vault Engines:
-    - kv v2 engine
-    - database engine
+    - KV2 Engine
+    - Database Engine
     """
     def __init__(
         self,
@@ -110,11 +108,13 @@ class VaultClient:
                     self.auth['token'] = os.environ.get('VAULT_TOKEN')
                 elif self.auth['type'] == 'kubernetes':
                     self.auth['kubernetes'] = os.environ.get('VAULT_KUBERNETES_SA_TOKEN', '/var/run/secrets/kubernetes.io/serviceaccount/token')
+
             log.info('[VaultClient]: configuration has been successfully extracted: auth: %s, url: %s, namespace: %s', self.auth['type'], self.url, self.namespace)
+
         except KeyError as keyerror:
             raise KeyError(
-                "Failed to extract the value of the environment variable. "
-                "You need to set an environment variable or pass an argument when creating an instance of VaultClient(arg=value)"
+                "Failed to extract the value of the Environment Variable. "
+                "You need to set an Environment Variable or pass an argument when creating an instance of VaultClient(arg=value)"
             ) from keyerror
 
         try:
@@ -122,13 +122,18 @@ class VaultClient:
             self.client = self.authentication()
             self.kv2engine = KV2Engine(vault_client=self, **kwargs.get('kv2engine', {}))
             self.dbengine = DBEngine(vault_client=self, **kwargs.get('dbengine', {}))
+
         except hvac.exceptions.InvalidRequest as invalid_request:
             log.error('[VaultClient]: failed to initialize the vault client: %s', invalid_request)
             raise hvac.exceptions.InvalidRequest
 
     def authentication(self) -> hvac.Client:
         """
-        This method is used to authenticate in the vault server.
+        This method is used to authenticate in the Vault Server.
+        Supported authentication methods:
+            - Token
+            - AppRole
+            - Kubernetes
 
         Args:
             None
