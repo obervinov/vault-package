@@ -6,7 +6,7 @@ import hvac.exceptions
 
 def reauthenticate_on_forbidden(method):
     """
-    Decorator for re-authenticate in the vault server when a Forbidden exception is caught.
+    Decorator for re-authenticate in the Vault Server when a Forbidden exception is caught.
     """
     def wrapper(self, *args, **kwargs):
         try:
