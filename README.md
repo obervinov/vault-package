@@ -12,15 +12,15 @@
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/book.png" width="25" title="about"> About this project
 This is an additional implementation compared to the **hvac** module.</br>
 The main purpose of which is to simplify the use and interaction with vault for my standard projects.</br>
-This module contains a set of methods for working with `secrets` and `database` engines in vault.
+This module contains a set of methods for working with `secrets` and `database` engines in **Vault**.
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/config.png" width="25" title="envs"> Supported environment variables
-| Variable                    | Description                                                                                                  | Example                                 |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| Variable                    | Description                                                                                                  | Example                       |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------ | ----------------------------- |
 | `VAULT_ADDR`                | Vault server address                                                                                         | `http://vault:8200`                             |
-| `VAULT_AUTH_TYPE`           | Type of authentication in the vault server (token, approle, kubernetes)                                      | `approle`                               |
-| `VAULT_NAMESPACE`           | Namespace in the vault server                                                                                | `namespace1`                            |
+| `VAULT_AUTH_TYPE`           | Type of authentication in the vault server (_token_, _approle_, _kubernetes_)                                | `approle`                               |
+| `VAULT_NAMESPACE`           | Namespace with mounted secrets in the vault server                                                           | `project1`                              |
 | `VAULT_TOKEN`               | Token for authentication in the vault server                                                                 | `s.123456789qwerty`                        |
 | `VAULT_APPROLE_ID`          | [Approle ID](https://developer.hashicorp.com/vault/docs/auth/approle) for get token in the vault server      | `db02de05-fa39-4855-059b-67221c5c2f63`  |
 | `VAULT_APPROLE_SECRET_ID`   | [Secret ID](https://developer.hashicorp.com/vault/docs/auth/approle) for get token in the vault server       | `6a174c20-f6de-a53c-74d2-6018fcceff64`  |
@@ -28,8 +28,7 @@ This module contains a set of methods for working with `secrets` and `database` 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="functions"> Supported functions
 
-__Deprecation Notice__
-[Detailed information](DEPRECATED.md)
+[__Deprecation Notice__](DEPRECATED.md)
 
 __Authentications__
 - `Token`
@@ -47,8 +46,7 @@ __Database Engine__
 
 
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/requirements.png" width="25" title="mods"> Usage examples
-This module supports the following functionality
-1. Authentication in vault
+1. Authentication in Vault
    - `token`
    - `approle`
    - `kubernetes`
@@ -88,7 +86,7 @@ client = VaultClient(
 ```
 
 
-2. Interaction with kv2 secrets engine
+2. Interaction with KV2 Secrets Engine
    - `read` specific key from the secret or the full secret body
    - `create` new secret with the specified key and value
    - `update` specific key in the secret with a new value
@@ -142,7 +140,7 @@ secret_list = client.kv2engine.list_secrets(path='namespace/secret')
 # type: bool
 deleted = client.kv2engine.delete_secret(path='namespace/secret')
 ```
-2. Interaction with database engine
+2. Interaction with Database Engine
    - `generate` new credentials for the specified role
 ```python
 import psycopg2
