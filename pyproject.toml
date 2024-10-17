@@ -22,6 +22,11 @@ requests = "^2"
 hvac = "^2"
 logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.0" }
 
+[tool.poetry.group.dev.dependencies]
+pylint = "^3.3.1"
+flake8 = "^7.1.1"
+pytest = "^8.3.3"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
