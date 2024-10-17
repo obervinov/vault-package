@@ -1,5 +1,4 @@
 """This module contains the class and methods for working with the kv v2 engine in the vault"""
-from typing import Union
 from logger import log
 
 import hvac
@@ -18,11 +17,7 @@ class KV2Engine:
         - list secrets
         - delete secret
     """
-    def __init__(
-        self,
-        vault_client: object = None,
-        **kwargs
-    ) -> None:
+    def __init__(self, vault_client: object = None, **kwargs) -> None:
         """
         A method for creating an instance of the kv v2 engine.
 
@@ -71,11 +66,7 @@ class KV2Engine:
             raise WrongKV2Configuration("Mount point not specified, KV2 Engine configuration error. Please set the argument mount_point=<mount_point_name>.")
 
     @reauthenticate_on_forbidden
-    def read_secret(
-        self,
-        path: str = None,
-        key: str = None
-    ) -> Union[str, dict, None]:
+    def read_secret(self, path: str = None, key: str = None) -> str | dict | None:
         """
         A method for read secret from KV2 Engine.
 
@@ -104,12 +95,7 @@ class KV2Engine:
             return None
 
     @reauthenticate_on_forbidden
-    def write_secret(
-        self,
-        path: str = None,
-        key: str = None,
-        value: str = None
-    ) -> object:
+    def write_secret(self, path: str = None, key: str = None, value: str = None) -> object:
         """
         A method for create or update secret in KV2 Engine.
 
@@ -147,10 +133,7 @@ class KV2Engine:
             )
 
     @reauthenticate_on_forbidden
-    def list_secrets(
-        self,
-        path: str = None
-    ) -> list:
+    def list_secrets(self, path: str = None) -> list:
         """
         A method for list secrets from KV2 Engine.
 
@@ -172,10 +155,7 @@ class KV2Engine:
             return []
 
     @reauthenticate_on_forbidden
-    def delete_secret(
-        self,
-        path: str = None
-    ) -> bool:
+    def delete_secret(self, path: str = None) -> bool:
         """
         A method for delete secret from KV2 Engine.
 
