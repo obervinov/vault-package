@@ -136,5 +136,6 @@ def fixture_configurator_client(vault_url, namespace, prepare_vault):
                 'id': prepare_vault['id'],
                 'secret-id': prepare_vault['secret-id']
             }
-        }
+        },
+        dbengine={'mount_point': 'database'}
     )
