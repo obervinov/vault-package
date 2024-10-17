@@ -184,8 +184,8 @@ name = myproject"
 version = "1.0.0"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v3.0.0" }
+python = "^3.12"
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v4.0.0" }
 
 [build-system]
 requires = ["poetry-core"]
@@ -198,4 +198,4 @@ poetry install
 ## <img src="https://github.com/obervinov/_templates/blob/main/icons/github-actions.png" width="25" title="github-actions"> GitHub Actions
 | Name  | Version |
 | ------------------------ | ----------- |
-| GitHub Actions Templates | [v1.2.6](https://github.com/obervinov/_templates/tree/v1.2.6) |
+| GitHub Actions Templates | [v2.0.0](https://github.com/obervinov/_templates/tree/v2.0.0) |

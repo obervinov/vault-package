@@ -6,10 +6,11 @@ Versions supported to fix vulnerabilities
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 3.x.x   | :white_check_mark: |
-| 2.x.x   | :x: |
-| 1.x.x   | :x: |
+| 4.x.x   | :white_check_mark: |
+| 3.x.x   | :x:                |
+| 2.x.x   | :x:                |
+| 1.x.x   | :x:                |
 
 ## Reporting a Vulnerability
 
-In order to inform me about the vulnerability, write the details to the mail `github.obervinov@proton.me`
+In order to inform me about the vulnerability, just open an issue: https://github.com/obervinov/vault-package/security/advisories/new

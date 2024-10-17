@@ -3,6 +3,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v4.0.0 - 2024-10-17
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v3.0.0...v4.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/50
+#### 💥 Breaking Changes
+* Bump python version to `3.12`
+#### 🚀 Features
+* Bump dependencies versions
+* Bump workflows versions to `v2.0.0`
+#### 🐛 Bug Fixes
+* [Bug: Set the vault client namespace as the prefix for `dbengine` mount point](https://github.com/obervinov/vault-package/issues/49)
+
+
 ## v3.0.0 - 2024-06-12
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v2.0.4...v3.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/48

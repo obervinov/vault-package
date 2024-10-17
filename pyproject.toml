@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "vault"
-version = "3.0.0"
+version = "4.0.0"
 description = "This is an additional implementation compared to the hvac module. The main purpose of which is to simplify the use and interaction with vault for my standard projects. This module contains a set of methods for working with secrets and database engines in vault."
-authors = ["Bervinov Oleg <obervinov@pm.me>"]
-maintainers = ["Bervinov Oleg <obervinov@pm.me>"]
+authors = ["Bervinov Oleg <bervinov.ob@gmail.com>"]
+maintainers = ["Bervinov Oleg <bervinov.ob@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 packages = [{include = "vault"}]
@@ -17,20 +17,15 @@ include = ["CHANGELOG.md"]
 "Bug Tracker" = "https://github.com/obervinov/vault-package/issues"
 
 [tool.poetry.dependencies]
-python = "^3.9 || ^3.10 || ^3.11"
-requests = ">=2.29.0,<2.30.0"
+python = "^3.12"
+requests = "^2"
 hvac = "^2"
-keyring = "^24"
-SecretStorage = "^3"
-python-dateutil = "^2"
-cryptography = "^42"
-idna = "^3"
-logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v1.0.6" }
+logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.0" }
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^8.2.2"
-pylint = "^3.2.2"
-flake8 = "^7.0.0"
+pylint = "^3.3.1"
+flake8 = "^7.1.1"
+pytest = "^8.3.3"
 
 [build-system]
 requires = ["poetry-core"]
