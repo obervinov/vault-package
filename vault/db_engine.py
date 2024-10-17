@@ -18,7 +18,7 @@ class DBEngine:
     def __init__(
         self,
         vault_client: object = None,
-        mount_point: str = 'database'
+        mount_point: str = None
     ) -> None:
         """
         A method for creating an instance of the database engine.
@@ -37,7 +37,10 @@ class DBEngine:
         log.info('[VaultClient] configuration Database Engine for client %s', vault_client.client)
         self.client = vault_client.client
         self.vault_client = vault_client
-        self.mount_point = mount_point
+        if mount_point:
+            self.mount_point = mount_point
+        else:
+            self.mount_point = f"{vault_client.namespace}-database"
 
     @reauthenticate_on_forbidden
     def generate_credentials(
