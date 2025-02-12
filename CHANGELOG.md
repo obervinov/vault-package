@@ -3,6 +3,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v4.0.1 - 2025-02-12
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v4.0.0...v4.0.1 by @obervinov in https://github.com/obervinov/vault-package/pull/52
+#### 🚀 Features
+* Bump dependencies versions
+* Bump workflows versions to `v2.1.1`
+#### 🐛 Bug Fixes
+* [Bug: Kubernetes auth type not working](https://github.com/obervinov/vault-package/issues/51)
+
+
 ## v4.0.0 - 2024-10-17
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v3.0.0...v4.0.0 by @obervinov in https://github.com/obervinov/vault-package/pull/50

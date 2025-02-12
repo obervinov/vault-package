@@ -162,7 +162,7 @@ class VaultClient:
                 if os.path.exists(self.auth['kubernetes']):
                     with open(self.auth['kubernetes'], 'r', encoding='UTF-8') as kubernetes_token:
                         jwt = kubernetes_token.read()
-                        Kubernetes(self.client.adapter).login(role=self.namespace, jwt=jwt)
+                        Kubernetes(client.adapter).login(role=self.namespace, jwt=jwt)
                 else:
                     log.error('[VaultClient]: not found the kubernetes service account token: %s', self.auth['kubernetes'])
                     raise FileNotFoundError
