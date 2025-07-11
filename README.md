@@ -185,7 +185,7 @@ version = "1.0.0"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v4.0.1" }
+vault = { git = "https://github.com/obervinov/vault-package.git", tag = "v4.0.2" }
 
 [build-system]
 requires = ["poetry-core"]
