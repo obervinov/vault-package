@@ -23,7 +23,7 @@ hvac = "^2"
 logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.2" }
 
 [tool.poetry.group.dev.dependencies]
-pylint = "^3"
+pylint = "^4"
 flake8 = "^7"
 pytest = "^8"
 
