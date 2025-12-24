@@ -3,6 +3,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v4.0.3 - 2025-12-24
+### What's Changed
+**Full Changelog**: https://github.com/obervinov/vault-package/compare/v4.0.2...v4.0.3 by @obervinov in https://github.com/obervinov/vault-package/pull/73
+#### 🚀 Features
+* Bump dependencies versions to latest versions
+
+
 ## v4.0.2 - 2025-07-11
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v4.0.1...v4.0.2 by @obervinov in https://github.com/obervinov/vault-package/pull/60
