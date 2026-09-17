@@ -59,8 +59,10 @@ client = VaultClient(
         namespace='project1',
         auth={
                 'type': 'approle',
-                'role_id': 'db02de05-fa39-4855-059b-67221c5c2f63',
-                'secret_id': '6a1740c20-f6de-a53c-74d2-6018fcceff64'
+                'approle': {
+                        'id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                        'secret-id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+                }
         }
 )
 
@@ -80,7 +82,7 @@ client = VaultClient(
         namespace='project1',
         auth={
                 'type': 'kubernetes',
-                'token': '/var/run/secrets/kubernetes.io/serviceaccount/token'
+                'kubernetes': '/var/run/secrets/kubernetes.io/serviceaccount/token'
         }
 )
 ```
@@ -100,8 +102,10 @@ client = VaultClient(
         namespace='project1',
         auth={
                 'type': 'approle',
-                'role_id': 'db02de05-fa39-4855-059b-67221c5c2f63',
-                'secret_id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+                'approle': {
+                        'id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                        'secret-id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+                }
         }
 )
 
@@ -140,7 +144,7 @@ secret_list = client.kv2engine.list_secrets(path='namespace/secret')
 # type: bool
 deleted = client.kv2engine.delete_secret(path='namespace/secret')
 ```
-2. Interaction with Database Engine
+3. Interaction with Database Engine
    - `generate` new credentials for the specified role
 ```python
 import psycopg2
@@ -151,8 +155,10 @@ client = VaultClient(
         namespace='project1',
         auth={
                 'type': 'approle',
-                'role_id': 'db02de05-fa39-4855-059b-67221c5c2f63',
-                'secret_id': '6a1740c20-f6de-a53c-74d2-6018fcceff64'
+                'approle': {
+                        'id': 'db02de05-fa39-4855-059b-67221c5c2f63',
+                        'secret-id': '6a174c20-f6de-a53c-74d2-6018fcceff64'
+                }
         }
 )
 # Read the secret with the specified path
@@ -180,7 +186,7 @@ An example with the required permissions and their description for this module i
 ```bash
 tee -a pyproject.toml <<EOF
 [tool.poetry]
-name = myproject"
+name = "myproject"
 version = "1.0.0"
 
 [tool.poetry.dependencies]
