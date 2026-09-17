@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v4.0.4 - 2026-09-17
+### What's Changed
+#### 🐛 Bug Fixes
+* `.github/workflows`: move the reusable workflows to `obervinov/_templates@v4.0.0`. Node 20 is removed from the Actions runner on 2026-09-23, and the pinned templates still called `actions/create-release` (`runs.using: node12`, archived) along with a set of `node20` actions — releases and checks in this repository would stop running.
+
+
 ## v4.0.3 - 2025-12-24
 ### What's Changed
 **Full Changelog**: https://github.com/obervinov/vault-package/compare/v4.0.2...v4.0.3 by @obervinov in https://github.com/obervinov/vault-package/pull/73
