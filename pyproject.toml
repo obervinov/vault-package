@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vault"
-version = "4.0.3"
+version = "4.0.4"
 description = "The main goal of the implementation is to simplify the use and interaction with Vault Server for my standard python projects. This module contains a set of methods for working with secrets and database engines in Vault."
 authors = ["Bervinov Oleg <bervinov.ob@gmail.com>"]
 maintainers = ["Bervinov Oleg <bervinov.ob@gmail.com>"]
