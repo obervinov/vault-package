@@ -20,7 +20,7 @@ include = ["CHANGELOG.md"]
 python = "^3.12"
 requests = "^2"
 hvac = "^2"
-logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.4" }
+logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.6" }
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^4"
