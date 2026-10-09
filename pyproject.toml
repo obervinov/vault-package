@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vault"
-version = "4.0.4"
+version = "4.0.5"
 description = "The main goal of the implementation is to simplify the use and interaction with Vault Server for my standard python projects. This module contains a set of methods for working with secrets and database engines in Vault."
 authors = ["Bervinov Oleg <bervinov.ob@gmail.com>"]
 maintainers = ["Bervinov Oleg <bervinov.ob@gmail.com>"]
@@ -20,7 +20,7 @@ include = ["CHANGELOG.md"]
 python = "^3.12"
 requests = "^2"
 hvac = "^2"
-logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.4" }
+logger = { git = "https://github.com/obervinov/logger-package.git", tag = "v2.0.6" }
 
 [tool.poetry.group.dev.dependencies]
 pylint = "^4"
