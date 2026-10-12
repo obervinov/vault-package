@@ -352,7 +352,7 @@ colors = ["colorama"]
 
 [[package]]
 name = "logger"
-version = "2.0.6"
+version = "2.0.7"
 description = "This is an additional implementation over the logging module. This module is designed for fast initialization and configuration of readable and structured logging."
 optional = false
 python-versions = "^3.12"
@@ -363,8 +363,8 @@ develop = false
 [package.source]
 type = "git"
 url = "https://github.com/obervinov/logger-package.git"
-reference = "v2.0.6"
-resolved_reference = "38b4381ed441b81b13b84101cdfedc25836d402b"
+reference = "v2"
+resolved_reference = "b80c00d238779eec986a136e439cfdba6b566e58"
 
 [[package]]
 name = "mccabe"
@@ -571,4 +571,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "cfa5ec86e24ec133fbb4b35554d85b96fc45b384611550d29acfc250cb873268"
+content-hash = "1e4ff2bafc5c5684b3a66e47d7868bdaf4df2720189b60dc1e298997e4c0e526"

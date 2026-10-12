@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## v4.0.6 - 2026-10-12
+### What's Changed
+#### 🐛 Bug Fixes
+* `pyproject.toml`: pin `logger` to its major tag (`tag = "v2"`) instead of an exact release. Packages that depend on both `vault` and `logger` can now pin `logger` to `v2` too without Poetry seeing two different refs of the same git package, so the exact pins no longer have to be bumped in lockstep across repositories. `poetry.lock` resolves `v2` to `logger` v2.0.7.
+
+
 ## v4.0.5 - 2026-10-09
 ### What's Changed
 #### 📚 Documentation
